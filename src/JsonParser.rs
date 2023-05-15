@@ -1,6 +1,5 @@
 use serde_json::json;
 use serde_json::{Result, Value};
-use std::f32::consts::E;
 use std::fs::File;
 use std::io::Read;
 use crate::Tri;
@@ -34,9 +33,6 @@ impl JsonParser
                 panic!("leFailed to open JSON fi: {}", e);
             }
         };
-        
-        
-        
     } 
 
     pub fn Parse(self,scene: &mut SceneContainer)

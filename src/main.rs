@@ -61,6 +61,7 @@ fn main() {
     for j in 0..fb.height{
         for i in 0..fb.width
         {   
+
             let max_t = INFINITY; 
             let mut min_t = 1.0;
             let r = cam.genRay(i as i32, j as i32, 0.0, 0.0);
@@ -77,10 +78,10 @@ fn main() {
             h.setT(1.0);
         }
     }
-    
+    let end = std::time::Instant::now();
     let filepath: String = "IMAGES/".to_owned() + &args[1] + ".png";
     fb.exportAsPng(filepath);
-    let end = std::time::Instant::now();
+    
     let elapsed_time = end - start;
     println!("Time to render: {:?}", elapsed_time);
 }
