@@ -1,5 +1,5 @@
 
-#[derive(Clone)]
+#[derive(Clone,Copy)]
 pub struct Vec3D{
     rgb: [f32; 3]
 }
@@ -28,7 +28,7 @@ impl Vec3D{
         cross //-> return
     }
 
-    pub fn dot(self, rhs: Vec3D) -> f32
+    pub fn dot(&self, rhs: &Vec3D) -> f32
     {
         (self[0] * rhs[0]) + (self[1] * rhs[1]) + (self[2] * rhs[2])
     }
@@ -86,10 +86,10 @@ impl std::ops::Add<Vec3D> for Vec3D
     }
 }
 
-impl std::ops::Sub<Vec3D> for Vec3D
+impl std::ops::Sub<&Vec3D> for &Vec3D
 {
     type Output = Vec3D;
-    fn sub(self, rhs: Vec3D) -> Self::Output 
+    fn sub(self, rhs: &Vec3D) -> Self::Output 
     {
         let mut r: Vec3D = Vec3D::new(0.0, 0.0, 0.0);
         r[0] = self.rgb[0] - rhs[0];
@@ -98,4 +98,16 @@ impl std::ops::Sub<Vec3D> for Vec3D
         r
     }
 }
-pub type Vec3 = Vec3D;
+
+impl std::ops::Mul<f32> for &Vec3D
+{
+    type Output = Vec3D;
+    fn mul(self, rhs: f32) -> Self::Output 
+    {
+        let r = self.rgb[0] * rhs;
+        let g = self.rgb[1] * rhs;
+        let b = self.rgb[2] * rhs;
+        Vec3D { rgb: [r,g,b] }
+    }
+}
+pub type Vec3 = Vec3D; 

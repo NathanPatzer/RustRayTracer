@@ -31,7 +31,7 @@ impl PerspectiveCamera
         let u: f32 = left + (right-left) * ((i as f32 + offI) / self.dimX as f32) as f32;
         let v: f32 = bottom + (top - bottom) * ((j as f32 + offJ) / self.dimY as f32) as f32;
 
-        let dir: Vec3D = (self.coord.W.clone() * -1.0 * self.focalLength) + (self.coord.U.clone() * u) + (self.coord.V.clone() * v);
+        let dir: Vec3D = (&self.coord.W * -1.0 * self.focalLength) + (&self.coord.U * u) + (&self.coord.V * v);
         Ray::new(dir, self.pos.clone())
     }
 }
