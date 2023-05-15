@@ -2,6 +2,7 @@ use crate::Vec3;
 use crate::Shape::Hittable;
 use crate::HStruct;
 use crate::Ray::Ray;
+#[derive(Clone,Copy)]
 pub struct Sphere
 {
     center: Vec3,

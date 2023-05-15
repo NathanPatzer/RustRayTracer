@@ -2,6 +2,7 @@ use crate::Triangle::Triangle;
 use crate::Ray::Ray;
 use crate::HitStruct::HitStruct;
 use crate::Sph;
+#[derive(Clone,Copy)]
 pub enum Shape
 {
     Triangle(Triangle),

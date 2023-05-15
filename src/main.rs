@@ -22,6 +22,8 @@ mod Shape;
 mod HitStruct;
 #[allow(non_snake_case)]
 mod Sphere;
+#[allow(non_snake_case)]
+mod JsonParser;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -43,20 +45,17 @@ fn main() {
     let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
     fb.setBackground(black);
 
-    //let tri1 = Tri::new(Vec3::new(0.4, -1.0, -2.5),Vec3::new(0.0,1.0,-5.0), Vec3::new(-1.0,-1.0,-6.0));
-    let tri2 = Tri::new(Vec3::new(0.7, -1.0, -2.8),Vec3::new(0.0,1.0,-4.0), Vec3::new(-1.0,-1.0,-4.0));
-    let s1 = Sph::new(Vec3::new(0.0, -0.5, -4.0), 1.1);
     let mut sc = SceneContainer::SceneContainer::new();
 
-    sc.addSpheres(s1);
-    sc.addTriangle(tri2);
     let cam = PerspectiveCamera::new(Vec3::new(0.0, 0.0, 0.0), 0.5 as f32, 0.5 as f32, fb.width as i32, fb.height as i32, coord);
     let start = std::time::Instant::now();
-    let shape_refs = &sc.shapes[..];
+
     let h = &mut HStruct::new();
 
-
+    let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string());
+    parser.Parse(&mut sc);
     //TEST
+    let shape_refs = &sc.shapes[..];
     let colvec: Vec<&Vec3> = vec![&red,&blue];
     let mut shapenum: i32 = 0;
     for j in 0..fb.height{
@@ -78,6 +77,7 @@ fn main() {
             h.setT(1.0);
         }
     }
+    
     let filepath: String = "IMAGES/".to_owned() + &args[1] + ".png";
     fb.exportAsPng(filepath);
     let end = std::time::Instant::now();

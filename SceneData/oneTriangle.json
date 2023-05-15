@@ -1,0 +1,32 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 0 0",
+	    "viewDir": "0 0 -1",
+	    "focalLength": 1.0,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "0 10 0",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+	    "diffuse": "0 0 1",
+	    "_name": "blue",
+	    "_type": "Lambertian"
+	}],
+	"shape": [{
+	    "shader": {
+		"_ref": "blue"
+	    },
+	    "v0": "-1.0 -1.0 -5",
+	    "v1": "1.0 -1.0 -5",
+	    "v2": "0 1.0 -5",
+	    "_name": "triangle1",
+	    "_type": "triangle"
+	}]
+    }
+}

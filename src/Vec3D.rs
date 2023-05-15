@@ -110,4 +110,5 @@ impl std::ops::Mul<f32> for &Vec3D
         Vec3D { rgb: [r,g,b] }
     }
 }
+
 pub type Vec3 = Vec3D; 

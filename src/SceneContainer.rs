@@ -1,6 +1,7 @@
 use crate::Triangle::Triangle;
 use crate::Shape::Shape;
 use crate::Sph;
+
 pub struct SceneContainer
 {
     pub shapes: Vec<Shape>
