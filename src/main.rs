@@ -1,7 +1,6 @@
 use PespectiveCamera::PerspectiveCamera;
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
 
-
 //use image::{Rgb, RgbImage};
 #[allow(non_snake_case)]
 mod Vec3D;
@@ -21,12 +20,14 @@ mod SceneContainer;
 mod Shape;
 #[allow(non_snake_case)]
 mod HitStruct;
-
+#[allow(non_snake_case)]
+mod Sphere;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
 pub use Triangle::*;
 pub use HitStruct::*;
+pub use Sphere::*;
 
 use crate::Shape::Hittable;
 //INSTRUCTIONS
@@ -42,12 +43,13 @@ fn main() {
     let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
     fb.setBackground(black);
 
-    let tri1 = Tri::new(Vec3::new(0.4, -1.0, -2.5),Vec3::new(0.0,1.0,-5.0), Vec3::new(-1.0,-1.0,-6.0));
-    let tri2 = Tri::new(Vec3::new(0.7, -1.0, -2.8),Vec3::new(0.0,1.0,-4.0), Vec3::new(-1.0,-1.0,-6.0));
+    //let tri1 = Tri::new(Vec3::new(0.4, -1.0, -2.5),Vec3::new(0.0,1.0,-5.0), Vec3::new(-1.0,-1.0,-6.0));
+    let tri2 = Tri::new(Vec3::new(0.7, -1.0, -2.8),Vec3::new(0.0,1.0,-4.0), Vec3::new(-1.0,-1.0,-4.0));
+    let s1 = Sph::new(Vec3::new(0.0, -0.5, -4.0), 1.1);
     let mut sc = SceneContainer::SceneContainer::new();
-    sc.addTriangle(tri1);
-    sc.addTriangle(tri2);
 
+    sc.addSpheres(s1);
+    sc.addTriangle(tri2);
     let cam = PerspectiveCamera::new(Vec3::new(0.0, 0.0, 0.0), 0.5 as f32, 0.5 as f32, fb.width as i32, fb.height as i32, coord);
     let start = std::time::Instant::now();
     let shape_refs = &sc.shapes[..];
@@ -76,8 +78,8 @@ fn main() {
             h.setT(1.0);
         }
     }
-
-    fb.exportAsPng(args[1].clone() + ".png");
+    let filepath: String = "IMAGES/".to_owned() + &args[1] + ".png";
+    fb.exportAsPng(filepath);
     let end = std::time::Instant::now();
     let elapsed_time = end - start;
     println!("Time to render: {:?}", elapsed_time);

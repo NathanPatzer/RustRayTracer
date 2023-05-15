@@ -1,10 +1,11 @@
 use crate::Triangle::Triangle;
 use crate::Ray::Ray;
 use crate::HitStruct::HitStruct;
-
+use crate::Sph;
 pub enum Shape
 {
-    Triangle(Triangle)
+    Triangle(Triangle),
+    Sphere(Sph)
 }
 
 pub trait Hittable
@@ -19,6 +20,7 @@ impl Hittable for Shape
         match self 
         {
             Shape::Triangle(triangle) => triangle.closestHit(r, tMin, tMax, h),
+            Shape::Sphere(sphere) => sphere.closestHit(r, tMin, tMax, h)
         }
     }
 }

@@ -27,6 +27,11 @@ impl Vec3D{
         cross[2] = (self.rgb[0] * rhs[1]) - (self.rgb[1] * rhs[0]);
         cross //-> return
     }
+
+    pub fn dot(self, rhs: Vec3D) -> f32
+    {
+        (self[0] * rhs[0]) + (self[1] * rhs[1]) + (self[2] * rhs[2])
+    }
 }
 
 impl std::ops::Index<usize> for Vec3D
@@ -71,7 +76,8 @@ impl std::ops::Div<f32> for Vec3D
 impl std::ops::Add<Vec3D> for Vec3D
 {
     type Output = Vec3D;
-    fn add(self, rhs: Vec3D) -> Self::Output {
+    fn add(self, rhs: Vec3D) -> Self::Output 
+    {
         let mut r: Vec3D = Vec3D::new(0.0, 0.0, 0.0); 
         r[0] = self.rgb[0] + rhs[0];
         r[1] = self.rgb[1] + rhs[1];   
@@ -80,4 +86,16 @@ impl std::ops::Add<Vec3D> for Vec3D
     }
 }
 
+impl std::ops::Sub<Vec3D> for Vec3D
+{
+    type Output = Vec3D;
+    fn sub(self, rhs: Vec3D) -> Self::Output 
+    {
+        let mut r: Vec3D = Vec3D::new(0.0, 0.0, 0.0);
+        r[0] = self.rgb[0] - rhs[0];
+        r[1] = self.rgb[1] - rhs[1];
+        r[2] = self.rgb[2] - rhs[2];
+        r
+    }
+}
 pub type Vec3 = Vec3D;
