@@ -1,5 +1,8 @@
 use crate::Vec3D::Vec3D;
 use crate::Ray::Ray;
+use crate::Shape::Hittable;
+use crate::HStruct;
+#[derive(Clone)]
 pub struct Triangle
 {
     A: Vec3D,
@@ -16,7 +19,12 @@ impl Triangle
         Triangle{A: a, B: b, C: c}
     }
 
-    pub fn closestHit(&self,r: Ray, tMin: f32, tMax: f32) -> bool
+    
+}
+
+impl Hittable for Triangle
+{
+    fn closestHit(&self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
     {
         let a = self.A[0] - self.B[0];
         let b = self.A[1] - self.B[1];
@@ -30,7 +38,7 @@ impl Triangle
         let j = self.A[0] - r.origin[0];
         let k = self.A[1] - r.origin[1];
         let l = self.A[2] - r.origin[2];
-
+        
         //compute M
 	    let M = a*((e*i) - (h*f)) + b*((g*f) - (d*i)) + c*((d*h) - (e*g));
 
@@ -62,8 +70,8 @@ impl Triangle
         {
    		 return false;
 	    }
-
+        h_struct.setT(T);
         true
     }
 }
-
+pub type Tri = Triangle;

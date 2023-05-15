@@ -35,3 +35,4 @@ impl CoordSys
 
     }
 }
+pub type Coord = CoordSys;

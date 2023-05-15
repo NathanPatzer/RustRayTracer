@@ -79,3 +79,5 @@ impl std::ops::Add<Vec3D> for Vec3D
         r      
     }
 }
+
+pub type Vec3 = Vec3D;

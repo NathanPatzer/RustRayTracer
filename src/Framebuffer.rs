@@ -20,11 +20,11 @@ impl Framebuffer
         }
     }
 
-    pub fn setPixelColor(&mut self ,locX: u32 ,locY: u32 , rgb: Vec3D)
+    pub fn setPixelColor(&mut self ,locX: u32 ,locY: u32 , rgb: &Vec3D)
     {
         let index: usize = ((locY * self.width) + locX) as usize;
         assert!(index < self.pixelArray.len(), "Index out of range");
-        self.pixelArray[index] = rgb;
+        self.pixelArray[index] = rgb.clone();
         
     }
 
