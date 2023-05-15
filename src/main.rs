@@ -24,12 +24,18 @@ mod HitStruct;
 mod Sphere;
 #[allow(non_snake_case)]
 mod JsonParser;
+#[allow(non_snake_case)]
+mod s_Lambertian;
+#[allow(non_snake_case)]
+mod Shader;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
 pub use Triangle::*;
 pub use HitStruct::*;
 pub use Sphere::*;
+pub use Shader::*;
+pub use s_Lambertian::*;
 
 use crate::Shape::Hittable;
 //INSTRUCTIONS
@@ -55,7 +61,7 @@ fn main() {
     let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string());
     parser.Parse(&mut sc);
     //TEST
-    let shape_refs = &sc.shapes[..];
+    let shape_refs = &sc.allShapes[..];
     let colvec: Vec<&Vec3> = vec![&red,&blue];
     let mut shapenum: i32 = 0;
     for j in 0..fb.height{
