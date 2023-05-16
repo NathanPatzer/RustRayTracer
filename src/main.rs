@@ -58,15 +58,17 @@ fn main() {
     let mut sc = SceneContainer::SceneContainer::new();
     let s = Sph::new(Vec3::new(0.0, 0.0, -5.0), 1.0);
     let l = PointLight::new(Vec3::new(0.0, 10.0, 0.0), Vec3::new(1.0, 1.0, 1.0));
-    sc.addShape(Shape::Shape::Sphere(s));
+    //sc.addShape(Shape::Shape::Sphere(s));
     sc.addLight(Light::Light::PointLight(l));
     let cam = PerspectiveCamera::new(Vec3::new(0.0, 0.0, 0.0), 0.5 as f32, 1.0 as f32, fb.width as i32, fb.height as i32, coord);
     let start = std::time::Instant::now();
 
     let lamb: Lambertian = Lambertian::new(Vec3::new(0.0, 0.0, 1.0));
 
-    //let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string());
-    //parser.Parse(&mut sc);
+    let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string(), fb.width as i32, fb.height as i32);
+
+    parser.Parse(&mut sc);
+    
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
     

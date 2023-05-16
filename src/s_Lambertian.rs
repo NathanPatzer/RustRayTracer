@@ -1,7 +1,7 @@
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
-use crate::Light::{IsLight};
-use crate::Shader;
+use crate::Light::IsLight;
+use crate::Shader::Shader;
 pub struct s_Lambertian
 {
     diffuse: Vec3
@@ -33,11 +33,11 @@ impl Shading for s_Lambertian
             lcolor[2] = light.getIntensity()[2] * self.diffuse[2];
             
             //SHADOWS
-            //let shadowRay = Shader::Shader::shadowRay(light, h_struct.getIntersect());
-            //if Shader::Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct.getShapes()) == false
-            //{
-            finalColor = finalColor + (lcolor * max);
-            //}
+            let shadowRay = Shader::shadowRay(light, h_struct.getIntersect());
+            if Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct.getShapes()) == false
+            {
+                finalColor = finalColor + (lcolor * max);
+            }
         }
         finalColor
     }
