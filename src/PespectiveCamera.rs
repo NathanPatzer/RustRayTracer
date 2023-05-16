@@ -1,6 +1,7 @@
 use crate::Vec3D::Vec3D;
 use crate::CoordSys::CoordSys;
 use crate::Ray::Ray;
+use crate::Camera::canGenRay;
 pub struct PerspectiveCamera
 {
     pos: Vec3D,
@@ -21,7 +22,12 @@ impl PerspectiveCamera
         PerspectiveCamera { pos: (pos), planeW: (planeW), planeH: (planeH), focalLength: (focalLength), dimX: (dimX), dimY: (dimY), coord: (coord) }
     }
 
-    pub fn genRay(&self, i: i32, j: i32, offI: f32, offJ: f32) -> Ray
+
+}
+
+impl canGenRay for PerspectiveCamera
+{
+    fn genRay(&self, i: i32, j: i32, offI: f32, offJ: f32) -> Ray
     {
         let left: f32 = -self.planeW / 2.0;
         let right: f32 = self.planeW / 2.0;

@@ -44,7 +44,7 @@ impl JsonParser
         let v1 = json["scene"]["shape"][0].get("v1").unwrap().as_str().unwrap();
         let v2 = json["scene"]["shape"][0].get("v2").unwrap().as_str().unwrap();
         //println!("{}", v0.unwrap());
-        scene.addTriangle(Tri::new(self::JsonParser::getVec(v0) ,self::JsonParser::getVec(v1),self::JsonParser::getVec(v2)));
+        //scene.addTriangle(Tri::new(self::JsonParser::getVec(v0) ,self::JsonParser::getVec(v1),self::JsonParser::getVec(v2)));
     }
 
     //helper function that converts "a b c" into a vec3(a,b,c)

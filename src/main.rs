@@ -28,6 +28,12 @@ mod JsonParser;
 mod s_Lambertian;
 #[allow(non_snake_case)]
 mod Shader;
+#[allow(non_snake_case)]
+mod Light;
+#[allow(non_snake_case)]
+mod l_PointLight;
+#[allow(non_snake_case)]
+mod Camera;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -36,8 +42,9 @@ pub use HitStruct::*;
 pub use Sphere::*;
 pub use Shader::*;
 pub use s_Lambertian::*;
+pub use l_PointLight::*;
 
-use crate::Shape::Hittable;
+use crate::{Shape::Hittable, Camera::canGenRay};
 //INSTRUCTIONS
 // ./exe [FILENAME]
 
@@ -67,7 +74,6 @@ fn main() {
     for j in 0..fb.height{
         for i in 0..fb.width
         {   
-
             let max_t = INFINITY; 
             let mut min_t = 1.0;
             let r = cam.genRay(i as i32, j as i32, 0.0, 0.0);

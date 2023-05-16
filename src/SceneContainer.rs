@@ -1,12 +1,16 @@
-use crate::Triangle::Triangle;
+use crate::Tri;
 use crate::Shape::Shape;
 use crate::Sph;
 use std::collections::HashMap;
 use crate::Shader::Shader;
+use crate::Light::Light;
+use crate::Camera::Camera;
 pub struct SceneContainer
 {
     pub allShapes: Vec<Shape>,
-    pub allShaders: HashMap<String,Shader>
+    pub allShaders: HashMap<String,Shader>,
+    pub allLights: Vec<Light>,
+    pub allCameras: Vec<Camera>
 }
 
 
@@ -17,15 +21,48 @@ impl SceneContainer
     {
         let v: Vec<Shape> = Vec::new();
         let s: HashMap<String,Shader> = HashMap::new();
-        SceneContainer { allShapes: v, allShaders: s }
+        let l: Vec<Light> = Vec::new();
+        let c: Vec<Camera> = Vec::new();
+        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c }
     }
-    pub fn addTriangle(&mut self, tri: Triangle)
-    {
-        self.allShapes.push(Shape::Triangle(tri));
-    } 
 
-    pub fn addSpheres(&mut self, s: Sph)
+    pub fn addShape(&mut self, shape: Shape)
     {
-        self.allShapes.push(Shape::Sphere(s))
+        match shape
+        {
+            Shape::Sphere(s) => self.allShapes.push(Shape::Sphere(s)),
+            Shape::Triangle(t) => self.allShapes.push(Shape::Triangle(t))
+        }
+    }
+
+    pub fn addShader(&mut self, shader: Shader, name: String)
+    {
+        match shader
+        {
+            Shader::Lambertian(l) => 
+            {
+                match self.allShaders.insert(name, Shader::Lambertian(l))
+                {
+                    None => (),
+                    Some(_old_shader) => println!("Replaced old shader"),
+                }
+            }
+        }
+    }
+
+    pub fn addLight(&mut self, light: Light)
+    {
+        match light
+        {
+            Light::PointLight(l) => self.allLights.push(Light::PointLight(l)),
+        }
+    }
+
+    pub fn addCamera(&mut self, cam: Camera)
+    {
+        match cam
+        {
+            Camera::PerpectiveCamera(p) => self.allCameras.push(Camera::PerpectiveCamera(p))
+        }
     }
 }

@@ -32,6 +32,15 @@ impl Vec3D{
     {
         (self[0] * rhs[0]) + (self[1] * rhs[1]) + (self[2] * rhs[2])
     }
+
+    pub fn normalize(&self) -> Vec3D
+    {
+        let mut norm = Vec3D::new(0.0, 0.0, 0.0);
+        norm[0] = self[0] / self.length();
+        norm[1] = self[1] / self.length();
+        norm[2] = self[2] / self.length();
+        norm
+    }
 }
 
 impl std::ops::Index<usize> for Vec3D
@@ -90,6 +99,19 @@ impl std::ops::Sub<&Vec3D> for &Vec3D
 {
     type Output = Vec3D;
     fn sub(self, rhs: &Vec3D) -> Self::Output 
+    {
+        let mut r: Vec3D = Vec3D::new(0.0, 0.0, 0.0);
+        r[0] = self.rgb[0] - rhs[0];
+        r[1] = self.rgb[1] - rhs[1];
+        r[2] = self.rgb[2] - rhs[2];
+        r
+    }
+}
+
+impl std::ops::Sub<Vec3D> for Vec3D
+{
+    type Output = Vec3D;
+    fn sub(self, rhs: Vec3D) -> Self::Output 
     {
         let mut r: Vec3D = Vec3D::new(0.0, 0.0, 0.0);
         r[0] = self.rgb[0] - rhs[0];

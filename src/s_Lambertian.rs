@@ -1,4 +1,4 @@
-use crate::Vec3;
+use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
 pub struct s_Lambertian
 {
@@ -15,7 +15,7 @@ impl s_Lambertian
 
 impl Shading for s_Lambertian
 {
-    fn apply(&self,h_struct: &crate::HStruct) -> Vec3 
+    fn apply(&self,h_struct: &HStruct) -> Vec3 
     {
         Vec3::new(0.0, 0.0, 0.0)    
     }
