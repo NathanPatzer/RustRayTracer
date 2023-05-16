@@ -65,8 +65,8 @@ fn main() {
 
     let lamb: Lambertian = Lambertian::new(Vec3::new(0.0, 0.0, 1.0));
 
-    let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string());
-    parser.Parse(&mut sc);
+    //let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string());
+    //parser.Parse(&mut sc);
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
     

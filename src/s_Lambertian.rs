@@ -24,6 +24,7 @@ impl Shading for s_Lambertian
         for light in lights
         {
             let L = (light.getPos() - h_struct.getIntersect()).normalize();
+            
             let ndotl = h_struct.getNormal().dot(&L);
             let max: f32 = 0.0_f32.max(ndotl);
             let mut lcolor = Vec3::newEmpty();
@@ -32,11 +33,11 @@ impl Shading for s_Lambertian
             lcolor[2] = light.getIntensity()[2] * self.diffuse[2];
             
             //SHADOWS
-            let shadowRay = Shader::Shader::shadowRay(light, h_struct.getIntersect());
-            if Shader::Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct.getShapes()) == false
-            {
-                finalColor = finalColor + (lcolor * max);
-            }
+            //let shadowRay = Shader::Shader::shadowRay(light, h_struct.getIntersect());
+            //if Shader::Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct.getShapes()) == false
+            //{
+            finalColor = finalColor + (lcolor * max);
+            //}
         }
         finalColor
     }

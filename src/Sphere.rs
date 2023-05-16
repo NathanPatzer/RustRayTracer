@@ -16,11 +16,11 @@ impl Sphere
         Sphere{center: c, radius: r}
     }
 
-    pub fn calcualteNormal(r: &Ray, center: &Vec3, T: f32) -> Vec3
+    pub fn calcualteNormal(r: &Ray, center: Vec3, T: f32) -> Vec3
     {
         let intersect = r.origin + (r.dir * T);
-        let norm = (intersect - *center).normalize();
-        norm
+        let norm = intersect - center;
+        norm.normalize()
     }
 }
 
@@ -50,7 +50,7 @@ impl Hittable for Sphere
             {
                 h_struct.setT(T);
                 h_struct.setIntersect(r.origin + (r.dir * T));
-                h_struct.setNormal(self::Sphere::calcualteNormal(r, &self.center, T));
+                h_struct.setNormal(self::Sphere::calcualteNormal(r, self.center, T));
                 h_struct.setRay(Ray::new(r.dir, r.origin));
                 return true;
             }
