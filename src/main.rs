@@ -50,30 +50,32 @@ use crate::{Shape::Hittable, Camera::canGenRay};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    
-    let red= Vec3::new(1.0, 0.0, 0.0);
-    let black= Vec3::new(0.0, 0.0, 0.0);
-    let blue = Vec3::new(0.0,0.0,1.0);
+    //let black= Vec3::new(0.0, 0.0, 0.0);
     let coord = Coord::new(Vec3::new(0.0,0.0,-1.0), Vec3::new(0.0,1.0,0.0));
     let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
-    fb.setBackground(black);
+    fb.setBackground(Vec3::new(0.2, 0.2, 0.2));
 
     let mut sc = SceneContainer::SceneContainer::new();
-
-    let cam = PerspectiveCamera::new(Vec3::new(0.0, 0.0, 0.0), 0.5 as f32, 0.5 as f32, fb.width as i32, fb.height as i32, coord);
+    let s = Sph::new(Vec3::new(0.0, 0.0, -5.0), 1.0);
+    let l = PointLight::new(Vec3::new(0.0, 5.0, 0.0), Vec3::new(1.0, 1.0, 1.0));
+    sc.addShape(Shape::Shape::Sphere(s));
+    sc.addLight(Light::Light::PointLight(l));
+    let cam = PerspectiveCamera::new(Vec3::new(0.0, 0.0, 0.0), 0.5 as f32, 1.0 as f32, fb.width as i32, fb.height as i32, coord);
     let start = std::time::Instant::now();
 
-    let h = &mut HStruct::new();
+    let lamb: Lambertian = Lambertian::new(Vec3::new(0.0, 1.0, 0.0));
 
     let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string());
     parser.Parse(&mut sc);
-    //TEST
-    let shape_refs = &sc.allShapes[..];
-    let colvec: Vec<&Vec3> = vec![&red,&blue];
-    let mut shapenum: i32 = 0;
+    let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
+    let light_refs: &[Light::Light] = &sc.allLights[..];
+    
     for j in 0..fb.height{
         for i in 0..fb.width
-        {   
+        {
+            let h: &mut HStruct = &mut HStruct::new();   
+            h.setShapes(shape_refs.to_vec());
+            h.setLights(light_refs.to_vec());
             let max_t = INFINITY; 
             let mut min_t = 1.0;
             let r = cam.genRay(i as i32, j as i32, 0.0, 0.0);
@@ -82,12 +84,9 @@ fn main() {
                 if s.closestHit(&r, min_t, max_t, h)
                 {
                     min_t = h.getT();
-                    fb.setPixelColor(i, j, colvec[shapenum as usize]);
+                    fb.setPixelColor(i, j, &lamb.apply(h));
                 }
-                shapenum = shapenum + 1;
             }
-            shapenum = 0;
-            h.setT(1.0);
         }
     }
     let end = std::time::Instant::now();

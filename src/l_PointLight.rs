@@ -1,12 +1,21 @@
 use crate::Vec3;
-use crate::Light::isLight;
+use crate::Light::IsLight;
+#[derive(Clone,Copy)]
 pub struct l_PointLight
 {
     pos: Vec3,
     intensity: Vec3
 }
 
-impl isLight for l_PointLight
+impl l_PointLight
+{
+    pub fn new(pos: Vec3, intensity: Vec3) -> l_PointLight
+    {
+        l_PointLight { pos: pos, intensity: intensity }
+    }
+}
+
+impl IsLight for l_PointLight
 {
     fn getIntensity(&self) -> Vec3 
     {

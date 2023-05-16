@@ -14,6 +14,12 @@ impl Vec3D{
         Vec3D{rgb}      
     }
 
+    pub fn newEmpty() -> Vec3D
+    {
+        let rgb: [f32;3] = [0.0;3];
+        Vec3D { rgb: (rgb) }
+    }
+
     pub fn length(&self) -> f32
     {
         (self.rgb[0] * self.rgb[0]) + (self.rgb[1] * self.rgb[1]) + (self.rgb[2] * self.rgb[2]).sqrt()
@@ -21,7 +27,7 @@ impl Vec3D{
 
     pub fn crossProduct(self,rhs: Vec3D) -> Vec3D
     {
-        let mut cross = Vec3D::new(0.0, 0.0, 0.0);
+        let mut cross = Vec3D::newEmpty();
         cross[0] = (self.rgb[1] * rhs[2]) - (self.rgb[2] * rhs[1]);
         cross[1] = (self.rgb[2] * rhs[0]) - (self.rgb[0] * rhs[2]);
         cross[2] = (self.rgb[0] * rhs[1]) - (self.rgb[1] * rhs[0]);
@@ -35,11 +41,16 @@ impl Vec3D{
 
     pub fn normalize(&self) -> Vec3D
     {
-        let mut norm = Vec3D::new(0.0, 0.0, 0.0);
+        let mut norm = Vec3D::newEmpty();
         norm[0] = self[0] / self.length();
         norm[1] = self[1] / self.length();
         norm[2] = self[2] / self.length();
         norm
+    }
+
+    pub fn print(&self)
+    {
+        println!("{} {} {}", self.rgb[0], self.rgb[1], self.rgb[2]);
     }
 }
 
@@ -113,7 +124,7 @@ impl std::ops::Sub<Vec3D> for Vec3D
     type Output = Vec3D;
     fn sub(self, rhs: Vec3D) -> Self::Output 
     {
-        let mut r: Vec3D = Vec3D::new(0.0, 0.0, 0.0);
+        let mut r: Vec3D = Vec3D::newEmpty();
         r[0] = self.rgb[0] - rhs[0];
         r[1] = self.rgb[1] - rhs[1];
         r[2] = self.rgb[2] - rhs[2];
@@ -130,6 +141,19 @@ impl std::ops::Mul<f32> for &Vec3D
         let g = self.rgb[1] * rhs;
         let b = self.rgb[2] * rhs;
         Vec3D { rgb: [r,g,b] }
+    }
+}
+
+impl std::ops::Add<f32> for Vec3D
+{
+    type Output = Vec3D;
+    fn add(self, rhs: f32) -> Self::Output
+    {
+        let mut r = Vec3::newEmpty();
+        r[0] = self.rgb[0] + rhs;
+        r[1] = self.rgb[1] + rhs;
+        r[2] = self.rgb[2] + rhs;
+        r
     }
 }
 

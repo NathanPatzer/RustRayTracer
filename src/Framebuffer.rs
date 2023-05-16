@@ -16,7 +16,7 @@ impl Framebuffer
         {
             width: w,
             height: h,
-            pixelArray: vec![Vec3D::new(0.0,0.0,0.0); arraySize]
+            pixelArray: vec![Vec3D::newEmpty(); arraySize]
         }
     }
 

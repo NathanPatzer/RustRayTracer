@@ -1,5 +1,5 @@
 use crate::Vec3D::Vec3D;
-
+#[derive(Clone,Copy)]
 pub struct Ray
 {
     pub dir: Vec3D,

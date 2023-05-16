@@ -33,7 +33,7 @@ impl Hittable for Sphere
         let b = 2.0 * &oc.dot(&r.dir);
         let c = oc.dot(&oc) - (self.radius * self.radius);
         let disc = (b*b) - (4.0*a*c);
-
+        
         if disc < 0.0
         {
             return false;
@@ -49,6 +49,9 @@ impl Hittable for Sphere
             else 
             {
                 h_struct.setT(T);
+                h_struct.setIntersect(r.origin + (r.dir * T));
+                h_struct.setNormal(self::Sphere::calcualteNormal(r, &self.center, T));
+                h_struct.setRay(Ray::new(r.dir, r.origin));
                 return true;
             }
         }

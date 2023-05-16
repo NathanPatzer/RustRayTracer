@@ -7,19 +7,24 @@ pub struct Triangle
 {
     A: Vec3D,
     B: Vec3D,
-    C: Vec3D
+    C: Vec3D,
+    normal: Vec3D
 }
-
 
 impl Triangle
 {
 
     pub fn new(a: Vec3D, b: Vec3D, c: Vec3D) -> Triangle
     {
-        Triangle{A: a, B: b, C: c}
+        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c)}
     }
 
-    
+    fn calcualteNormal(A: Vec3D, B: Vec3D, C: Vec3D) -> Vec3D
+    {
+        let a = B - A;
+        let b = C - A;
+        a.crossProduct(b).normalize()
+    }
 }
 
 impl Hittable for Triangle
@@ -71,6 +76,9 @@ impl Hittable for Triangle
    		 return false;
 	    }
         h_struct.setT(T);
+        h_struct.setNormal(self.normal);
+        h_struct.setIntersect(r.origin + (r.dir * T));
+        h_struct.setRay(Ray::new(r.dir, r.origin));
         true
     }
 }
