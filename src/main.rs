@@ -44,7 +44,7 @@ pub use Shader::*;
 pub use s_Lambertian::*;
 pub use l_PointLight::*;
 
-use crate::{Shape::Hittable, Camera::canGenRay};
+use crate::{Shape::Hittable, Camera::CanGenRay};
 //INSTRUCTIONS
 // ./exe [FILENAME]
 
@@ -56,7 +56,7 @@ fn main() {
     fb.setBackground(Vec3::new(0.2, 0.2, 0.2));
 
     let mut sc = SceneContainer::SceneContainer::new();
-    let s = Sph::new(Vec3::new(0.0, 0.0, -5.0), 1.0);
+    //let s = Sph::new(Vec3::new(0.0, 0.0, -5.0), 1.0);
     let l = PointLight::new(Vec3::new(0.0, 10.0, 0.0), Vec3::new(1.0, 1.0, 1.0));
     //sc.addShape(Shape::Shape::Sphere(s));
     sc.addLight(Light::Light::PointLight(l));
@@ -68,7 +68,7 @@ fn main() {
     let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string(), fb.width as i32, fb.height as i32);
 
     parser.Parse(&mut sc);
-    
+
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
     

@@ -5,12 +5,12 @@ pub enum Camera
     PerpectiveCamera(PerspectiveCamera)
 }
 
-pub trait canGenRay
+pub trait CanGenRay
 {
     fn genRay(&self, i: i32, j: i32, offI: f32, offJ: f32) -> Ray;
 }
 
-impl canGenRay for Camera
+impl CanGenRay for Camera
 {
     fn genRay(&self, i: i32, j: i32, offI: f32, offJ: f32) -> Ray
     {

@@ -1,6 +1,4 @@
-use crate::Tri;
 use crate::Shape::Shape;
-use crate::Sph;
 use std::collections::HashMap;
 use crate::Shader::Shader;
 use crate::Light::Light;
