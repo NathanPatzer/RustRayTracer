@@ -39,6 +39,8 @@ mod Camera;
 mod s_BlinnPhong;
 #[allow(non_snake_case)]
 mod sBox;
+#[allow(non_snake_case)]
+mod ArgsChecker;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -51,23 +53,27 @@ pub use l_PointLight::*;
 pub use s_BlinnPhong::*;
 pub use sBox::*;
 use crate::Camera::CanGenRay;
+use crate::ArgsChecker::*;
 //INSTRUCTIONS
 // ./exe [FILENAME]
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
+    let plainargs: Vec<String> = std::env::args().collect();
+    let args: Args = Args::new(plainargs);
+    
+    let mut fb = Framebuffer::Framebuffer::new(args.width, args.height);
 
     let mut sc = SceneContainer::SceneContainer::new();
-    
-    let parser = JsonParser::JsonParser::new("SceneData/threeTriangles.json".to_string(), fb.width as i32, fb.height as i32);
+    sc.background_color = Vec3::new(0.2, 0.2, 0.2);
+    assert!(args.json.len() > 0, "NO JSON SUPPLIED");
+    let parser = JsonParser::JsonParser::new(args.json, args.width as i32, args.height as i32);
 
     parser.Parse(&mut sc);
     let cam = sc.getCamera();
     let min_t = 1.0;
-    let rpp = 1;
+    let rpp = args.rpp;
     let mut rng: rand::rngs::ThreadRng = rand::thread_rng();
-    let depth = 1;
+    let depth = args.depth;
     let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
@@ -97,7 +103,7 @@ fn main() {
     }
     let end = std::time::Instant::now();
     
-    let filepath: String = "IMAGES/".to_owned() + &args[1] + ".png";
+    let filepath: String = "IMAGES/".to_owned() + &args.name + ".png";
     fb.exportAsPng(filepath);
     
     let elapsed_time = end - start;

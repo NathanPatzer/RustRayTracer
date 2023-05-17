@@ -12,18 +12,16 @@ pub struct PerspectiveCamera
     dimX: i32,
     dimY: i32,
     coord: CoordSys
-
 }
 
 impl PerspectiveCamera
 {
     pub fn new(pos: Vec3D, planeW: f32, focalLength: f32, dimX: i32, dimY: i32, coord: CoordSys) -> PerspectiveCamera
     {
-        let planeH = planeW * (dimY / dimX) as f32;
+        let ratio = dimY as f32 / dimX as f32;
+        let planeH = planeW * ratio;
         PerspectiveCamera { pos: (pos), planeW: (planeW), planeH: (planeH), focalLength: (focalLength), dimX: (dimX), dimY: (dimY), coord: (coord) }
     }
-
-
 }
 
 impl CanGenRay for PerspectiveCamera
@@ -33,12 +31,13 @@ impl CanGenRay for PerspectiveCamera
         let left: f32 = -self.planeW / 2.0;
         let right: f32 = self.planeW / 2.0;
         let bottom: f32 = -self.planeH / 2.0;
-        let top: f32 = self.planeW / 2.0;
+        let top: f32 = self.planeH / 2.0;
         
-        let u: f32 = left + (right-left) * ((i as f32 + offI) / self.dimX as f32) as f32;
-        let v: f32 = bottom + (top - bottom) * ((j as f32 + offJ) / self.dimY as f32) as f32;
+        let u: f32 = left + ((right-left) * ((i as f32 + offI) / self.dimX as f32));
+        let v: f32 = bottom + ((top - bottom) * ((j as f32 + offJ) / self.dimY as f32));
 
-        let dir: Vec3D = (&self.coord.W * -1.0 * self.focalLength) + (&self.coord.U * u) + (&self.coord.V * v);
-        Ray::new(dir, self.pos.clone())
+        //let dir: Vec3D = (&self.coord.W * -1.0 * self.focalLength) + (&self.coord.U * u) + (&self.coord.V * v);
+        let dir: Vec3D = &self.coord.W * -1.0 * self.focalLength + self.coord.U * u + self.coord.V * v;
+        Ray::new(dir, self.pos)
     }
 }

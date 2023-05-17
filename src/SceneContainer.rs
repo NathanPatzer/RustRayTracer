@@ -12,7 +12,7 @@ pub struct SceneContainer
     pub allShaders: HashMap<String,Shader>,
     pub allLights: Vec<Light>,
     pub allCameras: Vec<Camera>,
-    background_color: Vec3
+    pub background_color: Vec3
 }
 
 

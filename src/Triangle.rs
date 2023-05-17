@@ -25,7 +25,7 @@ impl Triangle
     {
         let a = B - A;
         let b = C - A;
-        a.crossProduct(b).normalize()
+        a.crossProduct(&b).normalize()
     }
 }
 

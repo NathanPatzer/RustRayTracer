@@ -20,7 +20,7 @@ impl Vec3D{
         ((self.rgb[0] * self.rgb[0]) + (self.rgb[1] * self.rgb[1]) + (self.rgb[2] * self.rgb[2])).sqrt()
     }
 
-    pub fn crossProduct(self,rhs: Vec3D) -> Vec3D
+    pub fn crossProduct(self,rhs: &Vec3D) -> Vec3D
     {
         let mut cross = Vec3D::newEmpty();
         cross[0] = (self.rgb[1] * rhs[2]) - (self.rgb[2] * rhs[1]);
@@ -82,6 +82,18 @@ impl std::ops::Mul<f32> for Vec3D
 }
 
 impl std::ops::Div<f32> for Vec3D
+{
+    type Output = Vec3D;
+    fn div(self, rhs: f32) -> Vec3D 
+    {
+        let r = self.rgb[0] / rhs;
+        let g = self.rgb[1] / rhs;
+        let b = self.rgb[2] / rhs;
+        Vec3D { rgb: [r,g,b] }
+    }
+}
+
+impl std::ops::Div<f32> for &Vec3D
 {
     type Output = Vec3D;
     fn div(self, rhs: f32) -> Vec3D 
