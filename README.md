@@ -2,7 +2,7 @@
 
 This is a raytracer written in Rust that generates images using various command-line arguments.
 
-## Usage
+## Setup
 
 To run the raytracer, follow the steps below:
 
@@ -16,9 +16,16 @@ git clone https://github.com/NathanPatzer/RustRayTracer.git
 ```
 cd RustRayTracer
 ```
+## Usage
 4. Build the project: Run the following command to build the raytracer.
 ```
 cargo build
+ .\target\debug\project.exe [Arguments]
+```
+or for an optimized version
+```
+cargo build --release
+ .\target\release\project.exe [Arguments]
 ```
 5. Run the raytracer: Execute the raytracer with the desired command-line arguments. The available options are as follows:
 
