@@ -7,17 +7,12 @@ pub struct Vec3D{
 impl Vec3D{
     pub fn new(a: f32, b: f32, c: f32) -> Vec3D
     {
-        let mut rgb: [f32;3] = [0.0;3];
-        rgb[0] = a;
-        rgb[1] = b;
-        rgb[2] = c;
-        Vec3D{rgb}      
+        Vec3D{rgb: [a,b,c]}      
     }
 
     pub fn newEmpty() -> Vec3D
     {
-        let rgb: [f32;3] = [0.0;3];
-        Vec3D { rgb: (rgb) }
+        Vec3D { rgb: [0.0,0.0,0.0] }
     }
 
     pub fn length(&self) -> f32

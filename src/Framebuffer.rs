@@ -24,7 +24,7 @@ impl Framebuffer
     {
         let index: usize = ((locY * self.width) + locX) as usize;
         assert!(index < self.pixelArray.len(), "Index out of range");
-        self.pixelArray[index] = rgb.clone();
+        self.pixelArray[index] = *rgb;
         
     }
 
@@ -57,11 +57,12 @@ impl Framebuffer
         }
     }
 
+    #[allow(dead_code)]
     pub fn setBackground(&mut self,color: Vec3D)
     {
         for i in 0u32..self.pixelArray.len() as u32
         {
-            self.pixelArray[i as usize] = color.clone();
+            self.pixelArray[i as usize] = color;
         }
     }
 }

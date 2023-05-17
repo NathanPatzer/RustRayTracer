@@ -50,27 +50,32 @@ pub use s_Lambertian::*;
 pub use l_PointLight::*;
 pub use s_BlinnPhong::*;
 pub use sBox::*;
-use crate::{Shape::Hittable, Camera::CanGenRay};
+use crate::Camera::CanGenRay;
 //INSTRUCTIONS
 // ./exe [FILENAME]
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let mut fb = Framebuffer::Framebuffer::new(100, 100);
-    //fb.setBackground(Vec3::new(0.2, 0.2, 0.2));
+    let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
 
     let mut sc = SceneContainer::SceneContainer::new();
     
-    let parser = JsonParser::JsonParser::new("SceneData/phongExp.json".to_string(), fb.width as i32, fb.height as i32);
+    let parser = JsonParser::JsonParser::new("SceneData/threeTriangles.json".to_string(), fb.width as i32, fb.height as i32);
 
     parser.Parse(&mut sc);
     let cam = sc.getCamera();
+    let min_t = 1.0;
+    let rpp = 1;
+    let mut rng: rand::rngs::ThreadRng = rand::thread_rng();
+    let depth = 1;
+    let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
+    hit_struct.setShapes(shape_refs.to_vec());
+    hit_struct.setLights(light_refs.to_vec());
+    let max_t = INFINITY;
+
     let start = std::time::Instant::now();
-    let min_t = 1.0;
-    let rpp = 5;
-    let mut rng = rand::thread_rng();
     for j in 0..fb.height{
         for i in 0..fb.width
         {
@@ -82,35 +87,19 @@ fn main() {
                 {
                     let off_i: f32 = (p as f32 + rng.gen::<f32>()) / rpp as f32;
                     let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
-
-                    let h: &mut HStruct = &mut HStruct::new();   
-                    h.setShapes(shape_refs.to_vec());
-                    h.setLights(light_refs.to_vec());
-                    let mut max_t = INFINITY; 
-                    
                     let r = cam.genRay(i as i32, j as i32, off_i, off_j);
-                    for s in shape_refs
-                    {   
-                        if s.closestHit(&r, min_t, max_t, h)
-                        {   
-                            let shader_name = s.getShaderName();
-                            let shader = sc.allShaders.get(&shader_name).expect("INVALID SHADER");
-                            max_t = h.getT();
-                            pixel_color = pixel_color + &shader.apply(h);
-                        }
-                    }
+                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, depth, hit_struct)
                 }
             }
             pixel_color = pixel_color / (rpp*rpp) as f32;
             fb.setPixelColor(i, j, &pixel_color)
         }
     }
-
     let end = std::time::Instant::now();
+    
     let filepath: String = "IMAGES/".to_owned() + &args[1] + ".png";
     fb.exportAsPng(filepath);
     
     let elapsed_time = end - start;
     println!("Time to render: {:?}", elapsed_time);
 }
-
