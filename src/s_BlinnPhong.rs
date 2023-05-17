@@ -1,7 +1,7 @@
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
 use crate::Light::IsLight;
-
+use crate::Shader::Shader;
 #[allow(non_camel_case_types)]
 
 pub struct s_BlinnPhong
@@ -50,8 +50,11 @@ impl Shading for s_BlinnPhong
             lcolor = lcolor * max;
 
             //SHADOWS
-
+            let shadowRay = Shader::shadowRay(light, h_struct.getIntersect());
+            if Shader::anyHit(shadowRay, 0.0001, 1.0, h_struct.getShapes()) == false
+            {
             finalColor = finalColor + (lcolor + specular);
+            }
 
         }
 

@@ -162,4 +162,17 @@ impl std::ops::Add<f32> for Vec3D
     }
 }
 
+impl std::ops::Add<&Vec3D> for Vec3D
+{
+    type Output = Vec3D;
+    fn add(self, rhs: &Vec3D) -> Self::Output 
+    {
+        let mut r = Vec3::newEmpty();
+        r[0] = self.rgb[0] + rhs[0];
+        r[1] = self.rgb[1] + rhs[1];
+        r[2] = self.rgb[2] + rhs[2];
+        r
+    }
+}
+
 pub type Vec3 = Vec3D; 

@@ -1,3 +1,4 @@
+use rand::Rng;
 use PespectiveCamera::PerspectiveCamera;
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
 
@@ -55,8 +56,8 @@ use crate::{Shape::Hittable, Camera::CanGenRay};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
-    fb.setBackground(Vec3::new(0.2, 0.2, 0.2));
+    let mut fb = Framebuffer::Framebuffer::new(100, 100);
+    //fb.setBackground(Vec3::new(0.2, 0.2, 0.2));
 
     let mut sc = SceneContainer::SceneContainer::new();
     
@@ -68,25 +69,40 @@ fn main() {
     let light_refs: &[Light::Light] = &sc.allLights[..];
     let start = std::time::Instant::now();
     let min_t = 1.0;
+    let rpp = 5;
+    let mut rng = rand::thread_rng();
     for j in 0..fb.height{
         for i in 0..fb.width
         {
-            let h: &mut HStruct = &mut HStruct::new();   
-            h.setShapes(shape_refs.to_vec());
-            h.setLights(light_refs.to_vec());
-            let mut max_t = INFINITY; 
-            
-            let r = cam.genRay(i as i32, j as i32, 0.0, 0.0);
-            for s in shape_refs
-            {   
-                if s.closestHit(&r, min_t, max_t, h)
-                {   
-                    let shader_name = s.getShaderName();
-                    let shader = sc.allShaders.get(&shader_name).expect("INVALID SHADER");
-                    max_t = h.getT();
-                    fb.setPixelColor(i, j, &shader.apply(h));
+            let mut pixel_color = Vec3::newEmpty();
+            //ANTI ALIASING
+            for p in 0..rpp
+            {
+                for q in 0..rpp
+                {
+                    let off_i: f32 = (p as f32 + rng.gen::<f32>()) / rpp as f32;
+                    let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
+
+                    let h: &mut HStruct = &mut HStruct::new();   
+                    h.setShapes(shape_refs.to_vec());
+                    h.setLights(light_refs.to_vec());
+                    let mut max_t = INFINITY; 
+                    
+                    let r = cam.genRay(i as i32, j as i32, off_i, off_j);
+                    for s in shape_refs
+                    {   
+                        if s.closestHit(&r, min_t, max_t, h)
+                        {   
+                            let shader_name = s.getShaderName();
+                            let shader = sc.allShaders.get(&shader_name).expect("INVALID SHADER");
+                            max_t = h.getT();
+                            pixel_color = pixel_color + &shader.apply(h);
+                        }
+                    }
                 }
             }
+            pixel_color = pixel_color / (rpp*rpp) as f32;
+            fb.setPixelColor(i, j, &pixel_color)
         }
     }
 
