@@ -1,0 +1,165 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 0.0 5.0",
+	    "viewDir": "0 0.0 -1.0",
+	    "focalLength": 0.40,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "-10.0 10.0 10.0",
+	    "intensity": "0.94 0.94 0.74",
+	    "_type": "point"
+	}],
+	"shader": [
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 2.0,
+		"_name": "redBlinnPhong_2",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 4.0,
+		"_name": "redBlinnPhong_4",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 8.0,
+		"_name": "redBlinnPhong_8",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 16.0,
+		"_name": "redBlinnPhong_16",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 32.0,
+		"_name": "redBlinnPhong_32",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 64.0,
+		"_name": "redBlinnPhong_64",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 128.0,
+		"_name": "redBlinnPhong_128",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 256.0,
+		"_name": "redBlinnPhong_256",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 512.0,
+		"_name": "redBlinnPhong_512",
+		"_type": "BlinnPhong"
+	    }
+	],
+	"shape": [
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_2"
+		},
+		"center": "-3.0 -3.0 -3.0",
+		"radius": 1.0,
+		"_name": "s1",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_4"
+		},
+		"center": "0.0 -3.0 -3.0",
+		"radius": 1.0,
+		"_name": "s4",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_8"
+		},
+		"center": "3.0 -3.0 -3.0",
+		"radius": 1.0,
+		"_name": "s8",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_16"
+		},
+		"center": "-3.0 0.0 -3.0",
+		"radius": 1.0,
+		"_name": "s16",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_32"
+		},
+		"center": "0.0 0.0 -3.0",
+		"radius": 1.0,
+		"_name": "s32",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_64"
+		},
+		"center": "3.0 0.0 -3.0",
+		"radius": 1.0,
+		"_name": "s64",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_128"
+		},
+		"center": "-3.0 3.0 -3.0",
+		"radius": 1.0,
+		"_name": "s128",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_256"
+		},
+		"center": "0.0 3.0 -3.0",
+		"radius": 1.0,
+		"_name": "s256",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redBlinnPhong_512"
+		},
+		"center": "3.0 3.0 -3.0",
+		"radius": 1.0,
+		"_name": "s512",
+		"_type": "sphere"
+	    }
+	]
+    }
+}

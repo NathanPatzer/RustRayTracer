@@ -34,6 +34,8 @@ mod Light;
 mod l_PointLight;
 #[allow(non_snake_case)]
 mod Camera;
+#[allow(non_snake_case)]
+mod s_BlinnPhong;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -43,6 +45,7 @@ pub use Sphere::*;
 pub use Shader::*;
 pub use s_Lambertian::*;
 pub use l_PointLight::*;
+pub use s_BlinnPhong::*;
 
 use crate::{Shape::Hittable, Camera::CanGenRay};
 //INSTRUCTIONS
@@ -50,28 +53,19 @@ use crate::{Shape::Hittable, Camera::CanGenRay};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    //let black= Vec3::new(0.0, 0.0, 0.0);
-    let coord = Coord::new(Vec3::new(0.0,0.0,-1.0), Vec3::new(0.0,1.0,0.0));
     let mut fb = Framebuffer::Framebuffer::new(1000, 1000);
     fb.setBackground(Vec3::new(0.2, 0.2, 0.2));
 
     let mut sc = SceneContainer::SceneContainer::new();
-    //let s = Sph::new(Vec3::new(0.0, 0.0, -5.0), 1.0);
-    let l = PointLight::new(Vec3::new(0.0, 10.0, 0.0), Vec3::new(1.0, 1.0, 1.0));
-    //sc.addShape(Shape::Shape::Sphere(s));
-    sc.addLight(Light::Light::PointLight(l));
-    let cam = PerspectiveCamera::new(Vec3::new(0.0, 0.0, 0.0), 0.5 as f32, 1.0 as f32, fb.width as i32, fb.height as i32, coord);
-    let start = std::time::Instant::now();
-
-    let lamb: Lambertian = Lambertian::new(Vec3::new(0.0, 0.0, 1.0));
-
-    let parser = JsonParser::JsonParser::new("SceneData/oneTriangle.json".to_string(), fb.width as i32, fb.height as i32);
+    
+    let parser = JsonParser::JsonParser::new("SceneData/phongExp.json".to_string(), fb.width as i32, fb.height as i32);
 
     parser.Parse(&mut sc);
-
+    let cam = sc.getCamera();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
-    
+
+    let start = std::time::Instant::now();
     for j in 0..fb.height{
         for i in 0..fb.width
         {
@@ -84,13 +78,16 @@ fn main() {
             for s in shape_refs
             {   
                 if s.closestHit(&r, min_t, max_t, h)
-                {
+                {   
+                    let shader_name = s.getShaderName();
+                    let shader = sc.allShaders.get(&shader_name).expect("INVALID SHADER");
                     min_t = h.getT();
-                    fb.setPixelColor(i, j, &lamb.apply(h));
+                    fb.setPixelColor(i, j, &shader.apply(h));
                 }
             }
         }
     }
+
     let end = std::time::Instant::now();
     let filepath: String = "IMAGES/".to_owned() + &args[1] + ".png";
     fb.exportAsPng(filepath);

@@ -1,5 +1,5 @@
 use crate::Vec3D::Vec3D;
-
+#[derive(Clone,Copy)]
 pub struct CoordSys
 {
     pub U: Vec3D,

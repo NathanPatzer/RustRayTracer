@@ -2,6 +2,7 @@ use crate::Vec3D::Vec3D;
 use crate::CoordSys::CoordSys;
 use crate::Ray::Ray;
 use crate::Camera::CanGenRay;
+#[derive(Clone,Copy)]
 pub struct PerspectiveCamera
 {
     pos: Vec3D,

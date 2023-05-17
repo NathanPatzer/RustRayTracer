@@ -22,20 +22,10 @@
 	    "shader": {
 		"_ref": "blue"
 	    },
-	    "v0": "-1.0 -1.0 -5",
-	    "v1": "1.0 -1.0 -5",
-	    "v2": "0 1.0 -5",
-	    "_name": "triangle1",
-	    "_type": "triangle"
-	},{
-	    "shader": {
-		"_ref": "blue"
-	    },
-	    "v0": "-1.0 -1.0 -5",
-	    "v1": "1.0 -1.0 -5",
-	    "v2": "0 1.0 -5",
-	    "_name": "triangle1",
-	    "_type": "triangle"
+	    "center": "0 0.0 -5",
+	    "radius": 1,
+	    "_name": "sphere1",
+	    "_type": "sphere"
 	}]
     }
 }

@@ -1,5 +1,6 @@
 use crate::PerspectiveCamera;
 use crate::Ray::Ray;
+#[derive(Clone,Copy)]
 pub enum Camera
 {
     PerpectiveCamera(PerspectiveCamera)

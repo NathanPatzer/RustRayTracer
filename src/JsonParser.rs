@@ -1,6 +1,7 @@
 use serde_json::Value;
 use std::fs::File;
 use std::io::Read;
+use crate::BlinnPhong;
 use crate::Tri;
 use crate::Sph;
 use crate::Vec3;
@@ -72,14 +73,16 @@ impl JsonParser
                 let v0 = self::JsonParser::getVec(shape_vec[i].get("v0").unwrap().as_str().unwrap());
                 let v1 = self::JsonParser::getVec(shape_vec[i].get("v1").unwrap().as_str().unwrap());
                 let v2 = self::JsonParser::getVec(shape_vec[i].get("v2").unwrap().as_str().unwrap());
-                let tri = Tri::new(v0, v1, v2);
+                let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
+                let tri = Tri::new(v0, v1, v2, shader_name);
                 scene.addShape(Shape::Triangle(tri));
             }
-            else if shape_type == "spere" 
+            else if shape_type == "sphere" 
             {
                 let center = self::JsonParser::getVec(shape_vec[i].get("center").unwrap().as_str().unwrap());
                 let radius = shape_vec[i].get("radius").unwrap().as_f64().unwrap();
-                let s = Sph::new(center, radius as f32);
+                let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
+                let s = Sph::new(center, radius as f32,shader_name);
                 scene.addShape(Shape::Sphere(s));
             }
         }
@@ -95,6 +98,15 @@ impl JsonParser
                 let shader = Lambertian::new(diffuse);
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
                 scene.addShader(Shader::Lambertian(shader), name.to_string());
+            }
+            if shader_type == "BlinnPhong"
+            {
+                let diffuse = self::JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
+                let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
+                let specular = self::JsonParser::getVec(shader_vec[i].get("specular").unwrap().as_str().unwrap());
+                let phong_exp = shader_vec[i].get("phongExp").unwrap().as_f64().unwrap();
+                let shader = BlinnPhong::new(diffuse, specular, phong_exp as f32);
+                scene.addShader(Shader::BlinnPhong(shader), name.to_string());
             }
         }
         println!("Added {} Shaders", shader_len);

@@ -45,6 +45,14 @@ impl SceneContainer
                     Some(_old_shader) => println!("Replaced old shader"),
                 }
             }
+            Shader::BlinnPhong(B)=>
+            {
+                match self.allShaders.insert(name, Shader::BlinnPhong(B))
+                {
+                    None=> (),
+                    Some(_old_shader) => println!("Replaced old shade")
+                }
+            }
         }
     }
 
@@ -62,5 +70,10 @@ impl SceneContainer
         {
             Camera::PerpectiveCamera(p) => self.allCameras.push(Camera::PerpectiveCamera(p))
         }
+    }
+
+    pub fn getCamera(&self) -> Camera
+    {
+        self.allCameras[0]
     }
 }

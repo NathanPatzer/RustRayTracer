@@ -2,7 +2,7 @@ use crate::Triangle::Triangle;
 use crate::Ray::Ray;
 use crate::HitStruct::HitStruct;
 use crate::Sph;
-#[derive(Clone,Copy)]
+#[derive(Clone)]
 pub enum Shape
 {
     Triangle(Triangle),
@@ -12,6 +12,7 @@ pub enum Shape
 pub trait Hittable
 {
     fn closestHit(&self ,r: &Ray , tMin: f32 , tMax: f32,h: &mut HitStruct ) -> bool;
+    fn getShaderName(&self) -> String;
 }
 
 impl Hittable for Shape
@@ -24,4 +25,14 @@ impl Hittable for Shape
             Shape::Sphere(sphere) => sphere.closestHit(r, tMin, tMax, h)
         }
     }
+
+    fn getShaderName(&self) -> String 
+    {
+        match self
+        {
+            Shape::Triangle(t) => t.getShaderName(),
+            Shape::Sphere(s) => s.getShaderName()
+        }
+    }
+
 }

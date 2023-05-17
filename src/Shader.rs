@@ -1,4 +1,5 @@
 use crate::Lambertian;
+use crate::BlinnPhong;
 use crate::HStruct;
 use crate::Light::IsLight;
 use crate::Shape::Hittable;
@@ -8,7 +9,8 @@ use crate::Shape::Shape;
 use crate::Ray::Ray;
 pub enum Shader
 {
-    Lambertian(Lambertian)
+    Lambertian(Lambertian),
+    BlinnPhong(BlinnPhong)
 }
 
 pub trait Shading
@@ -23,6 +25,7 @@ impl Shading for Shader
         match self
         {
             Shader::Lambertian(L) => L.apply(h_struct),
+            Shader::BlinnPhong(B) => B.apply(h_struct)
         }    
     }
 }

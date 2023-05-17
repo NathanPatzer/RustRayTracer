@@ -2,18 +2,19 @@ use crate::Vec3;
 use crate::Shape::Hittable;
 use crate::HStruct;
 use crate::Ray::Ray;
-#[derive(Clone,Copy)]
+#[derive(Clone)]
 pub struct Sphere
 {
     center: Vec3,
-    radius: f32
+    radius: f32,
+    shader_name: String
 }
 
 impl Sphere
 {
-    pub fn new(c: Vec3, r: f32) -> Sphere
+    pub fn new(c: Vec3, r: f32,shader_name: String) -> Sphere
     {
-        Sphere{center: c, radius: r}
+        Sphere{center: c, radius: r, shader_name: shader_name}
     }
 
     pub fn calcualteNormal(r: &Ray, center: Vec3, T: f32) -> Vec3
@@ -55,6 +56,11 @@ impl Hittable for Sphere
                 return true;
             }
         }
+    }
+
+    fn getShaderName(&self) -> String 
+    {
+        self.shader_name.clone()
     }
 }
 

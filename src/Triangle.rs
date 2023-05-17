@@ -2,21 +2,23 @@ use crate::Vec3D::Vec3D;
 use crate::Ray::Ray;
 use crate::Shape::Hittable;
 use crate::HStruct;
-#[derive(Clone,Copy)]
+#[derive(Clone)]
 pub struct Triangle
 {
     A: Vec3D,
     B: Vec3D,
     C: Vec3D,
-    normal: Vec3D
+    normal: Vec3D,
+    shader_name: String
+    
 }
 
 impl Triangle
 {
 
-    pub fn new(a: Vec3D, b: Vec3D, c: Vec3D) -> Triangle
+    pub fn new(a: Vec3D, b: Vec3D, c: Vec3D, shader_name: String) -> Triangle
     {
-        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c)}
+        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name}
     }
 
     fn calcualteNormal(A: Vec3D, B: Vec3D, C: Vec3D) -> Vec3D
@@ -81,5 +83,11 @@ impl Hittable for Triangle
         h_struct.setRay(Ray::new(r.dir, r.origin));
         true
     }
+
+    fn getShaderName(&self) -> String 
+    {
+        self.shader_name.clone()
+    }
+
 }
 pub type Tri = Triangle;
