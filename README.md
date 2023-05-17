@@ -29,6 +29,6 @@ To run the raytracer, follow the steps below:
 Here are a few examples to help you get started:
 
 - Generate a 800x600 image with a recursion depth of 4, 100 ambient occlusion samples, and using the `scene.txt` file as input:
-'''
+```
 cargo run --release -w 800 -h 600 -r 4 -k 100 -i scene.txt
-'''
+```
