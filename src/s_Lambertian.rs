@@ -34,11 +34,11 @@ impl Shading for s_Lambertian
             lcolor[2] = light.getIntensity()[2] * self.diffuse[2];
             
             //SHADOWS
-            let shadowRay = Shader::shadowRay(light, h_struct.getIntersect());
-            if Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct.getShapes()) == false
-            {
+            //let shadowRay = Shader::shadowRay(light, h_struct.getIntersect());
+            //if Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct.getShapes()) == false
+            //{
                 finalColor = finalColor + (lcolor * max);
-            }
+            //}
         }
         finalColor
     }

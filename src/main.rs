@@ -36,6 +36,8 @@ mod l_PointLight;
 mod Camera;
 #[allow(non_snake_case)]
 mod s_BlinnPhong;
+#[allow(non_snake_case)]
+mod sBox;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -46,7 +48,7 @@ pub use Shader::*;
 pub use s_Lambertian::*;
 pub use l_PointLight::*;
 pub use s_BlinnPhong::*;
-
+pub use sBox::*;
 use crate::{Shape::Hittable, Camera::CanGenRay};
 //INSTRUCTIONS
 // ./exe [FILENAME]
@@ -64,16 +66,16 @@ fn main() {
     let cam = sc.getCamera();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
-
     let start = std::time::Instant::now();
+    let min_t = 1.0;
     for j in 0..fb.height{
         for i in 0..fb.width
         {
             let h: &mut HStruct = &mut HStruct::new();   
             h.setShapes(shape_refs.to_vec());
             h.setLights(light_refs.to_vec());
-            let max_t = INFINITY; 
-            let mut min_t = 1.0;
+            let mut max_t = INFINITY; 
+            
             let r = cam.genRay(i as i32, j as i32, 0.0, 0.0);
             for s in shape_refs
             {   
@@ -81,7 +83,7 @@ fn main() {
                 {   
                     let shader_name = s.getShaderName();
                     let shader = sc.allShaders.get(&shader_name).expect("INVALID SHADER");
-                    min_t = h.getT();
+                    max_t = h.getT();
                     fb.setPixelColor(i, j, &shader.apply(h));
                 }
             }

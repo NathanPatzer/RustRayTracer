@@ -14,6 +14,7 @@ use crate::Light::Light;
 use crate::Coord;
 use crate::Camera::Camera;
 use crate::PerspectiveCamera;
+use crate::Box;
 pub struct JsonParser
 {
     path: String,
@@ -84,6 +85,19 @@ impl JsonParser
                 let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
                 let s = Sph::new(center, radius as f32,shader_name);
                 scene.addShape(Shape::Sphere(s));
+            }
+            else if shape_type == "box"
+            {
+                let minPt = self::JsonParser::getVec(shape_vec[i].get("minPt").unwrap().as_str().unwrap());
+                let maxPt = self::JsonParser::getVec(shape_vec[i].get("maxPt").unwrap().as_str().unwrap());
+                let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
+                println!("{}", shader_name);
+                let box_vec = Box::new(minPt, maxPt,shader_name);
+                //PUSH ALL 12 TRIANGLES INTO SHAPEVEC
+                for triangle in box_vec
+                {
+                    scene.addShape(Shape::Triangle(triangle));
+                }            
             }
         }
         println!("Added {} Shapes", shape_len);
