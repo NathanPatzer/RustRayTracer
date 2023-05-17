@@ -54,13 +54,11 @@ pub use s_BlinnPhong::*;
 pub use sBox::*;
 use crate::Camera::CanGenRay;
 use crate::ArgsChecker::*;
-//INSTRUCTIONS
-// ./exe [FILENAME]
 
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
     let args: Args = Args::new(plainargs);
-    
+
     let mut fb = Framebuffer::Framebuffer::new(args.width, args.height);
 
     let mut sc = SceneContainer::SceneContainer::new();

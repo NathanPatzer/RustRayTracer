@@ -42,7 +42,7 @@ cargo build --release
 
 Here is an few example to help you get started:
 
-- Generate a 800x600 image with an Anti-Aliasing-Coefficient of 4 , recursion-depth of 1, and using the `threeTriangles.json` file as input:
+- Generate a 500x500 image with an Anti-Aliasing-Coefficient of 4 , recursion-depth of 1, and using the `threeTriangles.json` file as input:
 ```
-cargo run --release -- -n threeTri -w 800 -h 600 -r 4 -k 1 -i .\SceneData\threeTriangles.json
+cargo run --release -- -n threeTri -r 4 -i .\SceneData\threeTriangles.json
 ```

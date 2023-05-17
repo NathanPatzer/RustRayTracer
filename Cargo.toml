@@ -1,5 +1,5 @@
 [package]
-name = "project"
+name = "renderer"
 version = "0.1.0"
 edition = "2021"
 
@@ -13,6 +13,9 @@ rand = "0.8"
 [profile.release]
 opt-level = 3
 debug = false
+overflow-checks = false
+lto = true
+debug-assertions = false
 
 [profile.dev]
 opt-level = 0

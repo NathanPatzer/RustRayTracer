@@ -15,12 +15,12 @@ impl ArgsChecker
 {
     pub fn new(args: Vec<String>) -> ArgsChecker
     {
-        let mut width = 100;
-        let mut height = 100;
+        let mut width = 500;
+        let mut height = 0;
         let mut json: String = "".to_string();
         let mut rpp: u32 = 1;
         let mut depth: i32 = 1;
-        let mut name = "img".to_string();
+        let mut name = "output".to_string();
         for i in 0..args.len()
         {
             if args[i] == "-w"
@@ -47,8 +47,12 @@ impl ArgsChecker
             {
                 name = args[i+1].to_string();
             }
-        }        
-
+        }       
+         
+        if height == 0
+        {
+            height = width;
+        }
         ArgsChecker { width: width, height: height, json: json, rpp: rpp, depth: depth, name: name }
     }
 
