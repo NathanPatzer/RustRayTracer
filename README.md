@@ -22,11 +22,11 @@ cargo build
 ```
 5. Run the raytracer: Execute the raytracer with the desired command-line arguments. The available options are as follows:
 
-- `-n [file_name]`: Specifies the name of the image that will be exported.
-- `-w [width]`: Specifies the width of the output image in pixels.
-- `-h [height]`: Specifies the height of the output image in pixels.
-- `-r [Anti-Aliasing-Coefficient]`: Sets the number of ray samples per pixel
-- `-k [recursion-depth]`: Sets the maximum recursion depth for ray reflections and refractions.
+- `-n [file_name]`: Specifies the name of the image that will be exported. Default to `output.png`
+- `-w [width]`: Specifies the width of the output image in pixels. Default value of 500px
+- `-h [height]`: Specifies the height of the output image in pixels. If no height is supplied, height = width.
+- `-r [Anti-Aliasing-Coefficient]`: Sets the number of ray samples per pixel. Default value of 1.
+- `-k [recursion-depth]`: Sets the maximum recursion depth for ray reflections and refractions. Default value of 1.
 - `-i [input_file]`: Specifies the input JSON file containing the scene description.
 
 6. Output: Once the raytracer finishes execution, the resulting image will be saved in the project directory as `file_name.png`.
