@@ -1,4 +1,4 @@
-### Raytracer README
+# RustRaytracer
 
 This is a raytracer written in Rust that generates images using various command-line arguments.
 
