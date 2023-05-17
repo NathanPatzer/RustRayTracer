@@ -17,7 +17,9 @@ git clone https://github.com/NathanPatzer/RustRayTracer.git
 cd RustRayTracer
 ```
 4. Build the project: Run the following command to build the raytracer.
-
+```
+cargo build
+```
 5. Run the raytracer: Execute the raytracer with the desired command-line arguments. The available options are as follows:
 
 - `-n [file_name]`: Specifies the name of the image that will be exported.
