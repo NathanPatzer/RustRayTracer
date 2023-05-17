@@ -1,7 +1,6 @@
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
 use crate::Light::IsLight;
-use crate::Shader::Shader;
 
 #[allow(non_camel_case_types)]
 
