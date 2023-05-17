@@ -20,12 +20,12 @@ cd RustRayTracer
 4. Build the project: Run the following command to build the raytracer.
 ```
 cargo build
- .\target\debug\project.exe [Arguments]
+.\target\debug\project.exe [Arguments]
 ```
 or for an optimized version
 ```
 cargo build --release
- .\target\release\project.exe [Arguments]
+.\target\release\project.exe [Arguments]
 ```
 5. Run the raytracer: Execute the raytracer with the desired command-line arguments. The available options are as follows:
 
