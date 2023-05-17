@@ -27,7 +27,7 @@ cargo build
 - `-h [height]`: Specifies the height of the output image in pixels. If no height is supplied, height = width.
 - `-r [Anti-Aliasing-Coefficient]`: Sets the number of ray samples per pixel. Default value of 1.
 - `-k [recursion-depth]`: Sets the maximum recursion depth for ray reflections and refractions. Default value of 1.
-- `-i [input_file]`: Specifies the input JSON file containing the scene description.
+- `-i [input_file]`: Specifies the input JSON file containing the scene description. Mandatory argument.
 
 6. Output: Once the raytracer finishes execution, the resulting image will be saved in the project directory as `file_name.png`.
 
