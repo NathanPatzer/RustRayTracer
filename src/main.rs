@@ -1,7 +1,7 @@
 use rand::Rng;
 use PespectiveCamera::PerspectiveCamera;
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
-
+use indicatif::ProgressBar;
 //use image::{Rgb, RgbImage};
 #[allow(non_snake_case)]
 mod Vec3D;
@@ -84,6 +84,9 @@ fn main() {
     hit_struct.setBackGroundColor(sc.background_color);
     let max_t = INFINITY;
 
+    //progress bar
+    let bar = ProgressBar::new(fb.height as u64);
+
     let start = std::time::Instant::now();
     for j in 0..fb.height{
         for i in 0..fb.width
@@ -103,12 +106,13 @@ fn main() {
             pixel_color = pixel_color / (rpp*rpp) as f32;
             fb.setPixelColor(i, j, &pixel_color)
         }
+        bar.inc(1);
     }
     let end = std::time::Instant::now();
     
     let filepath: String = "IMAGES/".to_owned() + &args.name + ".png";
     fb.exportAsPng(filepath);
-    
+    bar.finish();
     let elapsed_time = end - start;
     println!("Time to render: {:?}", elapsed_time);
 }
