@@ -182,4 +182,16 @@ impl std::ops::Add<&Vec3D> for Vec3D
     }
 }
 
+impl std::ops::Sub<f32> for Vec3D
+{
+    type Output = Vec3D;
+    fn sub(self, rhs: f32) -> Self::Output 
+    {
+        let r = self.rgb[0] - rhs;
+        let g = self.rgb[1] - rhs;
+        let b = self.rgb[2] - rhs;
+        Vec3D { rgb: [r,g,b] }
+    }
+}
+
 pub type Vec3 = Vec3D; 

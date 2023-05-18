@@ -3,7 +3,7 @@
 	"camera": [{
 	    "position": "0 3.0 4.0",
 	    "viewDir": "0 -1.0 -3.0",
-	    "focalLength": 0.30,
+	    "focalLength": 0.50,
 	    "imagePlaneWidth": 0.5,
 	    "_name": "main",
 	    "_type": "perspective"

@@ -2,19 +2,24 @@ use crate::Vec3;
 use crate::Shape::Hittable;
 use crate::HStruct;
 use crate::Ray::Ray;
+use crate::BoundingBox;
 #[derive(Clone)]
 pub struct Sphere
 {
     center: Vec3,
     radius: f32,
-    shader_name: String
+    shader_name: String,
+    bounding_box: BoundingBox,
+    centroid: Vec3
+
 }
 
 impl Sphere
 {
     pub fn new(c: Vec3, r: f32,shader_name: String) -> Sphere
-    {
-        Sphere{center: c, radius: r, shader_name: shader_name}
+    {   
+        let bbox = self::Sphere::createBoundingBox(c,r);
+        Sphere{center: c, radius: r, shader_name: shader_name,bounding_box: bbox,centroid: c}
     }
 
     pub fn calcualteNormal(r: &Ray, center: Vec3, T: f32) -> Vec3
@@ -22,6 +27,13 @@ impl Sphere
         let intersect = r.origin + (r.dir * T);
         let norm = intersect - center;
         norm.normalize()
+    }
+
+    pub fn createBoundingBox(center: Vec3, radius: f32) -> BoundingBox
+    {
+        let minPt = center - radius;
+        let maxPt = center + radius; 
+        BoundingBox::new(minPt, maxPt)
     }
 }
 
@@ -61,6 +73,16 @@ impl Hittable for Sphere
     fn getShaderName(&self) -> String 
     {
         self.shader_name.clone()
+    }
+
+    fn getBoundingBox(&self) -> BoundingBox 
+    {
+        self.bounding_box
+    }
+
+    fn getCentroid(&self) -> Vec3 
+    {
+        self.centroid
     }
 }
 

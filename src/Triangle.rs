@@ -2,6 +2,7 @@ use crate::Vec3D::Vec3D;
 use crate::Ray::Ray;
 use crate::Shape::Hittable;
 use crate::HStruct;
+use crate::BoundingBox;
 #[derive(Clone)]
 pub struct Triangle
 {
@@ -9,7 +10,10 @@ pub struct Triangle
     B: Vec3D,
     C: Vec3D,
     normal: Vec3D,
-    shader_name: String
+    shader_name: String,
+    bounding_box: BoundingBox,
+    centroid: Vec3D
+
     
 }
 
@@ -18,7 +22,9 @@ impl Triangle
 
     pub fn new(a: Vec3D, b: Vec3D, c: Vec3D, shader_name: String) -> Triangle
     {
-        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name}
+        let bbox = self::Triangle::createBoundingBox(a, b, c);
+        let centroid = (bbox.maxPt + bbox.maxPt) / 2.0;
+        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name,bounding_box: bbox,centroid: centroid}
     }
 
     fn calcualteNormal(A: Vec3D, B: Vec3D, C: Vec3D) -> Vec3D
@@ -26,6 +32,32 @@ impl Triangle
         let a = B - A;
         let b = C - A;
         a.crossProduct(&b).normalize()
+    }
+
+    fn createBoundingBox(A: Vec3D, B: Vec3D, C: Vec3D) -> BoundingBox
+    {
+        let mut minPt = Vec3D::newEmpty();
+        minPt[0] = self::Triangle::findMin(A[0], B[0], C[0]);
+        minPt[1] = self::Triangle::findMin(A[1], B[1], C[1]);
+        minPt[2] = self::Triangle::findMin(A[2], B[2], C[2]);
+
+        let mut maxPt = Vec3D::newEmpty();
+        maxPt[0] = self::Triangle::findMax(A[0], B[0], C[0]);
+        maxPt[1] = self::Triangle::findMax(A[1], B[1], C[1]);
+        maxPt[2] = self::Triangle::findMax(A[2], B[2], C[2]);
+
+        BoundingBox::new(minPt, maxPt)
+
+    }
+
+    fn findMax(a: f32, b: f32, c: f32) -> f32
+    {
+       a.max(b.max(c))
+    }
+
+    fn findMin(a: f32, b: f32, c: f32) -> f32
+    {
+        a.min(b.min(c))
     }
 }
 
@@ -87,6 +119,16 @@ impl Hittable for Triangle
     fn getShaderName(&self) -> String 
     {
         self.shader_name.clone()
+    }
+    
+    fn getBoundingBox(&self) -> BoundingBox 
+    {
+        self.bounding_box
+    }
+
+    fn getCentroid(&self) -> crate::Vec3 
+    {
+        self.centroid
     }
 
 }

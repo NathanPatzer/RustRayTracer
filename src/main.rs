@@ -5,6 +5,7 @@ use std::thread::{self};
 
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
 pub const NUM_THREADS: u32 = 16;
+pub const EPS: f32 = 1e-6;
 
 //use indicatif::ProgressBar;
 //use image::{Rgb, RgbImage};
@@ -47,6 +48,10 @@ mod sBox;
 #[allow(non_snake_case)]
 mod ArgsChecker;
 mod s_mirror;
+#[allow(non_snake_case)]
+mod AABoundingBox;
+#[allow(non_snake_case)]
+mod BVHNode;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -61,6 +66,7 @@ pub use sBox::*;
 use crate::Camera::CanGenRay;
 use crate::ArgsChecker::*;
 use crate::s_mirror::*;
+use crate::AABoundingBox::*;
 
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
