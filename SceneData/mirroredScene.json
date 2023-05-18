@@ -42,7 +42,7 @@
 	    {
 		"_name": "mirrorMat",
 		"_type": "Mirror",
-		"roughness": 0.8
+		"roughness": 0.1
 	    }
 	],
 	"shape": [
