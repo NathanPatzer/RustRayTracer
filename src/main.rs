@@ -4,7 +4,7 @@ use std::sync::{Arc, Mutex};
 use std::thread::{self};
 
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
-pub const NUM_THREADS: u32 = 3;
+pub const NUM_THREADS: u32 = 16;
 
 //use indicatif::ProgressBar;
 //use image::{Rgb, RgbImage};
@@ -70,7 +70,7 @@ fn main() {
     let mut fb = Framebuffer::Framebuffer::new(args.width, args.height);
 
     let mut sc = SceneContainer::SceneContainer::new();
-    sc.background_color = Vec3::new(0.2, 0.2, 0.2);
+    sc.background_color = Vec3::new(0.53,0.81,0.92);
     assert!(args.json.len() > 0, "NO JSON SUPPLIED");
     let parser = JsonParser::JsonParser::new(args.json, args.width as i32, args.height as i32);
 
@@ -134,12 +134,8 @@ fn main() {
     println!("Time to render: {:?}", elapsed_time);
 }
 
-
-
 fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32) -> Vec<(u32,u32,Vec3)>
 {
-    
-    
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
@@ -179,8 +175,7 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             }
             pixel_color = pixel_color / (rpp*rpp) as f32;
             slice.push((i,j,pixel_color));
-            }
-                
+            }  
         }
         slice
 }
