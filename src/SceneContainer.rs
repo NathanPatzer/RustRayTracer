@@ -12,7 +12,8 @@ pub struct SceneContainer
     pub allShaders: HashMap<String,Shader>,
     pub allLights: Vec<Light>,
     pub allCameras: Vec<Camera>,
-    pub background_color: Vec3
+    pub background_color: Vec3,
+    
 }
 
 
@@ -25,6 +26,7 @@ impl SceneContainer
         let s: HashMap<String,Shader> = HashMap::new();
         let l: Vec<Light> = Vec::new();
         let c: Vec<Camera> = Vec::new();
+        
         SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c, background_color: Vec3::newEmpty() }
     }
 

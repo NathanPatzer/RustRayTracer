@@ -1,5 +1,7 @@
 use rand::Rng;
 use PespectiveCamera::PerspectiveCamera;
+use std::sync::{Arc, Mutex};
+use rayon::prelude::*;
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
 use indicatif::ProgressBar;
 //use image::{Rgb, RgbImage};
@@ -60,7 +62,8 @@ use crate::s_mirror::*;
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
     let args: Args = Args::new(plainargs);
-
+    let w = args.width;
+    let h = args.height;
     let mut fb = Framebuffer::Framebuffer::new(args.width, args.height);
 
     let mut sc = SceneContainer::SceneContainer::new();
@@ -84,34 +87,43 @@ fn main() {
     hit_struct.setBackGroundColor(sc.background_color);
     let max_t = INFINITY;
 
+
     //progress bar
     let bar = ProgressBar::new(fb.height as u64);
 
+    //Mutexes
+    let hit_struct_mutex = Arc::new(Mutex::new(hit_struct));
+    let fb_mutex = Arc::new(Mutex::new(fb));
+    
     let start = std::time::Instant::now();
-    for j in 0..fb.height{
-        for i in 0..fb.width
-        {
+    (0..w).into_par_iter().for_each(|j| {
+        (0..h).into_par_iter().for_each(|i| {
+       
             let mut pixel_color = Vec3::newEmpty();
             //ANTI ALIASING
             for p in 0..rpp
             {
                 for q in 0..rpp
                 {
-                    let off_i: f32 = (p as f32 + rng.gen::<f32>()) / rpp as f32;
-                    let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
+                    //let off_i: f32 = (p as f32 + rng.gen::<f32>()) / rpp as f32;
+                    //let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
+                    let off_i = 0.0;
+                    let off_j = 0.0;
                     let r = cam.genRay(i as i32, j as i32, off_i, off_j);
-                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, depth, hit_struct)
+                    let mut hit_struct = hit_struct_mutex.lock().unwrap();
+                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, depth, &mut hit_struct)
                 }
             }
             pixel_color = pixel_color / (rpp*rpp) as f32;
+            let mut fb = fb_mutex.lock().unwrap();
             fb.setPixelColor(i, j, &pixel_color)
-        }
+        });
         bar.inc(1);
-    }
+        });
     let end = std::time::Instant::now();
     
     let filepath: String = "IMAGES/".to_owned() + &args.name + ".png";
-    fb.exportAsPng(filepath);
+    //fb.exportAsPng(filepath);
     bar.finish();
     let elapsed_time = end - start;
     println!("Time to render: {:?}", elapsed_time);
