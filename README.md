@@ -19,14 +19,15 @@ cd RustRayTracer
 ## Usage
 4. Build the project: Run the following command to build the raytracer.
 ```
-cargo build
-.\target\debug\renderer.exe [Arguments]
-```
-or for an optimized version
-```
 cargo build --release
 .\target\release\renderer.exe [Arguments]
 ```
+or for a debug version
+```
+cargo build
+.\target\debug\renderer.exe [Arguments]
+```
+
 5. Run the raytracer: Execute the raytracer with the desired command-line arguments. The available options are as follows:
 
 - `-n [file_name]`: Specifies the name of the image that will be exported. Default to `output.png`

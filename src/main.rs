@@ -41,6 +41,7 @@ mod s_BlinnPhong;
 mod sBox;
 #[allow(non_snake_case)]
 mod ArgsChecker;
+mod s_mirror;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -54,6 +55,7 @@ pub use s_BlinnPhong::*;
 pub use sBox::*;
 use crate::Camera::CanGenRay;
 use crate::ArgsChecker::*;
+use crate::s_mirror::*;
 
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
@@ -77,6 +79,9 @@ fn main() {
     let light_refs: &[Light::Light] = &sc.allLights[..];
     hit_struct.setShapes(shape_refs.to_vec());
     hit_struct.setLights(light_refs.to_vec());
+    hit_struct.setDepth(depth);
+    hit_struct.setShaders(sc.allShaders.clone());
+    hit_struct.setBackGroundColor(sc.background_color);
     let max_t = INFINITY;
 
     let start = std::time::Instant::now();

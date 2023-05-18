@@ -1,32 +1,40 @@
+use std::collections::HashMap;
+
 use crate::Vec3;
 use crate::Ray::Ray;
 use crate::Shape::Shape;
 use crate::Light::Light;
-#[derive(Clone)]
+use crate::SceneContainer::SceneContainer;
+use crate::Shader::Shader;
+//#[derive(Clone)]
 pub struct HitStruct
 {
     min_t: f32,
     intersect: Vec3,
     normal: Vec3,
     ray: Ray,
-    shapes: Vec<Shape>,
-    lights: Vec<Light>
+    pub scene: SceneContainer,
+    depth: i32,
+    background_color: Vec3
+    //shapes: Vec<Shape>,
+    //lights: Vec<Light>
 }
 
 impl HitStruct
 {
     pub fn new() -> HitStruct
     {
-        let shapes: Vec<Shape> = Vec::new();
-        let lights: Vec<Light> = Vec::new();
+        //let shapes: Vec<Shape> = Vec::new();
+        //let lights: Vec<Light> = Vec::new();
         //default values
         HitStruct{
             min_t: 1.0,
             intersect: Vec3::newEmpty(),
             normal: Vec3::newEmpty(), 
             ray: Ray::new(Vec3::newEmpty(), Vec3::newEmpty()),
-            shapes: shapes,
-            lights: lights
+            scene: SceneContainer::new(),
+            depth: 1,
+            background_color: Vec3::newEmpty()
         }
     }
 
@@ -69,25 +77,59 @@ impl HitStruct
     {
         self.ray
     }
-
+ 
     pub fn setShapes(&mut self, shapes: Vec<Shape>)
     {
-        self.shapes = shapes;
+        //self.shapes = shapes;
+        self.scene.allShapes = shapes;
     }
     
     pub fn getShapes(&self) -> Vec<Shape>
     {
-        self.shapes[..].to_vec()
+        //self.shapes[..].to_vec()
+        self.scene.allShapes[..].to_vec()
     }
 
     pub fn setLights(&mut self, lights: Vec<Light>)
     {
-        self.lights = lights;
+        //self.lights = lights;
+        self.scene.allLights = lights
     }
 
     pub fn getLights(&self) -> Vec<Light>
     {
-        self.lights[..].to_vec()
+        //self.lights[..].to_vec()
+        self.scene.allLights[..].to_vec()
+    }
+
+    pub fn setDepth(&mut self, d: i32)
+    {
+        self.depth = d;
+    }
+
+    pub fn getDepth(&self) -> i32
+    {
+        self.depth
+    }
+
+    pub fn setShaders(&mut self, shaders: HashMap<String,Shader>)
+    {
+        self.scene.allShaders = shaders;
+    }
+
+    pub fn getShaders(&self) -> HashMap<String,Shader>
+    {
+        self.scene.allShaders.clone()
+    }
+
+    pub fn setBackGroundColor(&mut self, bg: Vec3)
+    {
+        self.background_color = bg;
+    }
+
+    pub fn getBackGroundColor(&self) -> Vec3
+    {
+        self.background_color
     }
 
 }

@@ -3,7 +3,7 @@ use crate::Shader::Shading;
 use crate::Light::IsLight;
 use crate::Shader::Shader;
 #[allow(non_camel_case_types)]
-
+#[derive(Clone)]
 pub struct s_BlinnPhong
 {   
     diffuse: Vec3,
@@ -21,7 +21,7 @@ impl s_BlinnPhong
 
 impl Shading for s_BlinnPhong
 {
-    fn apply(&self,h_struct: &HStruct) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct) -> Vec3 
     {
         let mut finalColor = Vec3::newEmpty();
         let lights = h_struct.getLights();

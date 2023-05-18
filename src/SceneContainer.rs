@@ -54,7 +54,15 @@ impl SceneContainer
                 match self.allShaders.insert(name, Shader::BlinnPhong(B))
                 {
                     None=> (),
-                    Some(_old_shader) => println!("Replaced old shade")
+                    Some(_old_shader) => println!("Replaced old shader")
+                }
+            }
+            Shader::Mirror(M) =>
+            {
+                match self.allShaders.insert(name, Shader::Mirror(M))  
+                {
+                    None => (),
+                    Some(_old_shader) => println!("Replaced old shader")
                 }
             }
         }

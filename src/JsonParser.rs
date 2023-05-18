@@ -15,6 +15,7 @@ use crate::Coord;
 use crate::Camera::Camera;
 use crate::PerspectiveCamera;
 use crate::Box;
+use crate::s_mirror::Mirror;
 pub struct JsonParser
 {
     path: String,
@@ -91,7 +92,6 @@ impl JsonParser
                 let minPt = self::JsonParser::getVec(shape_vec[i].get("minPt").unwrap().as_str().unwrap());
                 let maxPt = self::JsonParser::getVec(shape_vec[i].get("maxPt").unwrap().as_str().unwrap());
                 let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
-                println!("{}", shader_name);
                 let box_vec = Box::new(minPt, maxPt,shader_name);
                 //PUSH ALL 12 TRIANGLES INTO SHAPEVEC
                 for triangle in box_vec
@@ -113,7 +113,7 @@ impl JsonParser
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
                 scene.addShader(Shader::Lambertian(shader), name.to_string());
             }
-            if shader_type == "BlinnPhong"
+            else if shader_type == "BlinnPhong"
             {
                 let diffuse = self::JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
@@ -121,6 +121,13 @@ impl JsonParser
                 let phong_exp = shader_vec[i].get("phongExp").unwrap().as_f64().unwrap();
                 let shader = BlinnPhong::new(diffuse, specular, phong_exp as f32);
                 scene.addShader(Shader::BlinnPhong(shader), name.to_string());
+            }
+            else if shader_type == "Mirror"
+            {
+                let roughness = shader_vec[i].get("roughness").unwrap().as_f64().unwrap();
+                let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
+                let shader = Mirror::new(roughness as f32);
+                scene.addShader(Shader::Mirror(shader), name.to_string());
             }
         }
         println!("Added {} Shaders", shader_len);
