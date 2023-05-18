@@ -1,5 +1,6 @@
 use crate::Vec3D::Vec3D;
 use image::{Rgb, RgbImage};
+
 pub struct Framebuffer
 {
     pub width: u32,
