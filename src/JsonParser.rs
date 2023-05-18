@@ -126,7 +126,7 @@ impl JsonParser
             {
                 let roughness = shader_vec[i].get("roughness")
                     .and_then(|value| value.as_f64())
-                    .unwrap_or(1.0);
+                    .unwrap_or(0.0);
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
                 let shader = Mirror::new(roughness as f32);
                 scene.addShader(Shader::Mirror(shader), name.to_string());
