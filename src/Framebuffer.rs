@@ -66,4 +66,12 @@ impl Framebuffer
             self.pixelArray[i as usize] = color;
         }
     }
+
+    pub fn setFromSlice(&mut self,slice: Vec<(u32,u32,Vec3D)>)
+    {
+        for (i,j,pixel) in slice
+        {
+           self.setPixelColor(i, j, &pixel);
+        }
+    }
 }

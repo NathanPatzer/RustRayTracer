@@ -6,6 +6,7 @@ use crate::Light::Light;
 use crate::Camera::Camera;
 use crate::Ray::Ray;
 use crate::Shape::Hittable;
+#[derive(Clone)]
 pub struct SceneContainer
 {
     pub allShapes: Vec<Shape>,
