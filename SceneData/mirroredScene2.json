@@ -1,0 +1,97 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 3.0 4.0",
+	    "viewDir": "0 -1.5 -3.0",
+	    "focalLength": 0.40,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [
+	    {
+		"position": "-10.0 10.0 1.0",
+		"intensity": "1.0 1.0 1.0",
+		"_type": "point"
+	    },
+	    {
+		"position": "10.0 8.0 1.0",
+		"intensity": "0.8 0.8 0.8",
+		"_type": "point"
+	    },
+	    {
+		"position": "1 3 8",
+		"intensity": "0.25 0.25 0.25",
+		"_type": "point"
+	    }
+	],
+	"shader": [
+	    {
+		"diffuse": "0 1 0",
+		"_name": "greenMat",
+		"_type": "Lambertian"
+	    },
+	    {
+		"diffuse": "1 0 0",
+		"specular": "1 1 1",
+		"phongExp": 32.0,
+		"_name": "redPlastic",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "0 0 1",
+		"specular": "1 1 1",
+		"phongExp": 1000.0,
+		"_name": "blueShiny",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "0.5 0.5 0.5",
+		"_name": "greyMat",
+		"_type": "Lambertian"
+	    },
+	    {
+		"_name": "mirror",
+		"_type": "Mirror"
+	    }
+	],
+	"shape": [
+	    {
+		"shader": {
+		    "_ref": "greyMat"
+		},
+		"minPt": "-50.0 -0.5 -50.0",
+		"maxPt": "50.0 0.0 50.0",
+		"_name": "ground",
+		"_type": "box"
+	    },
+	    {
+		"shader": {
+		    "_ref": "mirror"
+		},
+		"center": "-1.2 1.0 -3.0",
+		"radius": 1.0,
+		"_name": "leftsphere",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "greenMat"
+		},
+		"center": "1.2 1.10 -4.0",
+		"radius": 1.10,
+		"_name": "rightsphere",
+		"_type": "sphere"
+	    },
+	    {
+		"shader": {
+		    "_ref": "blueShiny"
+		},
+		"center": "0.0 3.0 6.0",
+		"radius": 1.0,
+		"_name": "frontsphere",
+		"_type": "sphere"
+	    }
+	]
+    }
+}

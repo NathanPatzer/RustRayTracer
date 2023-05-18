@@ -1,0 +1,67 @@
+{
+    "scene": {
+	"camera": [ {
+	    "position": "0 0 0",
+	    "viewDir": "0 0 -1",
+	    "focalLength": 1,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}
+		  ],
+	"light": [{
+	    "position": "-1 1 0",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [
+	    {
+		"diffuse": "1 0 0",
+		"_name": "red",
+		"_type": "Lambertian"
+	    },
+	    {
+		"diffuse": "0 1 0",
+		"_name": "green",
+		"_type": "Lambertian"
+	    },
+	    {
+		"diffuse": "0 0 1",
+		"_name": "blue",
+		"_type": "Lambertian"
+	    }
+	],
+	"shape": [
+	    {
+		"shader": {
+		    "_ref": "red"
+		},
+		"v0": "-1.2 -0.2 -7",
+		"v1": "0.8 -0.5 -5",
+		"v2": "0.9 0 -5",
+		"_name": "triangle1",
+		"_type": "triangle"
+	    },
+	    {
+		"shader": {
+		    "_ref": "green"
+		},
+		"v0": "0.773205 -0.93923 -7",
+		"v1": "0.0330127 0.94282 -5",
+		"v2": "-0.45 0.779423 -5",
+		"_name": "triangle2",
+		"_type": "triangle"
+	    },
+	    {
+		"shader": {
+		    "_ref": "blue"
+		},
+		"v0": "0.426795 1.13923 -7",
+		"v1": "-0.833013 -0.44282 -5",
+		"v2": "-0.45 -0.779423 -5",
+		"_name": "triangle3",
+		"_type": "triangle"
+	    }
+	]
+    }
+}
