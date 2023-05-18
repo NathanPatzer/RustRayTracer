@@ -1,4 +1,7 @@
+use std::rc::Rc;
+
 use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shader::Shader, Shape::Hittable};
+use rand::Rng;
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
 pub struct s_mirror
@@ -55,7 +58,15 @@ impl Shading for s_mirror
         let v = (h_struct.getRay().dir * -1.0).normalize();
         let n = h_struct.getNormal().normalize();
         let r = (v * -1.0) + (n * v.dot(&n) * 2.0);
-        let mirror_ray = Ray::new(r, h_struct.getIntersect());
+        let mut rng = rand::thread_rng();
+        let lower_range = -1.0 * self._roughness;
+        let upper_range = self._roughness;
+        let random_perturbation = Vec3::new(
+            rng.gen_range(lower_range..upper_range), 
+            rng.gen_range(lower_range..upper_range), 
+            rng.gen_range(lower_range..upper_range));
+        let rough_r = (r + random_perturbation).normalize();
+        let mirror_ray = Ray::new(rough_r, h_struct.getIntersect());
         let depth = h_struct.getDepth();
         self::s_mirror::mirror_color(mirror_ray, 1.0e-5, INFINITY, depth - 1, h_struct)
     }
