@@ -19,7 +19,6 @@ overflow-checks = false
 lto = true
 debug-assertions = false
 codegen-units = 1
-inline-threshold = 200
 
 [profile.dev]
 opt-level = 0

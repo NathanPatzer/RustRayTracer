@@ -90,11 +90,8 @@ impl Hittable for BVHNode
         let mut rightHit: bool = false;
         let mut left_t: f32 = tMax;
         let mut right_t: f32 = tMax;
-        let mut right_normal = Vec3::newEmpty();
         let mut left_normal = Vec3::newEmpty();
         let mut left_s = "".to_string();
-        let mut right_s = "".to_string();
-        let mut right_i = Vec3::newEmpty();
         let mut left_i = Vec3::newEmpty();
 
         if self.bounding_box.intersect(r)
@@ -118,9 +115,6 @@ impl Hittable for BVHNode
                 if h.getT() < tMax
                 {
                     right_t = h.getT();
-                    right_normal = h.getNormal();
-                    right_s = h.getShaderName();
-                    right_i = h.getIntersect();
                 }
             }
 
@@ -129,34 +123,24 @@ impl Hittable for BVHNode
                
                 if right_t < left_t
                 {
-                    h.setT(right_t);
-                    h.setNormal(right_normal);
-                    h.setShaderName(right_s);
-                    h.setIntersect(right_i);
+                    return true;
                 }
                 else {
                     h.setT(left_t);
                     h.setNormal(left_normal);
                     h.setShaderName(left_s);
                     h.setIntersect(left_i);
+                    return true;
                 }
-                return true;
+                
             }
             else if leftHit
             {
-                h.setT(left_t);
-                h.setNormal(left_normal);
-                h.setShaderName(left_s);
-                h.setIntersect(left_i);
                 return true;
             }
             else if rightHit
             {
-                
-                h.setT(right_t);
-                h.setNormal(right_normal);
-                h.setShaderName(right_s);
-                h.setIntersect(right_i);
+
                 return true;
             }
             else {

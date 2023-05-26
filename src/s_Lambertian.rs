@@ -38,7 +38,7 @@ impl Shading for s_Lambertian
             //SHADOWS
             let shadowRay = Shader::shadowRay(light, intersect);
             assert!(h_struct.scene.root.is_some(),"ROOT IS NONE");
-            if Shader::anyHit(shadowRay, 0.000001, 1.0, h_struct) == false
+            if Shader::anyHit(shadowRay, 0.0001, 1.0, h_struct) == false
             {
                 finalColor = finalColor + (lcolor * max);
             }

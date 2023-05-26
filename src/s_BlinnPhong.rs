@@ -54,7 +54,7 @@ impl Shading for s_BlinnPhong
 
             //SHADOWS
             let shadowRay = Shader::shadowRay(light, intersect);
-            if Shader::anyHit(shadowRay, 0.00001, 1.0, h_struct) == false
+            if Shader::anyHit(shadowRay, 0.0001, 1.0, h_struct) == false
             {
                 finalColor = finalColor + (lcolor + specular);
             }
