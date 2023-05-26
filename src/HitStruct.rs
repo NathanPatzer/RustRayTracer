@@ -6,7 +6,8 @@ use crate::Shape::Shape;
 use crate::Light::Light;
 use crate::SceneContainer::SceneContainer;
 use crate::Shader::Shader;
-//#[derive(Clone)]
+use crate::BVHNode;
+#[derive(Clone)]
 pub struct HitStruct
 {
     min_t: f32,
@@ -15,7 +16,8 @@ pub struct HitStruct
     ray: Ray,
     pub scene: SceneContainer,
     depth: i32,
-    background_color: Vec3
+    background_color: Vec3,
+    shader_name: String
     //shapes: Vec<Shape>,
     //lights: Vec<Light>
 }
@@ -34,7 +36,8 @@ impl HitStruct
             ray: Ray::new(Vec3::newEmpty(), Vec3::newEmpty()),
             scene: SceneContainer::new(),
             depth: 1,
-            background_color: Vec3::newEmpty()
+            background_color: Vec3::newEmpty(),
+            shader_name: "".to_string()
         }
     }
 
@@ -130,6 +133,26 @@ impl HitStruct
     pub fn getBackGroundColor(&self) -> Vec3
     {
         self.background_color
+    }
+
+    pub fn setShaderName(&mut self, shader: String)
+    {
+        self.shader_name = shader;
+    }
+
+    pub fn getShaderName(&self) -> String
+    {
+        self.shader_name.clone()
+    }
+
+    pub fn setRoot(&mut self,root: Option<BVHNode::BVHNode>)
+    {
+        self.scene.root = root;
+    }
+
+    pub fn getRoot(&self) -> BVHNode::BVHNode
+    {
+        self.scene.root.clone().unwrap()
     }
 
 }

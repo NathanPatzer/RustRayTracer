@@ -5,10 +5,8 @@ use std::thread::{self};
 
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
 pub const NUM_THREADS: u32 = 16;
-pub const EPS: f32 = 1e-6;
+pub const EPS: f32 = 1e-4;
 
-//use indicatif::ProgressBar;
-//use image::{Rgb, RgbImage};
 #[allow(non_snake_case)]
 mod Vec3D;
 #[allow(non_snake_case)]
@@ -95,12 +93,15 @@ fn main() {
     hit_struct.setShaders(sc.allShaders.clone());
     hit_struct.setBackGroundColor(sc.background_color);
     
-    let slice_width: u32 = w / NUM_THREADS;
     
+    let bvh = BVHNode::BVHNode::new(shape_refs.iter().map(|shape| Arc::new(shape.clone())).collect::<Vec<_>>().as_slice(), 0);
+    sc.root = Some(bvh);
+    let slice_width: u32 = w / NUM_THREADS;
+    hit_struct.setRoot(sc.root.clone());
     //THREADS
     let mut threads = vec![];
     let slices = Arc::new(Mutex::new(vec![]));
-
+    
     let start = std::time::Instant::now();
     for i in 0..NUM_THREADS 
     {

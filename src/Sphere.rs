@@ -39,7 +39,7 @@ impl Sphere
 
 impl Hittable for Sphere
 {
-    fn closestHit(&self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
+    fn closestHit(&mut self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
     {
         let oc = &r.origin - &self.center;
         let a = r.dir.dot(&r.dir);
@@ -65,6 +65,7 @@ impl Hittable for Sphere
                 h_struct.setIntersect(r.origin + (r.dir * T));
                 h_struct.setNormal(self::Sphere::calcualteNormal(r, self.center, T));
                 h_struct.setRay(Ray::new(r.dir, r.origin));
+                h_struct.setShaderName(self.shader_name.clone());
                 return true;
             }
         }

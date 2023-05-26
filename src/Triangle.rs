@@ -23,7 +23,7 @@ impl Triangle
     pub fn new(a: Vec3D, b: Vec3D, c: Vec3D, shader_name: String) -> Triangle
     {
         let bbox = self::Triangle::createBoundingBox(a, b, c);
-        let centroid = (bbox.maxPt + bbox.maxPt) / 2.0;
+        let centroid = (bbox.minPt + bbox.maxPt) / 2.0;
         Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name,bounding_box: bbox,centroid: centroid}
     }
 
@@ -63,7 +63,7 @@ impl Triangle
 
 impl Hittable for Triangle
 {
-    fn closestHit(&self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
+    fn closestHit(&mut self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
     {
         let a = self.A[0] - self.B[0];
         let b = self.A[1] - self.B[1];
@@ -113,6 +113,7 @@ impl Hittable for Triangle
         h_struct.setNormal(self.normal);
         h_struct.setIntersect(r.origin + (r.dir * T));
         h_struct.setRay(Ray::new(r.dir, r.origin));
+        h_struct.setShaderName(self.shader_name.clone());
         true
     }
 

@@ -6,6 +6,7 @@ use crate::Light::Light;
 use crate::Camera::Camera;
 use crate::Ray::Ray;
 use crate::Shape::Hittable;
+use crate::BVHNode::BVHNode;
 #[derive(Clone)]
 pub struct SceneContainer
 {
@@ -14,7 +15,7 @@ pub struct SceneContainer
     pub allLights: Vec<Light>,
     pub allCameras: Vec<Camera>,
     pub background_color: Vec3,
-    
+    pub root: Option<BVHNode>
 }
 
 
@@ -28,7 +29,7 @@ impl SceneContainer
         let l: Vec<Light> = Vec::new();
         let c: Vec<Camera> = Vec::new();
         
-        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c, background_color: Vec3::newEmpty() }
+        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c, background_color: Vec3::newEmpty(),root: None }
     }
 
     pub fn addShape(&mut self, shape: Shape)
@@ -36,7 +37,8 @@ impl SceneContainer
         match shape
         {
             Shape::Sphere(s) => self.allShapes.push(Shape::Sphere(s)),
-            Shape::Triangle(t) => self.allShapes.push(Shape::Triangle(t))
+            Shape::Triangle(t) => self.allShapes.push(Shape::Triangle(t)),
+            Shape::BVHNode(b) => self.allShapes.push(Shape::BVHNode(b))
         }
     }
 
@@ -92,11 +94,34 @@ impl SceneContainer
         self.allCameras[0]
     }
 
-    pub fn rayColor(&self,r: Ray,minT: f32, mut maxT: f32,_depth: i32, h: &mut HStruct) -> Vec3
+    pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32,_depth: i32, h: &mut HStruct) -> Vec3
     {
+        //WITH BVH
         let mut shader: Option<&Shader> =  None;
         let mut didHit: bool = false;
-        for s in self.allShapes.iter()
+        
+        if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
+        {
+            didHit = true;
+            
+            shader = Some(self.allShaders.get(&h.getShaderName()).expect("INVALID SHADER"));
+            //maxT = h.getT();
+        }
+
+        if didHit
+        {
+            shader.unwrap().apply(h)
+        }
+        else 
+        {
+            self.background_color
+        }
+
+        //OLD FUNCTION
+        /*
+        let mut shader: Option<&Shader> =  None;
+        let mut didHit: bool = false;
+        for mut s in self.allShapes[..].to_vec()
         {   
             if s.closestHit(&r, minT, maxT, h)
             {   
@@ -113,6 +138,8 @@ impl SceneContainer
         {
             self.background_color
         }
-        
+        */
     }
+
+
 }

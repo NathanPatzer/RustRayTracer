@@ -194,4 +194,16 @@ impl std::ops::Sub<f32> for Vec3D
     }
 }
 
+impl PartialEq for Vec3D
+{
+    fn eq(&self, other: &Self) -> bool {
+        if self[0] == other[0] && self[1] == other[1] && self[2] == other[2]
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
 pub type Vec3 = Vec3D; 

@@ -28,7 +28,7 @@ impl s_mirror
         let shaders = h.getShaders();
         let shapes = h.getShapes();
         
-        for s in shapes.iter()
+        for mut s in shapes
         {   
             if s.closestHit(&r, min_t, max_t, h)
             {   

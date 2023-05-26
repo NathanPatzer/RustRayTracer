@@ -1,4 +1,4 @@
-use crate::{Vec3, EPS};
+use crate::{Vec3};
 use crate::Ray::Ray;
 #[derive(Clone,Copy)]
 pub struct AABoundingBox
@@ -49,8 +49,10 @@ impl AABoundingBox
         {
             return false;
         }
-
-        true
+        else {
+            return true;
+        }
+        
     }
 
     pub fn union(&self, rBox: AABoundingBox) -> AABoundingBox
@@ -58,38 +60,23 @@ impl AABoundingBox
         let mut uMin: Vec3 = Vec3::newEmpty();
         let mut uMax: Vec3 = Vec3::newEmpty();
 
-        //MINIMUM
-        for i in 0..2
-        {
-            if self.minPt[i] < rBox.minPt[i]
-            {
-                uMin[i] = self.minPt[i]
-            }
-            else 
-            {
-                uMin[i] = rBox.minPt[i];   
-            }
-        }
+        //MIN
+        uMin[0] = self.minPt[0].min(rBox.minPt[0]);
+        uMin[1] = self.minPt[1].min(rBox.minPt[1]);
+        uMin[2] = self.minPt[2].min(rBox.minPt[2]);
 
-        //MAXIMUM
-        for i in 0..2
-        {
-            if self.maxPt[i] < rBox.maxPt[i]
-            {
-                uMax[i] = self.maxPt[i]
-            }
-            else 
-            {
-                uMax[i] = rBox.maxPt[i];   
-            }
-        }
+        //MAX
+        uMax[0] = self.maxPt[0].max(rBox.maxPt[0]);
+        uMax[1] = self.maxPt[1].max(rBox.maxPt[1]);
+        uMax[2] = self.maxPt[2].max(rBox.maxPt[2]);
+        let eps = 0.0001;
 
-        for i in 0..2
+        for i in 0..3
         {
-            if uMax[i] + EPS > uMin[i] && uMax[i] - EPS < uMin[i]
+            if uMax[i] + eps > uMin[i] && uMax[i] - eps < uMin[i]
             {
-                uMax[i] += EPS;
-                uMin[i] += EPS;
+                uMax[i] += eps;
+                uMin[i] -= eps;
             }
         }
 
