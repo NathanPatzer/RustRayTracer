@@ -17,33 +17,30 @@ impl s_mirror
 
 impl s_mirror
 {
-    fn mirror_color(r: Ray,min_t: f32, mut max_t: f32,depth: i32, h: &mut HStruct) -> Vec3
+    fn mirror_color(r: Ray,min_t: f32, max_t: f32,depth: i32, h: &mut HStruct) -> Vec3
     {
         if depth == 0
         {
             return h.getBackGroundColor();
         }
         let mut shader: Option<&Shader> =  None;
-        let mut did_hit: bool = false;
+        let mut didHit: bool = false;
         let shaders = h.getShaders();
-        let shapes = h.getShapes();
+        assert!(h.scene.root.is_some(), "ROOT IS NONE IN SCENE");
         
-        for mut s in shapes
-        {   
-            if s.closestHit(&r, min_t, max_t, h)
-            {   
-                did_hit = true;
-                shader = Some(shaders.get(&s.getShaderName()).expect("INVALID SHADER"));
-                max_t = h.getT();
-            }
+        if h.scene.root.clone().unwrap().closestHit(&r, min_t, max_t, h)
+        {
+            didHit = true;
+            shader = Some(shaders.get(&h.getShaderName()).expect("INVALID SHADER"));
         }
-        if did_hit
+
+        if didHit
         {
             shader.unwrap().apply(h)
         }
         else 
         {
-            return h.getBackGroundColor();
+            h.getBackGroundColor()
         }
     }
 }
