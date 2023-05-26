@@ -4,7 +4,6 @@ use std::sync::{Arc, Mutex};
 use std::thread::{self};
 
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
-pub const NUM_THREADS: u32 = 16;
 pub const EPS: f32 = 1e-4;
 
 #[allow(non_snake_case)]
@@ -96,14 +95,17 @@ fn main() {
     
     let bvh = BVHNode::BVHNode::new(shape_refs.iter().map(|shape| Arc::new(shape.clone())).collect::<Vec<_>>().as_slice(), 0);
     sc.root = Some(bvh);
-    let slice_width: u32 = w / NUM_THREADS;
+    println!("CONSTRUCTED BVH");
+    assert!(sc.root.is_some());
+    let slice_width: u32 = w / args.num_threads;
     hit_struct.setRoot(sc.root.clone());
     //THREADS
     let mut threads = vec![];
     let slices = Arc::new(Mutex::new(vec![]));
-    
+    assert!(hit_struct.scene.root.is_some(),"ROOT IS NONE IN MAIN");
+    println!("RENDERING WITH {} THREADS...",args.num_threads);      
     let start = std::time::Instant::now();
-    for i in 0..NUM_THREADS 
+    for i in 0..args.num_threads 
     {
         let thread_sc = sc.clone();
         let slice_start = slice_width * i;
@@ -112,7 +114,7 @@ fn main() {
         let thread = thread::spawn({
             let slices_clone = Arc::clone(&slices);
             move|| {
-            let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i);
+            let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i,args.num_threads);
             let mut v = slices_clone.lock().unwrap();
             v.push(slice_to_push);
             }
@@ -127,6 +129,7 @@ fn main() {
         thread.join().unwrap();
     }
     let end = std::time::Instant::now();
+
     let slices_guard = slices.lock().unwrap();
     let slices_vec = &*slices_guard;
     for slice in slices_vec.iter()
@@ -141,7 +144,7 @@ fn main() {
     println!("Time to render: {:?}", elapsed_time);
 }
 
-fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32) -> Vec<(u32,u32,Vec3)>
+fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
 {
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
@@ -160,7 +163,7 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
     let mut sw = slice_width;
     
     //renders rest of image on last thread
-    if thread == NUM_THREADS - 1
+    if thread == num_threads - 1
     {
         sw = img_w;
     }

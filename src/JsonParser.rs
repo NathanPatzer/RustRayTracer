@@ -163,7 +163,7 @@ impl JsonParser
             }
         }
         println!("Added {} Cameras",camera_len);
-        println!("RENDERING...");      
+        
     }
 
     //helper function that converts "a b c" into a vec3(a,b,c)

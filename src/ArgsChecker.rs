@@ -1,5 +1,4 @@
 
-
 pub struct ArgsChecker
 {
     pub width: u32,
@@ -7,7 +6,8 @@ pub struct ArgsChecker
     pub json: String,
     pub rpp: u32,
     pub depth: i32,
-    pub name: String
+    pub name: String,
+    pub num_threads: u32
 
 }
 
@@ -21,6 +21,7 @@ impl ArgsChecker
         let mut rpp: u32 = 1;
         let mut depth: i32 = 1;
         let mut name = "output".to_string();
+        let mut num_threads: u32 = 1;
         for i in 0..args.len()
         {
             if args[i] == "-w"
@@ -47,13 +48,31 @@ impl ArgsChecker
             {
                 name = args[i+1].to_string();
             }
+            else if args[i] == "-t"
+            {
+                if let Ok(parsed_threads) = args[i+1].parse::<u32>()
+                {
+                    num_threads = if parsed_threads > 0
+                    {
+                        parsed_threads
+                    }
+                    else{
+                        1
+                    };
+
+                    if num_threads > 16
+                    {
+                        num_threads = 16;
+                    }
+                }
+            }
         }       
          
         if height == 0
         {
             height = width;
         }
-        ArgsChecker { width: width, height: height, json: json, rpp: rpp, depth: depth, name: name }
+        ArgsChecker { width: width, height: height, json: json, rpp: rpp, depth: depth, name: name,num_threads: num_threads }
     }
 
     

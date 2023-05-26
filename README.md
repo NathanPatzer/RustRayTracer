@@ -36,6 +36,7 @@ Run the raytracer: Execute the raytracer with the desired command-line arguments
 - `-r [Anti-Aliasing-Coefficient]`: Sets the number of ray samples per pixel. Default value of 1.
 - `-k [recursion-depth]`: Sets the maximum recursion depth for ray reflections and refractions. Default value of 1.
 - `-i [input_file]`: Specifies the input JSON file containing the scene description. Mandatory argument.
+- `-t [num_threads]`: Specifies the number of threads that will be used to render the image. Default to 1 and max of 16
 
 Output: Once the raytracer finishes execution, the resulting image will be saved in the project directory as `file_name.png`.
 

@@ -99,6 +99,8 @@ impl SceneContainer
         //WITH BVH
         let mut shader: Option<&Shader> =  None;
         let mut didHit: bool = false;
+        h.setRoot(self.root.clone());
+        assert!(h.scene.root.is_some(), "ROOT IS NONE IN SCENE");
         
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
         {
