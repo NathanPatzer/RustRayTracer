@@ -1,55 +1,32 @@
+#![allow(non_snake_case)]
 use rand::Rng;
 use PespectiveCamera::PerspectiveCamera;
 use std::sync::{Arc, Mutex};
 use std::thread::{self};
 
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
-pub const EPS: f32 = 1e-4;
-
-#[allow(non_snake_case)]
 mod Vec3D;
-#[allow(non_snake_case)]
 mod Framebuffer;
-#[allow(non_snake_case)]
 mod CoordSys;
-#[allow(non_snake_case)]
 mod Ray;
-#[allow(non_snake_case)]
 mod PespectiveCamera;
-#[allow(non_snake_case)]
 mod Triangle;
-#[allow(non_snake_case)]
 mod SceneContainer;
-#[allow(non_snake_case)]
 mod Shape;
-#[allow(non_snake_case)]
 mod HitStruct;
-#[allow(non_snake_case)]
 mod Sphere;
-#[allow(non_snake_case)]
 mod JsonParser;
-#[allow(non_snake_case)]
 mod s_Lambertian;
-#[allow(non_snake_case)]
 mod Shader;
-#[allow(non_snake_case)]
 mod Light;
-#[allow(non_snake_case)]
 mod l_PointLight;
-#[allow(non_snake_case)]
 mod Camera;
-#[allow(non_snake_case)]
 mod s_BlinnPhong;
-#[allow(non_snake_case)]
 mod sBox;
-#[allow(non_snake_case)]
 mod ArgsChecker;
 mod s_mirror;
-#[allow(non_snake_case)]
 mod AABoundingBox;
-#[allow(non_snake_case)]
 mod BVHNode;
-#[allow(non_snake_case)]
 mod s_Toon;
 
 pub use Vec3D::*;
