@@ -131,16 +131,12 @@ impl Hittable for BVHNode
                     return true;
                 }
             }
-            else if leftHit
+            else if leftHit || rightHit
             {
                 return true;
             }
-            else if rightHit
+            else 
             {
-
-                return true;
-            }
-            else {
                 return false;
             }
         }          
