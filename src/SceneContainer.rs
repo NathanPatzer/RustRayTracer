@@ -100,7 +100,7 @@ impl SceneContainer
         self.allCameras[0]
     }
 
-    pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32,_depth: i32, h: &mut HStruct) -> Vec3
+    pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32, h: &mut HStruct) -> Vec3
     {
         h.setRoot(self.root.clone());
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)

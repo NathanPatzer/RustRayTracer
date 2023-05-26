@@ -168,7 +168,7 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
                     let off_i: f32 = (p as f32 + rng.gen::<f32>()) / rpp as f32;
                     let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
                     let r = cam.genRay(i as i32, j as i32, off_i, off_j);
-                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, depth, hit_struct)
+                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, hit_struct)
                 }
             }
             pixel_color = pixel_color / (rpp*rpp) as f32;
