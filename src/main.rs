@@ -49,6 +49,8 @@ mod s_mirror;
 mod AABoundingBox;
 #[allow(non_snake_case)]
 mod BVHNode;
+#[allow(non_snake_case)]
+mod s_Toon;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -64,6 +66,7 @@ use crate::Camera::CanGenRay;
 use crate::ArgsChecker::*;
 use crate::s_mirror::*;
 use crate::AABoundingBox::*;
+use crate::s_Toon::*;
 
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();

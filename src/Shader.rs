@@ -6,7 +6,7 @@ use crate::Light::IsLight;
 use crate::Shape::Hittable;
 use crate::Vec3;
 use crate::Light::Light;
-
+use crate::Toon;
 use crate::Ray::Ray;
 use crate::Mirror;
 #[derive(Clone)]
@@ -14,7 +14,8 @@ pub enum Shader
 {
     Lambertian(Lambertian),
     BlinnPhong(BlinnPhong),
-    Mirror(Mirror)
+    Mirror(Mirror),
+    Toon(Toon)
 }
 
 pub trait Shading
@@ -30,7 +31,8 @@ impl Shading for Shader
         {
             Shader::Lambertian(L) => L.apply(h_struct),
             Shader::BlinnPhong(B) => B.apply(h_struct),
-            Shader::Mirror(M) => M.apply(h_struct)
+            Shader::Mirror(M) => M.apply(h_struct),
+            Shader::Toon(T) => T.apply(h_struct)
         }    
     }
 }

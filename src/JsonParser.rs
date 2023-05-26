@@ -15,6 +15,7 @@ use crate::Coord;
 use crate::Camera::Camera;
 use crate::PerspectiveCamera;
 use crate::Box;
+use crate::s_Toon::Toon;
 use crate::s_mirror::Mirror;
 pub struct JsonParser
 {
@@ -130,6 +131,14 @@ impl JsonParser
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
                 let shader = Mirror::new(roughness as f32);
                 scene.addShader(Shader::Mirror(shader), name.to_string());
+            }
+            else if shader_type == "Toon"
+            {
+                let color = self::JsonParser::getVec(shader_vec[i].get("color").unwrap().as_str().unwrap());
+                let thresh = shader_vec[i].get("thresh").unwrap().as_i64().unwrap();
+                let shader = Toon::new(color, thresh as i32);
+                let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
+                scene.addShader(Shader::Toon(shader), name.to_string());
             }
         }
         println!("Added {} Shaders", shader_len);

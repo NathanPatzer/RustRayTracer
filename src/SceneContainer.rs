@@ -70,6 +70,14 @@ impl SceneContainer
                     Some(_old_shader) => println!("Replaced old shader")
                 }
             }
+            Shader::Toon(T)=>
+            {
+                match self.allShaders.insert(name, Shader::Toon(T))
+                {
+                    None => (),
+                    Some(_old_shader) => println!("Replaced old shader")
+                }
+            }
         }
     }
 
