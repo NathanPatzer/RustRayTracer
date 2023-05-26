@@ -144,7 +144,8 @@ fn main() {
     fb.exportAsPng(filepath);
     
     let elapsed_time = end - start;
-    println!("Time to render: {:?}", elapsed_time);
+    let rounded = (elapsed_time.as_secs_f64() * 100.0).round() / 100.0;
+    println!("Time to render: {:.2}s", rounded);
 }
 
 fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
