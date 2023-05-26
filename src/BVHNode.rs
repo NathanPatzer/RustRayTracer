@@ -114,10 +114,8 @@ impl Hittable for BVHNode
                     left_t = h.getT();
                 } 
             }
-            
             if leftHit && rightHit
             {
-               
                 if right_t < left_t
                 {
                     h.setT(right_t);
@@ -127,20 +125,14 @@ impl Hittable for BVHNode
                     return true;
                 }
                 else {
-
                     return true;
                 }
             }
-            else if leftHit || rightHit
-            {
-                return true;
-            }
-            else 
-            {
-                return false;
+            else {
+                return leftHit || rightHit;
             }
         }          
-        return false;
+        false
     }
 
     fn getBoundingBox(&self) -> BoundingBox {
