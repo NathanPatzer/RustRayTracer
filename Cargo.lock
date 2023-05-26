@@ -560,7 +560,6 @@ dependencies = [
  "image",
  "indicatif",
  "rand",
- "rayon",
  "serde_json",
 ]
 
