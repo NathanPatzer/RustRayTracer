@@ -1,4 +1,4 @@
-use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shader::Shader, Shape::Hittable};
+use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shape::Hittable};
 use rand::Rng;
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
@@ -23,25 +23,19 @@ impl s_mirror
         {
             return h.getBackGroundColor();
         }
-        let mut shader: Option<&Shader> =  None;
-        let mut didHit: bool = false;
+
         let shaders = h.getShaders();
         assert!(h.scene.root.is_some(), "ROOT IS NONE IN SCENE");
         
         if h.scene.root.clone().unwrap().closestHit(&r, min_t, max_t, h)
         {
-            didHit = true;
-            shader = Some(shaders.get(&h.getShaderName()).expect("INVALID SHADER"));
+            
+            if let Some(shader) = shaders.get(&h.getShaderName()) {
+                return shader.apply(h);
+            }
         }
-
-        if didHit
-        {
-            shader.unwrap().apply(h)
-        }
-        else 
-        {
             h.getBackGroundColor()
-        }
+        
     }
 }
 

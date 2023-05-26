@@ -18,8 +18,6 @@ pub struct SceneContainer
     pub root: Option<BVHNode>
 }
 
-
-
 impl SceneContainer
 {
     pub fn new()->SceneContainer
@@ -104,25 +102,13 @@ impl SceneContainer
 
     pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32,_depth: i32, h: &mut HStruct) -> Vec3
     {
-        let mut shader: Option<&Shader> =  None;
-        let mut didHit: bool = false;
         h.setRoot(self.root.clone());
-        assert!(h.scene.root.is_some(), "ROOT IS NONE IN SCENE");
-        
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
         {
-            didHit = true;
-            shader = Some(self.allShaders.get(&h.getShaderName()).expect("INVALID SHADER"));
+            if let Some(shader) = self.allShaders.get(&h.getShaderName()) {
+                return shader.apply(h);
+            }
         }
-        if didHit
-        {
-            shader.unwrap().apply(h)
-        }
-        else 
-        {
-            self.background_color
-        }
+        self.background_color
     }
-
-
 }
