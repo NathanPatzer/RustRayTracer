@@ -45,14 +45,7 @@ impl AABoundingBox
             tzMax = invZ * (self.maxPt[2] - ray.origin[2]);
         }
 
-        if  (txMin >  tyMax) || (tyMin > txMax) || (txMin > tzMax) || (tzMin > txMax) || (tyMin > tzMax) || (tzMin > tyMax) 
-        {
-            return false;
-        }
-        else {
-            return true;
-        }
-        
+        !(txMin >  tyMax || tyMin > txMax || txMin > tzMax || tzMin > txMax || tyMin > tzMax || tzMin > tyMax)
     }
 
     pub fn union(&self, rBox: AABoundingBox) -> AABoundingBox
