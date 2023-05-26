@@ -48,8 +48,7 @@ impl BVHNode
             let mut bbox = Shapes[0].getBoundingBox();
             for shape in Shapes.to_vec()
             {
-                bbox = bbox.union(shape.getBoundingBox());
-                
+                bbox = bbox.union(shape.getBoundingBox()); 
             }
             //split based on axis
             let split = (bbox.minPt + bbox.maxPt) / 2.0;
@@ -88,24 +87,12 @@ impl Hittable for BVHNode
         let mut rightHit: bool = false;
         let mut left_t: f32 = tMax;
         let mut right_t: f32 = tMax;
-        let mut left_normal = Vec3::newEmpty();
-        let mut left_s = "".to_string();
-        let mut left_i = Vec3::newEmpty();
+        let mut right_normal = Vec3::newEmpty();
+        let mut right_s = "".to_string();
+        let mut right_i = Vec3::newEmpty();
 
         if self.bounding_box.intersect(r)
         {
-            if self.leftChild.is_some()
-            {
-                let mut shape = self.leftChild.clone().unwrap().as_ref().clone();
-                leftHit = shape.closestHit(r, tMin, tMax, h);
-                if h.getT() < tMax
-                {
-                    left_t = h.getT();
-                    left_normal = h.getNormal();
-                    left_s = h.getShaderName();
-                    left_i = h.getIntersect();
-                } 
-            }
             if self.rightChild.is_some()
             {
                 let mut shape = self.rightChild.clone().unwrap().as_ref().clone();
@@ -113,21 +100,34 @@ impl Hittable for BVHNode
                 if h.getT() < tMax
                 {
                     right_t = h.getT();
+                    right_normal = h.getNormal();
+                    right_s = h.getShaderName();
+                    right_i = h.getIntersect();
                 }
             }
-
+            if self.leftChild.is_some()
+            {
+                let mut shape = self.leftChild.clone().unwrap().as_ref().clone();
+                leftHit = shape.closestHit(r, tMin, tMax, h);
+                if h.getT() < tMax
+                {
+                    left_t = h.getT();
+                } 
+            }
+            
             if leftHit && rightHit
             {
                
                 if right_t < left_t
                 {
+                    h.setT(right_t);
+                    h.setNormal(right_normal);
+                    h.setShaderName(right_s);
+                    h.setIntersect(right_i);
                     return true;
                 }
                 else {
-                    h.setT(left_t);
-                    h.setNormal(left_normal);
-                    h.setShaderName(left_s);
-                    h.setIntersect(left_i);
+
                     return true;
                 }
             }
