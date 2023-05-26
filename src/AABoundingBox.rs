@@ -69,7 +69,7 @@ impl AABoundingBox
         uMax[0] = self.maxPt[0].max(rBox.maxPt[0]);
         uMax[1] = self.maxPt[1].max(rBox.maxPt[1]);
         uMax[2] = self.maxPt[2].max(rBox.maxPt[2]);
-        let eps = 0.0001;
+        let eps = 0.00001;
 
         for i in 0..3
         {

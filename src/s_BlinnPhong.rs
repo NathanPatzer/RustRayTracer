@@ -25,15 +25,18 @@ impl Shading for s_BlinnPhong
     {
         let mut finalColor = Vec3::newEmpty();
         let lights = h_struct.getLights();
+        let intersect = h_struct.getIntersect();
+        let normal = h_struct.getNormal();
+        let ray = h_struct.getRay();
         for light in lights
         {
             let mut lcolor = Vec3::newEmpty();
 
             //CALCULATE SPECULAR COMPONENET
-            let L = (light.getPos() - h_struct.getIntersect()).normalize();
-            let V = (h_struct.getRay().dir * -1.0).normalize();
+            let L = (light.getPos() - intersect).normalize();
+            let V = (ray.dir * -1.0).normalize();
             let H = (L + V).normalize();
-            let mut phongMax = 0.0_f32.max(h_struct.getNormal().dot(&H));
+            let mut phongMax = 0.0_f32.max(normal.dot(&H));
             phongMax = phongMax.powf(self.phongExp);
             let mut specular = Vec3::newEmpty();
             specular[0] = self.specular[0] * light.getIntensity()[0];
@@ -42,7 +45,7 @@ impl Shading for s_BlinnPhong
             specular = specular * phongMax;
 
             //CALCULATE DIFFUSE COMPONENET
-            let ndotl = h_struct.getNormal().dot(&L);
+            let ndotl = normal.dot(&L);
             let max: f32 = 0.0_f32.max(ndotl);
             lcolor[0] = light.getIntensity()[0] * self.diffuse[0];
             lcolor[1] = light.getIntensity()[1] * self.diffuse[1];
@@ -50,14 +53,12 @@ impl Shading for s_BlinnPhong
             lcolor = lcolor * max;
 
             //SHADOWS
-            let shadowRay = Shader::shadowRay(light, h_struct.getIntersect());
-            if Shader::anyHit(shadowRay, 0.0001, 1.0, h_struct) == false
+            let shadowRay = Shader::shadowRay(light, intersect);
+            if Shader::anyHit(shadowRay, 0.00001, 1.0, h_struct) == false
             {
                 finalColor = finalColor + (lcolor + specular);
             }
-
         }
-
        finalColor
     }
 }

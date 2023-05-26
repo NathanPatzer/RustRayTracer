@@ -90,7 +90,6 @@ fn main() {
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("[{bar:25}] {percent}%")
-
     );
 
     let start = std::time::Instant::now();
