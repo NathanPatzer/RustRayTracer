@@ -45,7 +45,6 @@ impl BVHNode
         }
         else 
         {
-            
             let mut bbox = Shapes[0].getBoundingBox();
             for shape in Shapes.to_vec()
             {
@@ -68,7 +67,6 @@ impl BVHNode
                     leftShapes.push(Arc::clone(&shape));
                 }
             }
-            
             
             let LB = Self::build_bvh_node(rightShapes, (axis+1) % 3);
             let RB = Self::build_bvh_node(leftShapes, (axis+1) % 3);
@@ -132,7 +130,6 @@ impl Hittable for BVHNode
                     h.setIntersect(left_i);
                     return true;
                 }
-                
             }
             else if leftHit
             {
