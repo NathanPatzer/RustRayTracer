@@ -104,7 +104,6 @@ impl SceneContainer
 
     pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32,_depth: i32, h: &mut HStruct) -> Vec3
     {
-        //WITH BVH
         let mut shader: Option<&Shader> =  None;
         let mut didHit: bool = false;
         h.setRoot(self.root.clone());
@@ -113,32 +112,7 @@ impl SceneContainer
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
         {
             didHit = true;
-            
             shader = Some(self.allShaders.get(&h.getShaderName()).expect("INVALID SHADER"));
-            //maxT = h.getT();
-        }
-
-        if didHit
-        {
-            shader.unwrap().apply(h)
-        }
-        else 
-        {
-            self.background_color
-        }
-
-        //OLD FUNCTION
-        /*
-        let mut shader: Option<&Shader> =  None;
-        let mut didHit: bool = false;
-        for mut s in self.allShapes[..].to_vec()
-        {   
-            if s.closestHit(&r, minT, maxT, h)
-            {   
-                didHit = true;
-                shader = Some(self.allShaders.get(&s.getShaderName()).expect("INVALID SHADER"));
-                maxT = h.getT();
-            }
         }
         if didHit
         {
@@ -148,7 +122,6 @@ impl SceneContainer
         {
             self.background_color
         }
-        */
     }
 
 
