@@ -82,11 +82,7 @@ fn main() {
     
     println!("RENDERING WITH {} THREADS...",args.num_threads);
     //LOADING BAR
-    let progress_bar = Arc::new(ProgressBar::new((args.height * args.num_threads) as u64));
-    progress_bar.set_style(
-        ProgressStyle::default_bar()
-            .template("[{bar:25}] {percent}%")
-    );
+
 
     //TEXTURE
 
@@ -95,17 +91,16 @@ fn main() {
     {
         let thread_sc = sc.clone();
         let slice_start = slice_width * i;
-        let progress_bar_clone = progress_bar.clone();
+        
         // Spawn a new thread for each iteration
         let thread = thread::spawn({
             let slices_clone = Arc::clone(&slices);
             move|| {
-            let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i,args.num_threads,&progress_bar_clone);
+            let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i,args.num_threads);
             let mut v = slices_clone.lock().unwrap();
             v.push(slice_to_push);
             }
         });
-
         // Store the thread handle in the vector
         threads.push(thread);
     }
@@ -115,7 +110,7 @@ fn main() {
         thread.join().unwrap();
     }
     let end = std::time::Instant::now();
-    progress_bar.finish();
+    
     let slices_guard = slices.lock().unwrap();
     let slices_vec = &*slices_guard;
     for slice in slices_vec.iter()
@@ -131,17 +126,18 @@ fn main() {
     println!("Time to render: {:.2}s", rounded);
 }
 
-fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32, progress_bar: &ProgressBar) -> Vec<(u32,u32,Vec3)>
+fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
 {
+    
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
     let light_refs: &[Light::Light] = &sc.allLights[..];
     hit_struct.setShapes(shape_refs.to_vec());
     hit_struct.setLights(light_refs.to_vec());
-    hit_struct.setDepth(depth);
+    hit_struct.setDepth(depth.clone());
     hit_struct.setShaders(sc.allShaders.clone());
-    hit_struct.setBackGroundColor(sc.background_color);
+    hit_struct.setBackGroundColor(sc.background_color.clone());
     hit_struct.setTextures(sc.allTextures.clone());
     let mut rng: rand::rngs::ThreadRng = rand::thread_rng();
     let mut slice: Vec<(u32,u32,Vec3)> = Vec::new();
@@ -172,7 +168,8 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             pixel_color = pixel_color / (rpp*rpp) as f32;
             slice.push((i,j,pixel_color));
             }
-            progress_bar.inc(1);  
+            
         }
+        println!("{}", thread);
         slice
 }

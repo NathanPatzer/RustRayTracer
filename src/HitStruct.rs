@@ -20,6 +20,7 @@ pub struct HitStruct
     depth: i32,
     background_color: Vec3,
     shader_name: String,
+    texture_name: String,
     t_coords: (f32,f32)
     //shapes: Vec<Shape>,
     //lights: Vec<Light>
@@ -38,8 +39,19 @@ impl HitStruct
             depth: 1,
             background_color: Vec3::newEmpty(),
             shader_name: "".to_string(),
+            texture_name: "".to_string(),
             t_coords: (0.0,0.0)
         }
+    }
+
+    pub fn setTextureName(&mut self, n: String)
+    {
+        self.texture_name = n;
+    }
+
+    pub fn getTextureName(&self) -> &String
+    {
+        &self.texture_name
     }
 
     pub fn setCoords(&mut self, coords: (f32,f32))

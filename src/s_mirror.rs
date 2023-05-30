@@ -31,7 +31,7 @@ impl s_mirror
         {
             
             if let Some(shader) = shaders.get(&h.getShaderName()) {
-                return shader.apply(h);
+                return shader.apply(h,Vec3::newEmpty());
             }
         }
             h.getBackGroundColor()
@@ -41,9 +41,8 @@ impl s_mirror
 
 impl Shading for s_mirror
 {
-    fn apply(&self,h_struct: &mut HStruct) -> Vec3
+    fn apply(&self,h_struct: &mut HStruct,_color_to_shade: Vec3) -> Vec3
     {
-
         let v = (h_struct.getRay().dir * -1.0).normalize();
         let n = h_struct.getNormal().normalize();
         let r = (v * -1.0) + (n * v.dot(&n) * 2.0);

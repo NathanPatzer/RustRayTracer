@@ -107,8 +107,15 @@ impl SceneContainer
         h.setRoot(self.root.clone());
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
         {
+            let mut color = Vec3::newEmpty();
+            if let Some(texture) = self.allTextures.get(h.getTextureName())
+            {
+                let coords = h.getCoords();
+                color = Texture::get_texture_color(coords.0, coords.1, texture);
+            }
+
             if let Some(shader) = self.allShaders.get(&h.getShaderName()) {
-                return shader.apply(h);
+                return shader.apply(h,color);
             }
         }
         self.background_color

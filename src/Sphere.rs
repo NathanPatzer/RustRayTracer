@@ -11,6 +11,7 @@ pub struct Sphere
     center: Vec3,
     radius: f32,
     shader_name: String,
+    texture_name: String,
     bounding_box: BoundingBox,
     centroid: Vec3
 
@@ -18,10 +19,10 @@ pub struct Sphere
 
 impl Sphere
 {
-    pub fn new(c: Vec3, r: f32,shader_name: String) -> Sphere
+    pub fn new(c: Vec3, r: f32,shader_name: String,texture_name: String) -> Sphere
     {   
         let bbox = self::Sphere::createBoundingBox(c,r);
-        Sphere{center: c, radius: r, shader_name: shader_name,bounding_box: bbox,centroid: c}
+        Sphere{center: c, radius: r, shader_name: shader_name,bounding_box: bbox,centroid: c, texture_name: texture_name}
     }
 
     pub fn calcualteNormal(r: &Ray, center: Vec3, T: f32) -> Vec3
@@ -73,6 +74,7 @@ impl Hittable for Sphere
             else 
             {
                 let intersection = r.origin + (r.dir * T);
+                h_struct.setTextureName(self.texture_name.clone());
                 h_struct.setCoords(self::Sphere::getSphereUV((intersection - self.center) / self.radius));
                 h_struct.setT(T);
                 h_struct.setIntersect(intersection);

@@ -7,21 +7,20 @@ use crate::Shader::Shader;
 #[derive(Clone)]
 pub struct s_Toon
 {
-    color: Vec3,
     thresh: i32
 }
 
 impl s_Toon
 {
-    pub fn new(c: Vec3, t: i32) ->s_Toon
+    pub fn new(t: i32) ->s_Toon
     {
-        s_Toon { color: c, thresh: t }
+        s_Toon {thresh: t }
     }
 }
 
 impl Shading for s_Toon
 {
-    fn apply(&self,h_struct: &mut HStruct) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct,color_to_shade: Vec3) -> Vec3 
     {
         let mut final_color = Vec3::newEmpty();
         let lights = h_struct.getLights();
@@ -30,9 +29,9 @@ impl Shading for s_Toon
             let ndotl = h_struct.getNormal().dot(&l);
             let max = 0.0_f32.max(ndotl);
             let mut lcolor = Vec3::newEmpty();
-            lcolor[0] = light.getIntensity()[0] * self.color[0];
-            lcolor[1] = light.getIntensity()[1] * self.color[1];
-            lcolor[2] = light.getIntensity()[2] * self.color[2];
+            lcolor[0] = light.getIntensity()[0] * color_to_shade[0];
+            lcolor[1] = light.getIntensity()[1] * color_to_shade[1];
+            lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
 
         // SHADOWS
             let shadow_ray = Shader::shadowRay(light, h_struct.getIntersect());
