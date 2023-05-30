@@ -14,7 +14,7 @@
 	    "_type": "point"
 	}],
 	"shader": [{
-	    "texture": "textura-grunge-3.jpg",
+	    "texture": "earth.jpg",
 	    "_name": "blue",
 	    "_type": "Lambertian"
 	}],

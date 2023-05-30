@@ -60,7 +60,7 @@ impl Shading for s_Lambertian
             }
             else if self.texture.is_some()
             {  
-                let t_color = self::Lambertian::get_texture_color(coords.0, coords.1, h_struct.getTexture(self.texture.clone().unwrap()));
+                let t_color = Lambertian::get_texture_color(coords.0, coords.1, h_struct.getTexture(self.texture.clone().unwrap()));
                 lcolor[0] = light.getIntensity()[0] * t_color[0];
                 lcolor[1] = light.getIntensity()[1] * t_color[1];
                 lcolor[2] = light.getIntensity()[2] * t_color[2];
