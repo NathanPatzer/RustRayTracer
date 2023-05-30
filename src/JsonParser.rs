@@ -17,6 +17,7 @@ use crate::PerspectiveCamera;
 use crate::Box;
 use crate::s_Toon::Toon;
 use crate::s_mirror::Mirror;
+use crate::Texture::Texture;
 pub struct JsonParser
 {
     path: String,
@@ -109,8 +110,21 @@ impl JsonParser
             let shader_type = shader_vec[i].get("_type").unwrap().as_str().unwrap();
             if shader_type == "Lambertian"
             {
-                let diffuse = self::JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
-                let shader = Lambertian::new(diffuse);
+                let diffuse = if let Some(diffuse_value) = shader_vec[i].get("diffuse") {
+                    Some(self::JsonParser::getVec(diffuse_value.as_str().unwrap()))
+                } else {
+                    None
+                };
+                
+                let texture: Option<String> = if let Some(texture_value) = shader_vec[i].get("texture") {
+                    println!("{}", texture_value.as_str().unwrap());
+                    scene.addTexture(Texture::new("TEXTURES/".to_string() + texture_value.as_str().unwrap()), texture_value.as_str().unwrap().to_string());
+                    Some(texture_value.as_str().unwrap().to_string())
+                } else {
+                    None
+                };
+
+                let shader = Lambertian::new(diffuse,texture);
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
                 scene.addShader(Shader::Lambertian(shader), name.to_string());
             }

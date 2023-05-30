@@ -3,6 +3,8 @@ use crate::Shape::Hittable;
 use crate::HStruct;
 use crate::Ray::Ray;
 use crate::BoundingBox;
+use std::f32::consts::PI;
+use libm::{self, atan2,asin};
 #[derive(Clone)]
 pub struct Sphere
 {
@@ -35,6 +37,15 @@ impl Sphere
         let maxPt = center + radius; 
         BoundingBox::new(minPt, maxPt)
     }
+
+    fn getSphereUV(p: Vec3) -> (f32,f32)
+    {
+        let phi = atan2(p[2] as f64, p[0] as f64);
+        let theta = asin(p[1] as f64);
+        let u: f32 = 1.0 - (phi as f32 + PI) / (2.0*PI);
+        let v: f32 = (theta as f32 + (PI / 2.0)) / PI;
+        (u,v)
+    }
 }
 
 impl Hittable for Sphere
@@ -61,8 +72,10 @@ impl Hittable for Sphere
             }
             else 
             {
+                let intersection = r.origin + (r.dir * T);
+                h_struct.setCoords(self::Sphere::getSphereUV((intersection - self.center) / self.radius));
                 h_struct.setT(T);
-                h_struct.setIntersect(r.origin + (r.dir * T));
+                h_struct.setIntersect(intersection);
                 h_struct.setNormal(self::Sphere::calcualteNormal(r, self.center, T));
                 h_struct.setRay(Ray::new(r.dir, r.origin));
                 h_struct.setShaderName(self.shader_name.clone());
@@ -75,6 +88,8 @@ impl Hittable for Sphere
     {
         self.shader_name.clone()
     }
+
+
 
     fn getBoundingBox(&self) -> BoundingBox 
     {

@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use crate::Texture::Texture;
 use crate::Vec3;
 use crate::Ray::Ray;
 use crate::Shape::Shape;
@@ -7,6 +8,7 @@ use crate::Light::Light;
 use crate::SceneContainer::SceneContainer;
 use crate::Shader::Shader;
 use crate::BVHNode;
+
 #[derive(Clone)]
 pub struct HitStruct
 {
@@ -17,7 +19,8 @@ pub struct HitStruct
     pub scene: SceneContainer,
     depth: i32,
     background_color: Vec3,
-    shader_name: String
+    shader_name: String,
+    t_coords: (f32,f32)
     //shapes: Vec<Shape>,
     //lights: Vec<Light>
 }
@@ -26,9 +29,6 @@ impl HitStruct
 {
     pub fn new() -> HitStruct
     {
-        //let shapes: Vec<Shape> = Vec::new();
-        //let lights: Vec<Light> = Vec::new();
-        //default values
         HitStruct{
             min_t: 1.0,
             intersect: Vec3::newEmpty(),
@@ -37,8 +37,19 @@ impl HitStruct
             scene: SceneContainer::new(),
             depth: 1,
             background_color: Vec3::newEmpty(),
-            shader_name: "".to_string()
+            shader_name: "".to_string(),
+            t_coords: (0.0,0.0)
         }
+    }
+
+    pub fn setCoords(&mut self, coords: (f32,f32))
+    {
+        self.t_coords = coords; 
+    }
+
+    pub fn getCoords(&self) -> (f32,f32)
+    {
+        self.t_coords
     }
 
     pub fn setT(&mut self, newT: f32)
@@ -153,6 +164,16 @@ impl HitStruct
     pub fn getRoot(&self) -> BVHNode::BVHNode
     {
         self.scene.root.clone().unwrap()
+    }
+
+    pub fn setTextures(&mut self, textures: HashMap<String,Texture>)
+    {
+        self.scene.allTextures = textures;
+    }
+
+    pub fn getTexture(&self, t: String) -> &Texture
+    {
+        self.scene.allTextures.get(&t).unwrap()
     }
 
 }

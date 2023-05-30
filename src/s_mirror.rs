@@ -50,16 +50,18 @@ impl Shading for s_mirror
         let mut rng = rand::thread_rng();
         let lower_range = -1.0 * self._roughness;
         let upper_range = self._roughness;
-        let mut random_perturbation = Vec3::newEmpty();
+        let mut rough_r = r;
+        
         if self._roughness > 0.0
         {
-        random_perturbation = Vec3::new(
+            println!(".");
+            let random_perturbation = Vec3::new(
             rng.gen_range(lower_range..upper_range), 
             rng.gen_range(lower_range..upper_range), 
             rng.gen_range(lower_range..upper_range));
+            rough_r = rough_r + random_perturbation;
         }
 
-        let rough_r = r + random_perturbation;
         let mirror_ray = Ray::new(rough_r, h_struct.getIntersect());
         let depth = h_struct.getDepth();
         self::s_mirror::mirror_color(mirror_ray, 1.0e-5, INFINITY, depth - 1, h_struct)

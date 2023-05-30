@@ -29,6 +29,7 @@ mod s_mirror;
 mod AABoundingBox;
 mod BVHNode;
 mod s_Toon;
+mod Texture;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -46,6 +47,7 @@ use crate::s_mirror::*;
 use crate::AABoundingBox::*;
 use crate::s_Toon::*;
 
+
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
     let args: Args = Args::new(plainargs);
@@ -55,6 +57,7 @@ fn main() {
 
     let mut sc = SceneContainer::SceneContainer::new();
     sc.background_color = Vec3::new(0.53,0.81,0.92);
+    //sc.background_color = Vec3::newEmpty();
     assert!(args.json.len() > 0, "NO JSON SUPPLIED");
     let parser = JsonParser::JsonParser::new(args.json, args.width as i32, args.height as i32);
 
@@ -64,26 +67,19 @@ fn main() {
     let rpp = args.rpp;
     
     let depth = args.depth;
-    let hit_struct = &mut HStruct::new();
+
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
-    let light_refs: &[Light::Light] = &sc.allLights[..];
-    hit_struct.setShapes(shape_refs.to_vec());
-    hit_struct.setLights(light_refs.to_vec());
-    hit_struct.setDepth(depth);
-    hit_struct.setShaders(sc.allShaders.clone());
-    hit_struct.setBackGroundColor(sc.background_color);
-    
-    
+
     let bvh = BVHNode::BVHNode::new(shape_refs.iter().map(|shape| Arc::new(shape.clone())).collect::<Vec<_>>().as_slice(), 0);
     sc.root = Some(bvh);
     println!("CONSTRUCTED BVH");
     assert!(sc.root.is_some());
     let slice_width: u32 = w / args.num_threads;
-    hit_struct.setRoot(sc.root.clone());
+
     //THREADS
     let mut threads = vec![];
     let slices = Arc::new(Mutex::new(vec![]));
-    assert!(hit_struct.scene.root.is_some(),"ROOT IS NONE IN MAIN");
+    
     println!("RENDERING WITH {} THREADS...",args.num_threads);
     //LOADING BAR
     let progress_bar = Arc::new(ProgressBar::new((args.height * args.num_threads) as u64));
@@ -91,6 +87,8 @@ fn main() {
         ProgressStyle::default_bar()
             .template("[{bar:25}] {percent}%")
     );
+
+    //TEXTURE
 
     let start = std::time::Instant::now();
     for i in 0..args.num_threads 
@@ -144,7 +142,7 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
     hit_struct.setDepth(depth);
     hit_struct.setShaders(sc.allShaders.clone());
     hit_struct.setBackGroundColor(sc.background_color);
-
+    hit_struct.setTextures(sc.allTextures.clone());
     let mut rng: rand::rngs::ThreadRng = rand::thread_rng();
     let mut slice: Vec<(u32,u32,Vec3)> = Vec::new();
     let min_t = 1.0;

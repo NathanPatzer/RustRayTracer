@@ -1,3 +1,4 @@
+use crate::Texture::Texture;
 use crate::{HStruct, Vec3, Shading, Shape::Shape};
 
 use std::collections::HashMap;
@@ -14,6 +15,7 @@ pub struct SceneContainer
     pub allShaders: HashMap<String,Shader>,
     pub allLights: Vec<Light>,
     pub allCameras: Vec<Camera>,
+    pub allTextures: HashMap<String,Texture>,
     pub background_color: Vec3,
     pub root: Option<BVHNode>
 }
@@ -26,8 +28,8 @@ impl SceneContainer
         let s: HashMap<String,Shader> = HashMap::new();
         let l: Vec<Light> = Vec::new();
         let c: Vec<Camera> = Vec::new();
-        
-        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c, background_color: Vec3::newEmpty(),root: None }
+        let t: HashMap<String,Texture> = HashMap::new();
+        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c,allTextures: t, background_color: Vec3::newEmpty(),root: None }
     }
 
     pub fn addShape(&mut self, shape: Shape)
@@ -110,5 +112,10 @@ impl SceneContainer
             }
         }
         self.background_color
+    }
+
+    pub fn addTexture(&mut self, t: Texture,tname: String)
+    {
+        self.allTextures.insert(tname, t);
     }
 }
