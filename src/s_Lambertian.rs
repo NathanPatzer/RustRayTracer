@@ -7,7 +7,7 @@ use crate::Shader::Shader;
 #[derive(Clone)]
 pub struct s_Lambertian
 {
-
+    
 }
 
 impl s_Lambertian
