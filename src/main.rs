@@ -171,6 +171,6 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             }
             
         }
-        println!("{}",thread);
+        
         slice
 }
