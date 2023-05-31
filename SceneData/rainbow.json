@@ -14,19 +14,20 @@
 	    "_type": "point"
 	}],
 	"shader": [{
+	    "texture": "colorful.jpg",
 	    "_name": "blue",
 	    "_type": "Lambertian"
 	}],
     "texture":[{
-        "_name": "earth",
-        "texture": "earth.jpg"
+        "_name": "rainbow",
+        "texture": "colorful.jpg"
     }],
 	"shape": [{
 	    "shader": {
 		"_ref": "blue"
 	    },
         "texture": {
-        "_ref": "earth"
+        "_ref": "rainbow"
         },
 	    "center": "0 0.0 -5",
 	    "radius": 1,
