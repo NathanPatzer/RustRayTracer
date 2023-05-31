@@ -90,7 +90,7 @@ impl Hittable for BVHNode
         let mut right_normal = Vec3::newEmpty();
         let mut right_s = "".to_string();
         let mut right_i = Vec3::newEmpty();
-
+        let mut right_texture = "".to_string();
         if self.bounding_box.intersect(r)
         {
             if self.rightChild.is_some()
@@ -103,6 +103,7 @@ impl Hittable for BVHNode
                     right_normal = h.getNormal();
                     right_s = h.getShaderName();
                     right_i = h.getIntersect();
+                    right_texture = h.getTextureName().to_string();
                 }
             }
             if self.leftChild.is_some()
@@ -122,6 +123,7 @@ impl Hittable for BVHNode
                     h.setNormal(right_normal);
                     h.setShaderName(right_s);
                     h.setIntersect(right_i);
+                    h.setTextureName(right_texture);
                     return true;
                 }
                 else {
