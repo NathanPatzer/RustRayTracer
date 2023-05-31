@@ -20,19 +20,19 @@ pub enum Shader
 
 pub trait Shading
 {
-    fn apply(&self,h_struct: &mut HStruct) -> Vec3;
+    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3) -> Vec3;
 }
 
 impl Shading for Shader
 {
-    fn apply(&self,h_struct: &mut HStruct) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3) -> Vec3 
     {
         match self
         {
-            Shader::Lambertian(L) => L.apply(h_struct),
-            Shader::BlinnPhong(B) => B.apply(h_struct),
-            Shader::Mirror(M) => M.apply(h_struct),
-            Shader::Toon(T) => T.apply(h_struct)
+            Shader::Lambertian(L) => L.apply(h_struct,color_to_shade),
+            Shader::BlinnPhong(B) => B.apply(h_struct,color_to_shade),
+            Shader::Mirror(M) => M.apply(h_struct,color_to_shade),
+            Shader::Toon(T) => T.apply(h_struct,color_to_shade)
         }    
     }
 }

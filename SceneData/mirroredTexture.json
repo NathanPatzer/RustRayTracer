@@ -27,7 +27,6 @@
 	],
 	"shader": [
 	    {
-		"texture": "Dirt.jpg",
 		"_name": "greenMat",
 		"_type": "Lambertian"
 	    },
@@ -55,6 +54,10 @@
 		"_type": "Mirror"
 	    }
 	],
+    "texture":[{
+        "_name": "earth",
+        "texture": "earth.jpg"
+    }],
 	"shape": [
 	    {
 		"shader": {
@@ -77,7 +80,9 @@
 	    {
 		"shader": {
 		    "_ref": "greenMat"
-		},
+		},"texture": {
+			"_ref": "earth"
+			},
 		"center": "1.2 1.10 -4.0",
 		"radius": 1.10,
 		"_name": "rightsphere",

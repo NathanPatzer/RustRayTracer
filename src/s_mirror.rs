@@ -1,4 +1,4 @@
-use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shape::Hittable};
+use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shape::Hittable, Texture::Texture};
 use rand::Rng;
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
@@ -29,9 +29,22 @@ impl s_mirror
         
         if h.scene.root.clone().unwrap().closestHit(&r, min_t, max_t, h)
         {
+            let mut color: Vec3 = Vec3::newEmpty();
+            if let Some(texture) = h.scene.allTextures.get(h.getTextureName())
+            {
+                if texture.isTexture
+                {
+                    let coords = h.getCoords();
+                    color = Texture::get_texture_color(coords.0, coords.1, texture);
+                }
+                else {
+                   
+                    color = texture.get_diffuse_color();
+                }
+            }
             
             if let Some(shader) = shaders.get(&h.getShaderName()) {
-                return shader.apply(h);
+                return shader.apply(h,&color);
             }
         }
             h.getBackGroundColor()
@@ -41,9 +54,8 @@ impl s_mirror
 
 impl Shading for s_mirror
 {
-    fn apply(&self,h_struct: &mut HStruct) -> Vec3
+    fn apply(&self,h_struct: &mut HStruct,_color_to_shade: &Vec3) -> Vec3
     {
-
         let v = (h_struct.getRay().dir * -1.0).normalize();
         let n = h_struct.getNormal().normalize();
         let r = (v * -1.0) + (n * v.dot(&n) * 2.0);
@@ -54,7 +66,7 @@ impl Shading for s_mirror
         
         if self._roughness > 0.0
         {
-            println!(".");
+            
             let random_perturbation = Vec3::new(
             rng.gen_range(lower_range..upper_range), 
             rng.gen_range(lower_range..upper_range), 

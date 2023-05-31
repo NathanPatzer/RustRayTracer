@@ -6,22 +6,21 @@ use crate::Shader::Shader;
 #[derive(Clone)]
 pub struct s_BlinnPhong
 {   
-    diffuse: Vec3,
     specular: Vec3,
     phongExp: f32
 }
 
 impl s_BlinnPhong
 {
-    pub fn new(diffuse: Vec3,specular: Vec3, phongExp: f32) -> s_BlinnPhong
+    pub fn new(specular: Vec3, phongExp: f32) -> s_BlinnPhong
     {
-        s_BlinnPhong {diffuse: diffuse,  specular: specular, phongExp: phongExp }
+        s_BlinnPhong {specular: specular, phongExp: phongExp }
     }
 }
 
 impl Shading for s_BlinnPhong
 {
-    fn apply(&self,h_struct: &mut HStruct) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3) -> Vec3 
     {
         let mut finalColor = Vec3::newEmpty();
         let lights = h_struct.getLights();
@@ -47,9 +46,9 @@ impl Shading for s_BlinnPhong
             //CALCULATE DIFFUSE COMPONENET
             let ndotl = normal.dot(&L);
             let max: f32 = 0.0_f32.max(ndotl);
-            lcolor[0] = light.getIntensity()[0] * self.diffuse[0];
-            lcolor[1] = light.getIntensity()[1] * self.diffuse[1];
-            lcolor[2] = light.getIntensity()[2] * self.diffuse[2];
+            lcolor[0] = light.getIntensity()[0] * color_to_shade[0];
+            lcolor[1] = light.getIntensity()[1] * color_to_shade[1];
+            lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
             lcolor = lcolor * max;
 
             //SHADOWS
