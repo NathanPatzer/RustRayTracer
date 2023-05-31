@@ -22,8 +22,6 @@ pub struct HitStruct
     shader_name: String,
     texture_name: String,
     t_coords: (f32,f32)
-    //shapes: Vec<Shape>,
-    //lights: Vec<Light>
 }
 
 impl HitStruct
