@@ -52,6 +52,6 @@ cargo run --release -- -n threeTri -r 4 -i .\SceneData\threeTriangles.json -n th
 
 - Generate a 500x500 image with an Anti-Aliasing-Coefficient of 5 and using the `oneEarth.json` file as input:
 ```
-cargo run --release -- -n threeTri -r 5 -i .\SceneData\threeTriangles.json -n oneEarth
+cargo run --release -- -n threeTri -r 5 -i .\SceneData\oneEarth.json -n oneEarth
 ```
 ![Alt Text](./IMAGES/oneEarth.png)
