@@ -20,12 +20,12 @@ pub enum Shader
 
 pub trait Shading
 {
-    fn apply(&self,h_struct: &mut HStruct, color_to_shade: Vec3) -> Vec3;
+    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3) -> Vec3;
 }
 
 impl Shading for Shader
 {
-    fn apply(&self,h_struct: &mut HStruct,color_to_shade: Vec3) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3) -> Vec3 
     {
         match self
         {

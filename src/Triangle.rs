@@ -12,7 +12,8 @@ pub struct Triangle
     normal: Vec3D,
     shader_name: String,
     bounding_box: BoundingBox,
-    centroid: Vec3D
+    centroid: Vec3D,
+    texture_name: String
 
     
 }
@@ -20,11 +21,11 @@ pub struct Triangle
 impl Triangle
 {
 
-    pub fn new(a: Vec3D, b: Vec3D, c: Vec3D, shader_name: String) -> Triangle
+    pub fn new(a: Vec3D, b: Vec3D, c: Vec3D, shader_name: String,t: String) -> Triangle
     {
         let bbox = self::Triangle::createBoundingBox(a, b, c);
         let centroid = (bbox.minPt + bbox.maxPt) / 2.0;
-        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name,bounding_box: bbox,centroid: centroid}
+        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name,bounding_box: bbox,centroid: centroid, texture_name: t}
     }
 
     fn calcualteNormal(A: Vec3D, B: Vec3D, C: Vec3D) -> Vec3D
@@ -109,6 +110,7 @@ impl Hittable for Triangle
         {
    		 return false;
 	    }
+        h_struct.setTextureName(self.texture_name.clone());
         h_struct.setT(T);
         h_struct.setNormal(self.normal);
         h_struct.setIntersect(r.origin + (r.dir * T));

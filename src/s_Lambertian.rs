@@ -20,7 +20,7 @@ impl s_Lambertian
 
 impl Shading for s_Lambertian
 {
-    fn apply(&self,h_struct: &mut HStruct, color_to_shade: Vec3) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3) -> Vec3 
     {
         let mut finalColor = Vec3::newEmpty();
         let lights = h_struct.getLights();

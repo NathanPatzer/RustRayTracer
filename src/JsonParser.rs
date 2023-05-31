@@ -81,17 +81,27 @@ impl JsonParser
                 let v1 = self::JsonParser::getVec(shape_vec[i].get("v1").unwrap().as_str().unwrap());
                 let v2 = self::JsonParser::getVec(shape_vec[i].get("v2").unwrap().as_str().unwrap());
                 let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
-                let tri = Tri::new(v0, v1, v2, shader_name);
+                let tri = Tri::new(v0, v1, v2, shader_name.clone(),shader_name);
                 scene.addShape(Shape::Triangle(tri));
             }
             else if shape_type == "sphere" 
             {
                 let center = self::JsonParser::getVec(shape_vec[i].get("center").unwrap().as_str().unwrap());
                 let radius = shape_vec[i].get("radius").unwrap().as_f64().unwrap();
-                let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
-                let texture_name = shape_vec[i].get("texture").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
-                let s = Sph::new(center, radius as f32,shader_name,texture_name);
-                scene.addShape(Shape::Sphere(s));
+                
+
+                if shape_vec[i].get("texture").is_some()
+                {
+                    let texture_name = shape_vec[i].get("texture").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
+                    let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
+                    let s = Sph::new(center, radius as f32,shader_name.clone(),texture_name);
+                    scene.addShape(Shape::Sphere(s));
+                }
+                else {
+                    let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
+                    let s = Sph::new(center, radius as f32,shader_name.clone(),shader_name);
+                    scene.addShape(Shape::Sphere(s));
+                }
             }
             else if shape_type == "box"
             {
@@ -115,14 +125,26 @@ impl JsonParser
             {
                 let shader = Lambertian::new();
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
-                scene.addShader(Shader::Lambertian(shader), name.to_string());
+                if shader_vec[i].get("diffuse").is_none()
+                {
+                    scene.addShader(Shader::Lambertian(shader), name.to_string());
+                }
+                else {
+                    let diffuse = JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
+                    let texture = Texture::create_diffuse_texture(diffuse);
+                    scene.addTexture(texture, name.to_string());
+                    scene.addShader(Shader::Lambertian(shader), name.to_string());
+                }
             }
             else if shader_type == "BlinnPhong"
             {
                 let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
                 let specular = self::JsonParser::getVec(shader_vec[i].get("specular").unwrap().as_str().unwrap());
+                let diffuse = self::JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
                 let phong_exp = shader_vec[i].get("phongExp").unwrap().as_f64().unwrap();
                 let shader = BlinnPhong::new(specular, phong_exp as f32);
+                let texure = Texture::create_diffuse_texture(diffuse);
+                scene.addTexture(texure, name.to_string());
                 scene.addShader(Shader::BlinnPhong(shader), name.to_string());
             }
             else if shader_type == "Mirror"
@@ -172,6 +194,7 @@ impl JsonParser
                 scene.addCamera(Camera::PerpectiveCamera(p_cam));
             }
         }
+        
         println!("Added {} Cameras",camera_len);
         //ADD TEXTURES
         for i in 0..texture_len
@@ -182,7 +205,6 @@ impl JsonParser
             scene.addTexture(texture, texture_name.to_string());  
         }
         println!("Added {} Textures", texture_len);
-        
     }
 
     //helper function that converts "a b c" into a vec3(a,b,c)

@@ -38,7 +38,7 @@
              "_name": "wall",
              "_type": "Lambertian"
           }
-       ],
+       ],"texture":[],
        "shape": [
           {
              "minPt": "-10.0 -300.0 -8.0",

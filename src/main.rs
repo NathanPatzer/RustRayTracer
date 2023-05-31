@@ -93,16 +93,15 @@ fn main() {
     {
         let thread_sc = sc.clone();
         let slice_start = slice_width * i;
+        let slices_clone = Arc::clone(&slices);
         // Spawn a new thread for each iteration
         let thread = thread::spawn({
-            let slices_clone = Arc::clone(&slices);
             move|| {
             let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i,args.num_threads);
             let mut v = slices_clone.lock().unwrap();
             v.push(slice_to_push);
             }
         });
-
         // Store the thread handle in the vector
         threads.push(thread);
     }
@@ -146,7 +145,7 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
     let max_t = INFINITY;
     let mut sw = slice_width;
     
-    //renders rest of image on last thread
+    //renders rest of image on lst thread
     if thread == num_threads - 1
     {
         sw = img_w;
