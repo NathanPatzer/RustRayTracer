@@ -81,6 +81,17 @@ impl std::ops::Mul<f32> for Vec3D
     }
 }
 
+impl std::ops::Mul<Vec3D> for Vec3D
+{
+    type Output = Vec3D;
+    fn mul(self, rhs: Vec3D) -> Vec3D {
+        let r = self.rgb[0] * rhs[0];
+        let g = self.rgb[1] * rhs[1];
+        let b = self.rgb[2] * rhs[2];
+        Vec3D { rgb: [r,g,b] }
+    }
+}
+
 impl std::ops::Div<f32> for Vec3D
 {
     type Output = Vec3D;
@@ -101,6 +112,18 @@ impl std::ops::Div<f32> for &Vec3D
         let r = self.rgb[0] / rhs;
         let g = self.rgb[1] / rhs;
         let b = self.rgb[2] / rhs;
+        Vec3D { rgb: [r,g,b] }
+    }
+}
+
+impl std::ops::Div<Vec3D> for Vec3D
+{
+    type Output = Vec3D;
+    fn div(self, rhs: Vec3D) -> Vec3D 
+    {
+        let r = self.rgb[0] / rhs[0];
+        let g = self.rgb[1] / rhs[1];
+        let b = self.rgb[2] / rhs[2];
         Vec3D { rgb: [r,g,b] }
     }
 }

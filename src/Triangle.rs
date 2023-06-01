@@ -10,12 +10,12 @@ pub struct Triangle
     B: Vec3D,
     C: Vec3D,
     normal: Vec3D,
+    v_normals: (Vec3D,Vec3D,Vec3D),
     shader_name: String,
     bounding_box: BoundingBox,
     centroid: Vec3D,
-    texture_name: String
-
-    
+    texture_name: String,
+    interpolate: bool
 }
 
 impl Triangle
@@ -25,7 +25,8 @@ impl Triangle
     {
         let bbox = self::Triangle::createBoundingBox(a, b, c);
         let centroid = (bbox.minPt + bbox.maxPt) / 2.0;
-        Triangle{A: a, B: b, C: c, normal: self::Triangle::calcualteNormal(a,b,c),shader_name: shader_name,bounding_box: bbox,centroid: centroid, texture_name: t}
+        let norm = Tri::calcualteNormal(a, b, c);
+        Triangle{A: a, B: b, C: c, normal: norm,shader_name: shader_name,bounding_box: bbox,centroid: centroid, texture_name: t, v_normals: (norm,norm,norm),interpolate: false}
     }
 
     fn calcualteNormal(A: Vec3D, B: Vec3D, C: Vec3D) -> Vec3D
@@ -33,6 +34,11 @@ impl Triangle
         let a = B - A;
         let b = C - A;
         a.crossProduct(&b).normalize()
+    }
+
+    pub fn setInterpolateON(&mut self)
+    {
+        self.interpolate = true;
     }
 
     fn createBoundingBox(A: Vec3D, B: Vec3D, C: Vec3D) -> BoundingBox
@@ -59,6 +65,31 @@ impl Triangle
     fn findMin(a: f32, b: f32, c: f32) -> f32
     {
         a.min(b.min(c))
+    }
+
+    pub fn setVNormals(&mut self, norms: (Vec3D,Vec3D,Vec3D))
+    {
+        self.v_normals.0 = norms.0;
+        self.v_normals.1 = norms.1;
+        self.v_normals.2 = norms.2;
+    }
+
+    pub fn calcualate_barycentric_coords(A: Vec3D, B: Vec3D,C: Vec3D,intersection: Vec3D) -> (Vec3D,Vec3D,Vec3D)
+    {
+        let v1p = intersection - A;
+        let v2p = intersection - B;
+        let v3p = intersection - C;
+
+        let area = (B - A).crossProduct(&(C - A)) * 0.5;
+        let area1 = v2p.crossProduct(&v3p) * 0.5;
+        let area2 = v3p.crossProduct(&v1p) * 0.5;
+        let area3 = v1p.crossProduct(&v2p) * 0.5;
+
+        let u = area1 / area;
+        let v = area2 / area;
+        let w = area3 / area;
+
+        (u,v,w)
     }
 }
 
@@ -110,9 +141,21 @@ impl Hittable for Triangle
         {
    		 return false;
 	    }
+
+        let mut normal = self.normal;
+        //TESTING
+        if self.interpolate
+        {
+            let barys = self::Tri::calcualate_barycentric_coords(self.A,self.B,self.C,r.origin + (r.dir * T));
+            normal = ((barys.0 * self.v_normals.0) + (barys.1 * self.v_normals.1) + (barys.2 * self.v_normals.2)).normalize();
+        }
+
+
+        //DONE TESTING
         h_struct.setTextureName(self.texture_name.clone());
         h_struct.setT(T);
-        h_struct.setNormal(self.normal);
+        //h_struct.setNormal(self.normal);
+        h_struct.setNormal(normal);
         h_struct.setIntersect(r.origin + (r.dir * T));
         h_struct.setRay(Ray::new(r.dir, r.origin));
         h_struct.setShaderName(self.shader_name.clone());

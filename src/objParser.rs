@@ -41,18 +41,19 @@ impl OBJParser
             }
             if line_Vec[0] == "f"
             {
-                let face: (i32,i32,i32) = OBJ::getFace(&line_Vec);  
+                let face: (i32,i32,i32) = OBJ::getFace(&line_Vec); 
                 faces.push(face);
             }
         }
-
-        for face in faces
+        let vertex_normals: Vec<Vec3> = OBJ::calculate_vertex_normals(&faces,verticies.len() as i32,&verticies);
+        for face in &faces
         {
-            let triangle_to_push: Tri = Tri::new(verticies[face.0 as usize], verticies[face.1 as usize], verticies[face.2 as usize], shader_ref.clone(), shader_ref.clone());
+            let mut triangle_to_push: Tri = Tri::new(verticies[face.0 as usize], verticies[face.1 as usize], verticies[face.2 as usize], shader_ref.clone(), shader_ref.clone());
+            let tri_norms: (Vec3,Vec3,Vec3) = (vertex_normals[face.0 as usize],vertex_normals[face.1 as usize],vertex_normals[face.2 as usize]);
+            triangle_to_push.setInterpolateON();
+            triangle_to_push.setVNormals(tri_norms);
             self.tri.push(triangle_to_push);
         }
-
-        
     }
 
         //helper function that converts line_vec into a vec3
@@ -69,6 +70,46 @@ impl OBJParser
         pub fn getSceneShapes(&self) -> &Vec<Tri>
         {
             &self.tri
+        }
+
+        fn calculate_vertex_normals(f: &Vec<(i32,i32,i32)>,num_verts: i32, verts: &Vec<Vec3>) -> Vec<Vec3>
+        {
+            let mut face_vec: Vec<(i32,i32,i32)> = Vec::new();
+            let mut normal_vec: Vec<Vec3> = Vec::new();
+            let mut vertex_normals: Vec<Vec3> = Vec::new();
+            //for every verticie, check if is contained in a face
+            for i in 0..num_verts
+            {
+                for face in f
+                {
+                    if face.0 == i || face.1 == i || face.2 == i
+                    {
+                        face_vec.push((face.0,face.1,face.2));
+                    }
+                }
+                for tri in &face_vec
+                {
+                    normal_vec.push(OBJ::calcualteFaceNormal(verts[tri.0 as usize], verts[tri.1 as usize], verts[tri.2 as usize]));
+                }
+                let mut norm_total: Vec3 = Vec3::newEmpty();
+                for norm in &normal_vec
+                {
+                    norm_total = norm_total + norm;
+                }
+                norm_total = norm_total / face_vec.len() as f32;
+                vertex_normals.push(norm_total.normalize());
+                normal_vec.clear();
+                face_vec.clear();
+            }
+
+            vertex_normals
+        }
+
+        fn calcualteFaceNormal(A: Vec3, B: Vec3, C: Vec3) -> Vec3
+        {
+            let a = B - A;
+            let b = C - A;
+            a.crossProduct(&b).normalize()
         }
 }
 
