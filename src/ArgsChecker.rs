@@ -7,7 +7,8 @@ pub struct ArgsChecker
     pub rpp: u32,
     pub depth: i32,
     pub name: String,
-    pub num_threads: u32
+    pub num_threads: u32,
+    pub interpolation: bool
 
 }
 
@@ -22,6 +23,7 @@ impl ArgsChecker
         let mut depth: i32 = 1;
         let mut name = "output".to_string();
         let mut num_threads: u32 = 1;
+        let mut interpolion: bool = false;
         for i in 0..args.len()
         {
             if args[i] == "-w"
@@ -66,13 +68,17 @@ impl ArgsChecker
                     }
                 }
             }
+            else if args[i] == "-s"
+            {
+                interpolion = true;
+            }
         }       
          
         if height == 0
         {
             height = width;
         }
-        ArgsChecker { width: width, height: height, json: json, rpp: rpp, depth: depth, name: name,num_threads: num_threads }
+        ArgsChecker { width: width, height: height, json: json, rpp: rpp, depth: depth, name: name,num_threads: num_threads,interpolation: interpolion }
     }
 
     

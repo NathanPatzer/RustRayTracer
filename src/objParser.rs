@@ -16,7 +16,7 @@ impl OBJParser
         OBJParser { tri:  emptytri}
     }
 
-    pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String)
+    pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String,interpolate_on: bool)
     {
         let mut verticies: Vec<Vec3> = Vec::new();
         let mut faces: Vec<(i32,i32,i32)> = Vec::new();
@@ -45,13 +45,24 @@ impl OBJParser
                 faces.push(face);
             }
         }
-        let vertex_normals: Vec<Vec3> = OBJ::calculate_vertex_normals(&faces,verticies.len() as i32,&verticies);
+
+        let mut vertex_normals: Vec<Vec3> = Vec::new();
+        if interpolate_on
+        {
+            vertex_normals = OBJ::calculate_vertex_normals(&faces,verticies.len() as i32,&verticies);
+        }
+        
         for face in &faces
         {
             let mut triangle_to_push: Tri = Tri::new(verticies[face.0 as usize], verticies[face.1 as usize], verticies[face.2 as usize], shader_ref.clone(), shader_ref.clone());
-            let tri_norms: (Vec3,Vec3,Vec3) = (vertex_normals[face.0 as usize],vertex_normals[face.1 as usize],vertex_normals[face.2 as usize]);
-            triangle_to_push.setInterpolateON();
-            triangle_to_push.setVNormals(tri_norms);
+            
+            if interpolate_on
+            {
+                let tri_norms: (Vec3,Vec3,Vec3) = (vertex_normals[face.0 as usize],vertex_normals[face.1 as usize],vertex_normals[face.2 as usize]);
+                triangle_to_push.setInterpolateON();
+                triangle_to_push.setVNormals(tri_norms);
+            }
+
             self.tri.push(triangle_to_push);
         }
     }

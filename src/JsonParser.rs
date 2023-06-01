@@ -23,14 +23,15 @@ pub struct JsonParser
 {
     path: String,
     width: i32,
-    height: i32
+    height: i32,
+    interpolate: bool
 }
 
 impl JsonParser
 {
-    pub fn new(p: String, w: i32, h: i32) -> JsonParser
+    pub fn new(p: String, w: i32, h: i32,interpolate: bool) -> JsonParser
     {
-        JsonParser{path: p, width: w, height: h}
+        JsonParser{path: p, width: w, height: h,interpolate: interpolate}
     }
 
     pub fn readFile(path: String) -> String
@@ -215,7 +216,7 @@ impl JsonParser
             let obj_file_name = obj_vec[i].get("obj").unwrap().as_str().unwrap().to_string();
             let shader_ref = obj_vec[i].get("shader_ref").unwrap().as_str().unwrap().to_string();
             let mut obj_parser: OBJ = OBJ::new();
-            obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref);
+            obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate);
             let triVec: &Vec<Tri> = obj_parser.getSceneShapes();
             for tri in triVec
             {
