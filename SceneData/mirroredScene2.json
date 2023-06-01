@@ -54,7 +54,7 @@
 		"_name": "mirror",
 		"_type": "Mirror"
 	    }
-	],"texture":[],
+	],"texture":[],"obj":[],
 	"shape": [
 	    {
 		"shader": {

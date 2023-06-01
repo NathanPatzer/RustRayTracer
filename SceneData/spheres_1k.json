@@ -113,7 +113,7 @@
 				"_name": "baseShader",
 				"_type": "Lambertian"
 			}
-		],
+		],"obj":[],
 		"shape": [
 			{
 				"center": "-150.272 -150.251 -149.874",

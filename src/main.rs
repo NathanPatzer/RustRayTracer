@@ -31,6 +31,7 @@ mod AABoundingBox;
 mod BVHNode;
 mod s_Toon;
 mod Texture;
+mod objParser;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -47,7 +48,7 @@ use crate::ArgsChecker::*;
 use crate::s_mirror::*;
 use crate::AABoundingBox::*;
 use crate::s_Toon::*;
-
+use crate::objParser::*;
 
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
@@ -55,13 +56,13 @@ fn main() {
     let w = args.width;
     let h = args.height;
     let mut fb = Framebuffer::Framebuffer::new(args.width, args.height);
-
+    
     let mut sc = SceneContainer::SceneContainer::new();
-    sc.background_color = Vec3::new(0.53,0.81,0.92);
-    //sc.background_color = Vec3::newEmpty();
+    //obj.setSceneShapes(&mut sc);
+    //sc.background_color = Vec3::new(0.53,0.81,0.92);
+    sc.background_color = Vec3::newEmpty();
     assert!(args.json.len() > 0, "NO JSON SUPPLIED");
     let parser = JsonParser::JsonParser::new(args.json, args.width as i32, args.height as i32);
-
     parser.Parse(&mut sc);
     let cam = sc.getCamera();
     

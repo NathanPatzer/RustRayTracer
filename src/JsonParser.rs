@@ -18,6 +18,7 @@ use crate::Box;
 use crate::s_Toon::Toon;
 use crate::s_mirror::Mirror;
 use crate::Texture::Texture;
+use crate::OBJ;
 pub struct JsonParser
 {
     path: String,
@@ -56,9 +57,12 @@ impl JsonParser
         let json: serde_json::Value = serde_json::from_str(&jString).expect("JSON not well formatted");
         let jShapes: Option<&Vec<Value>> = json["scene"]["shape"].as_array();
         let jShaders = json["scene"]["shader"].as_array();
+        let jObj = json["scene"]["obj"].as_array();
         let jLights = json["scene"]["light"].as_array();
         let jCameras = json["scene"]["camera"].as_array();
         let jTextures = json["scene"]["texture"].as_array();
+        let obj_vec = jObj.unwrap();
+        let obj_len = obj_vec.len();
         let texture_vec = jTextures.unwrap();
         let texture_len = texture_vec.len();
         let camera_vec = jCameras.unwrap();
@@ -205,6 +209,19 @@ impl JsonParser
             scene.addTexture(texture, texture_name.to_string());  
         }
         println!("Added {} Textures", texture_len);
+
+        for i in 0..obj_len
+        {
+            let obj_file_name = obj_vec[i].get("obj").unwrap().as_str().unwrap().to_string();
+            let shader_ref = obj_vec[i].get("shader_ref").unwrap().as_str().unwrap().to_string();
+            let mut obj_parser: OBJ = OBJ::new();
+            obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref);
+            let triVec: &Vec<Tri> = obj_parser.getSceneShapes();
+            for tri in triVec
+            {
+                scene.addShape(Shape::Triangle(tri.clone()));
+            }
+        }
     }
 
     //helper function that converts "a b c" into a vec3(a,b,c)

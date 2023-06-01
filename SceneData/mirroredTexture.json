@@ -57,7 +57,7 @@
     "texture":[{
         "_name": "earth",
         "texture": "earth.jpg"
-    }],
+    }],"obj":[],
 	"shape": [
 	    {
 		"shader": {

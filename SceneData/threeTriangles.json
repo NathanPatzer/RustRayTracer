@@ -30,7 +30,7 @@
 		"_name": "blue",
 		"_type": "Lambertian"
 	    }
-	],"texture":[],
+	],"texture":[],"obj":[],
 	"shape": [
 	    {
 		"shader": {

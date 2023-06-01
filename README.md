@@ -55,3 +55,8 @@ cargo run --release -- -n threeTri -r 4 -i .\SceneData\threeTriangles.json -n th
 cargo run --release -- -n threeTri -r 5 -i .\SceneData\oneEarth.json -n oneEarth
 ```
 ![Alt Text](./IMAGES/oneEarth.png)
+- Generate a 1000x1000 image with an Anti-Aliasing-Coefficient of 3 and using the `homer.json` file as input:
+```
+cargo run --release -- -n threeTri -r 3 -i .\SceneData\homer.json -n homer
+```
+![Alt Text](./IMAGES/homer.png)

@@ -21,7 +21,7 @@
     "texture":[{
         "_name": "rainbow",
         "texture": "colorful.jpg"
-    }],
+    }],"obj":[],
 	"shape": [{
 	    "shader": {
 		"_ref": "blue"
