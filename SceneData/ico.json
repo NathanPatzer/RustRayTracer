@@ -1,0 +1,41 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 1 10",
+	    "viewDir": "0 -0.1 -1",
+	    "focalLength": 1.0,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "10 10 0",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	},{
+	    "position": "10 -10 0",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	},
+    {
+	    "position": "-10 -10 0",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	},{
+	    "position": "-10 10 0",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+        "diffuse": "1 0 0",
+	    "_name": "red",
+	    "_type": "Lambertian"
+	}],
+     "obj":[{
+        "obj": "icosahedron.obj",
+        "shader_ref": "red"
+    }],
+    "texture":[],
+	"shape": []
+    }
+}
