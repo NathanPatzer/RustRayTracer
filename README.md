@@ -38,6 +38,7 @@ Run the raytracer: Execute the raytracer with the desired command-line arguments
 - `-i [input_file]`: Specifies the input JSON file containing the scene description. Mandatory argument.
 - `-t [num_threads]`: Specifies the number of threads that will be used to render the image. Default to 1 and max of 16
 - `-s [smoothing]`: dictates whether or not smoothing will be turned on. No arguments.
+
 Output: Once the raytracer finishes execution, the resulting image will be saved in the project directory as `file_name.png`.
 
 ## Examples
