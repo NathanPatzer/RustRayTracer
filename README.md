@@ -37,7 +37,7 @@ Run the raytracer: Execute the raytracer with the desired command-line arguments
 - `-k [recursion-depth]`: Sets the maximum recursion depth for ray reflections and refractions. Default value of 1.
 - `-i [input_file]`: Specifies the input JSON file containing the scene description. Mandatory argument.
 - `-t [num_threads]`: Specifies the number of threads that will be used to render the image. Default to 1 and max of 16
-
+- `-s [smoothing]`: dictates whether or not smoothing will be turned on. No arguments.
 Output: Once the raytracer finishes execution, the resulting image will be saved in the project directory as `file_name.png`.
 
 ## Examples
@@ -55,8 +55,8 @@ cargo run --release -- -n threeTri -r 4 -i .\SceneData\threeTriangles.json -n th
 cargo run --release -- -n threeTri -r 5 -i .\SceneData\oneEarth.json -n oneEarth
 ```
 ![Alt Text](./IMAGES/oneEarth.png)
-- Generate a 1000x1000 image with an Anti-Aliasing-Coefficient of 3 and using the `homer.json` file as input:
+- Generate a 1000x1000 image with Smoothing, Anti-Aliasing-Coefficient of 3 and using the `homer.json` file as input:
 ```
-cargo run --release -- -n threeTri -r 3 -i .\SceneData\homer.json -n homer
+cargo run --release -- -r 3 -i .\SceneData\homer.json -n homer -s -w 1000
 ```
 ![Alt Text](./IMAGES/homer.png)
