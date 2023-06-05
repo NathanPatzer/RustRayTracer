@@ -5,7 +5,9 @@ use crate::Tri;
 
 pub struct OBJParser
 {
-    tri: Vec<Tri>
+    tri: Vec<Tri>,
+    shift: Option<Vec3>,
+    scale: Option<f32>
 }
 
 impl OBJParser
@@ -13,7 +15,17 @@ impl OBJParser
     pub fn new() ->OBJParser
     {
         let emptytri: Vec<Tri> = Vec::new(); 
-        OBJParser { tri:  emptytri}
+        OBJParser { tri:  emptytri, shift: None,scale: None}
+    }
+
+    pub fn setShift(&mut self,shift: Vec3)
+    {
+        self.shift = Some(shift);
+    }
+
+    pub fn setScale(&mut self, s: f32)
+    {
+        self.scale = Some(s);
     }
 
     pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String,interpolate_on: bool) -> i32
@@ -37,7 +49,7 @@ impl OBJParser
             let line_Vec: Vec<String> = line.split(' ').map(|s| s.parse().unwrap()).collect();
             if line_Vec[0] == "v"
             {
-                let vec3 = OBJ::getVec(&line_Vec);
+             let vec3 = OBJ::getVec(&line_Vec,self.shift,self.scale);   
                 verticies.push(vec3);
             }
             if line_Vec[0] == "f"
@@ -70,9 +82,22 @@ impl OBJParser
     }
 
         //helper function that converts line_vec into a vec3
-        fn getVec(vert: &Vec<String>) -> Vec3
+        fn getVec(vert: &Vec<String>, s: Option<Vec3>, sc: Option<f32>) -> Vec3
         {
-            Vec3::new(vert[1].parse::<f32>().unwrap(), vert[2].parse::<f32>().unwrap(), vert[3].parse::<f32>().unwrap())
+            let mut shift = Vec3::newEmpty();
+            let mut scale = 1.0;
+            if s.is_some()
+            {
+                shift = s.unwrap();
+            }
+            if sc.is_some()
+            {
+                scale = sc.unwrap();
+            }
+            let a = (vert[1].parse::<f32>().unwrap() + shift[0]) * scale;
+            let b = (vert[2].parse::<f32>().unwrap() + shift[1]) * scale;
+            let c = (vert[3].parse::<f32>().unwrap() + shift[2]) * scale;
+            Vec3::new(a, b, c)
         }
 
         fn getFace(face: &Vec<String>) -> (i32,i32,i32)

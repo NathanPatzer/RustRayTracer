@@ -18,7 +18,7 @@
         "thresh": 10,
 	    "_name": "blue",
 	    "_type": "Toon"
-	}],
+	}],"texture":[],"obj":[],
 	"shape": [{
 	    "shader": {
 		"_ref": "blue"

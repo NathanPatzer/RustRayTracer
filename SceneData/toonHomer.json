@@ -1,0 +1,29 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0.5 0.8 2.0",
+	    "viewDir": "0 0 -1",
+	    "focalLength": 1.0,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "0 2 2",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+	    "color": "1 1 0",
+        "thresh": 7,
+	    "_name": "blue",
+	    "_type": "Toon"
+	}],
+	"texture":[],
+    "obj":[{
+        "obj": "homer.obj",
+        "shader_ref": "blue"
+    }],
+	"shape": []
+    }
+}

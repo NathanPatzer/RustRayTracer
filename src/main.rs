@@ -32,6 +32,7 @@ mod BVHNode;
 mod s_Toon;
 mod Texture;
 mod objParser;
+mod l_SpotLight;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -49,6 +50,7 @@ use crate::s_mirror::*;
 use crate::AABoundingBox::*;
 use crate::s_Toon::*;
 use crate::objParser::*;
+//use crate::l_SpotLight::*;
 
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
@@ -131,7 +133,7 @@ fn main() {
 
 fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
 {
-    println!("{}", thread);
+    
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
@@ -173,6 +175,6 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             }
             
         }
-        println!("{} Finished", thread);
+        
         slice
 }

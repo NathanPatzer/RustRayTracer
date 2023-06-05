@@ -83,9 +83,9 @@ impl JsonParser
             let shape_type = shape_vec[i].get("_type").unwrap().as_str().unwrap();
             if shape_type == "triangle"
             {
-                let v0 = self::JsonParser::getVec(shape_vec[i].get("v0").unwrap().as_str().unwrap());
-                let v1 = self::JsonParser::getVec(shape_vec[i].get("v1").unwrap().as_str().unwrap());
-                let v2 = self::JsonParser::getVec(shape_vec[i].get("v2").unwrap().as_str().unwrap());
+                let v0 = JsonParser::getVec(shape_vec[i].get("v0").unwrap().as_str().unwrap());
+                let v1 = JsonParser::getVec(shape_vec[i].get("v1").unwrap().as_str().unwrap());
+                let v2 = JsonParser::getVec(shape_vec[i].get("v2").unwrap().as_str().unwrap());
                 let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
                 let tri = Tri::new(v0, v1, v2, shader_name.clone(),shader_name);
                 scene.addShape(Shape::Triangle(tri));
@@ -113,8 +113,8 @@ impl JsonParser
             }
             else if shape_type == "box"
             {
-                let minPt = self::JsonParser::getVec(shape_vec[i].get("minPt").unwrap().as_str().unwrap());
-                let maxPt = self::JsonParser::getVec(shape_vec[i].get("maxPt").unwrap().as_str().unwrap());
+                let minPt = JsonParser::getVec(shape_vec[i].get("minPt").unwrap().as_str().unwrap());
+                let maxPt = JsonParser::getVec(shape_vec[i].get("maxPt").unwrap().as_str().unwrap());
                 let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
                 let box_vec = Box::new(minPt, maxPt,shader_name);
                 //PUSH ALL 12 TRIANGLES INTO SHAPEVEC
@@ -133,28 +133,28 @@ impl JsonParser
             if shader_type == "Lambertian"
             {
                 let shader = Lambertian::new();
-                let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
+                let name = JsonParser::getStr(shader_vec[i].get("_name"));
                 if shader_vec[i].get("diffuse").is_none()
                 {
-                    scene.addShader(Shader::Lambertian(shader), name.to_string());
+                    scene.addShader(Shader::Lambertian(shader), name);
                 }
                 else {
                     let diffuse = JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
                     let texture = Texture::create_diffuse_texture(diffuse);
                     scene.addTexture(texture, name.to_string());
-                    scene.addShader(Shader::Lambertian(shader), name.to_string());
+                    scene.addShader(Shader::Lambertian(shader), name);
                 }
             }
             else if shader_type == "BlinnPhong"
             {
-                let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
-                let specular = self::JsonParser::getVec(shader_vec[i].get("specular").unwrap().as_str().unwrap());
-                let diffuse = self::JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
+                let name = JsonParser::getStr(shader_vec[i].get("_name"));
+                let specular = JsonParser::getVec(shader_vec[i].get("specular").unwrap().as_str().unwrap());
+                let diffuse = JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
                 let phong_exp = shader_vec[i].get("phongExp").unwrap().as_f64().unwrap();
                 let shader = BlinnPhong::new(specular, phong_exp as f32);
                 let texure = Texture::create_diffuse_texture(diffuse);
                 scene.addTexture(texure, name.to_string());
-                scene.addShader(Shader::BlinnPhong(shader), name.to_string());
+                scene.addShader(Shader::BlinnPhong(shader), name);
             }
             else if shader_type == "Mirror"
             {
@@ -169,8 +169,11 @@ impl JsonParser
             {
                 let thresh = shader_vec[i].get("thresh").unwrap().as_i64().unwrap();
                 let shader = Toon::new(thresh as i32);
-                let name = shader_vec[i].get("_name").unwrap().as_str().unwrap();
-                scene.addShader(Shader::Toon(shader), name.to_string());
+                let name = JsonParser::getStr(shader_vec[i].get("_name"));
+                let color = JsonParser::getVec(shader_vec[i].get("color").unwrap().as_str().unwrap());
+                let Texture = Texture::create_diffuse_texture(color);
+                scene.addTexture(Texture, name.to_string());
+                scene.addShader(Shader::Toon(shader), name);
             }
         }
         
@@ -181,8 +184,8 @@ impl JsonParser
             let light_type = light_vec[i].get("_type").unwrap().as_str().unwrap();
             if light_type == "point"
             {
-                let pos = self::JsonParser::getVec(light_vec[i].get("position").unwrap().as_str().unwrap());
-                let intensity = self::JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());     
+                let pos = JsonParser::getVec(light_vec[i].get("position").unwrap().as_str().unwrap());
+                let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());     
                 let l: PointLight = PointLight::new(pos, intensity);
                 scene.addLight(Light::PointLight(l));              
             }
@@ -194,8 +197,8 @@ impl JsonParser
             let cam_type = camera_vec[i].get("_type").unwrap().as_str().unwrap();
             if cam_type == "perspective"
             {
-                let pos = self::JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
-                let view_dir = self::JsonParser::getVec(camera_vec[i].get("viewDir").unwrap().as_str().unwrap());
+                let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
+                let view_dir = JsonParser::getVec(camera_vec[i].get("viewDir").unwrap().as_str().unwrap());
                 let focal_length = camera_vec[i].get("focalLength").unwrap().as_f64().unwrap();
                 let plane_w = camera_vec[i].get("imagePlaneWidth").unwrap().as_f64().unwrap();
                 let coord_sys = Coord::new(view_dir, Vec3::new(0.0, 1.0, 0.0));
@@ -207,20 +210,31 @@ impl JsonParser
         //ADD TEXTURES
         for i in 0..texture_len
         {
-            let texture_name = texture_vec[i].get("_name").unwrap().as_str().unwrap();
-            let stexture = texture_vec[i].get("texture").unwrap().as_str().unwrap();
-            let texture = Texture::new("TEXTURES/".to_string() + stexture);
-            scene.addTexture(texture, texture_name.to_string());  
+            //let texture_name = texture_vec[i].get("_name").unwrap().as_str().unwrap();
+            let texture_name = JsonParser::getStr(texture_vec[i].get("_name"));
+            let stexture = JsonParser::getStr(texture_vec[i].get("texture"));
+            let texture = Texture::new("TEXTURES/".to_string() + &stexture);
+            scene.addTexture(texture, texture_name);  
         }
         
-
         for i in 0..obj_len
         {
-            let obj_file_name = obj_vec[i].get("obj").unwrap().as_str().unwrap().to_string();
-            let shader_ref = obj_vec[i].get("shader_ref").unwrap().as_str().unwrap().to_string();
+            let obj_file_name = JsonParser::getStr(obj_vec[i].get("obj"));
+            let shader_ref = JsonParser::getStr(obj_vec[i].get("shader_ref"));
             let mut obj_parser: OBJ = OBJ::new();
+            if obj_vec[i].get("shift").is_some()
+            {
+                let shift = JsonParser::getVec(obj_vec[i].get("shift").unwrap().as_str().unwrap());
+                obj_parser.setShift(shift);
+            }
+            if obj_vec[i].get("scale").is_some()
+            {
+                let scale = obj_vec[i].get("scale").unwrap().as_f64().unwrap() as f32;
+                obj_parser.setScale(scale);
+            }
             let shapes_added = obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate);
             let triVec: &Vec<Tri> = obj_parser.getSceneShapes();
+
             for tri in triVec
             {
                 scene.addShape(Shape::Triangle(tri.clone()));
@@ -239,4 +253,9 @@ impl JsonParser
         let parts: Vec<f32> = v.split(' ').map(|s| s.parse().unwrap()).collect();
         Vec3::new(parts[0], parts[1], parts[2])
     }  
+
+    fn getStr(val: Option<&Value>) -> String
+    {
+        val.unwrap().as_str().unwrap().to_string()
+    }
 }

@@ -1,0 +1,57 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 0 -200",
+	    "viewDir": "0 0 1",
+	    "focalLength": 0.45,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "0 0 -200",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 64.0,
+		"_name": "redBlinnPhong_64",
+		"_type": "BlinnPhong"
+	    },{
+            "diffuse": "0 0 1",
+            "specular": "1 1 1",
+            "phongExp": 64.0,
+            "_name": "blueBlinnPhong_64",
+            "_type": "BlinnPhong"
+            },{
+                "diffuse": "0 1 0",
+                "specular": "1 1 1",
+                "phongExp": 64.0,
+                "_name": "greenBlinnPhong_64",
+                "_type": "BlinnPhong"
+                }],
+     "obj":[{
+        "obj": "xyzrgb_dragon.obj",
+        "shader_ref": "redBlinnPhong_64",
+        "shift": "0 100 0",
+        "scale": 0.5
+        
+    },{
+        "obj": "xyzrgb_dragon.obj",
+        "shader_ref": "blueBlinnPhong_64",
+        "shift": "0 0 0",
+        "scale": 0.5
+        
+    },{
+        "obj": "xyzrgb_dragon.obj",
+        "shader_ref": "greenBlinnPhong_64",
+        "shift": "0 -100 0",
+        "scale": 0.5
+        
+    }],
+    "texture":[],
+	"shape": []
+    }
+}

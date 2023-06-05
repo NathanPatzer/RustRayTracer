@@ -28,8 +28,8 @@ impl Shading for s_Lambertian
         let normal = h_struct.getNormal();
         for light in lights
         {
-            let L = (light.getPos() - intersect).normalize();
-            let ndotl = normal.dot(&L);
+            let L_direction = (light.getPos() - intersect).normalize();
+            let ndotl = normal.dot(&L_direction);
             let max: f32 = 0.0_f32.max(ndotl);
             let mut lcolor = Vec3::newEmpty();
 
