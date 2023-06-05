@@ -61,16 +61,12 @@ impl BVHNode
 
             let median = centroids[centroids.len() / 2];
 
-            //let split = (bbox.minPt + bbox.maxPt) / 2.0;
             let mut leftShapes: Vec<Arc<Shape>> = Vec::new();
             let mut rightShapes: Vec<Arc<Shape>> = Vec::new();
-            //let eps = f32::EPSILON;
             
             for shape in &Shapes
             {
                 let centroid = shape.getCentroid()[axis as usize];
-
-                //println!("Centroid: {} Median: {}", centroid,median);  
                 if centroid > median
                 {
                     rightShapes.push(Arc::clone(&shape));
@@ -90,8 +86,6 @@ impl BVHNode
                     leftShapes.push(Arc::clone(&shape));
                 }
             }
-            //println!("left size: {} rightsize: {}", leftShapes.len(),rightShapes.len());
-            //println!("");
             let LB = Self::build_bvh_node(leftShapes, (axis+1) % 3);
             let RB = Self::build_bvh_node(rightShapes, (axis+1) % 3);
             let Ls = Shape::BVHNode(LB);

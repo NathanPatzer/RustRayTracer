@@ -1,0 +1,28 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": ".5 0 10",
+	    "viewDir": "0 0 -1",
+	    "focalLength": 0.4,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "0 0 10",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+        "diffuse": "1 1 0",
+	    "_name": "red",
+	    "_type": "Lambertian"
+	}],
+     "obj":[{
+        "obj": "cow.obj",
+        "shader_ref": "red"
+    }],
+    "texture":[],
+	"shape": []
+    }
+}

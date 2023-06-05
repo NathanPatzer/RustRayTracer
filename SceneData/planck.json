@@ -1,0 +1,28 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "20 0 -200",
+	    "viewDir": "0 0 1",
+	    "focalLength": 0.3,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "0 0 -200",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+        "diffuse": "1 1 1",
+	    "_name": "red",
+	    "_type": "Lambertian"
+	}],
+     "obj":[{
+        "obj": "max-planck.obj",
+        "shader_ref": "red"
+    }],
+    "texture":[],
+	"shape": []
+    }
+}

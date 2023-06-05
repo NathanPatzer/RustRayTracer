@@ -21,7 +21,7 @@
              "intensity": "0.8 0.8 0.8",
              "_type": "point"
           }
-       ],
+       ],"obj":[],
        "shader": [
           {
              "diffuse": "0.2 0.6 0.2",

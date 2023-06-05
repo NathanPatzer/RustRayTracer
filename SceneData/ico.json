@@ -32,7 +32,7 @@
 	    "_type": "Lambertian"
 	}],
      "obj":[{
-        "obj": "icosahedron.obj",
+        "obj": "ico2.obj",
         "shader_ref": "red"
     }],
     "texture":[],
