@@ -62,14 +62,13 @@ impl AABoundingBox
         uMax[0] = self.maxPt[0].max(rBox.maxPt[0]);
         uMax[1] = self.maxPt[1].max(rBox.maxPt[1]);
         uMax[2] = self.maxPt[2].max(rBox.maxPt[2]);
-        let eps = 0.00001;
-
+        let eps = f32::EPSILON;
         for i in 0..3
         {
             if uMax[i] + eps > uMin[i] && uMax[i] - eps < uMin[i]
             {
-                uMax[i] += eps;
-                uMin[i] -= eps;
+                uMax[i] = uMax[i] + eps;
+                uMin[i] = uMin[i] - eps;
             }
         }
 

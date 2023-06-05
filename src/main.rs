@@ -131,6 +131,7 @@ fn main() {
 
 fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
 {
+    println!("{}", thread);
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
@@ -172,6 +173,6 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             }
             
         }
-        
+        println!("{} Finished", thread);
         slice
 }

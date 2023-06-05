@@ -102,17 +102,19 @@ impl OBJParser
                 {
                     normal_vec.push(OBJ::calcualteFaceNormal(verts[tri.0 as usize], verts[tri.1 as usize], verts[tri.2 as usize]));
                 }
+
                 let mut norm_total: Vec3 = Vec3::newEmpty();
+                //TODO: only account for unique normals to account for normals that are on the same plane
                 for norm in &normal_vec
                 {
                     norm_total = norm_total + norm;
                 }
-                norm_total = norm_total / face_vec.len() as f32;
+                norm_total = norm_total / normal_vec.len() as f32;
                 vertex_normals.push(norm_total.normalize());
                 normal_vec.clear();
                 face_vec.clear();
             }
-
+            
             vertex_normals
         }
 
