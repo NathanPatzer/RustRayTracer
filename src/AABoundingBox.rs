@@ -1,6 +1,6 @@
 use crate::{Vec3};
 use crate::Ray::Ray;
-#[derive(Clone,Copy)]
+#[derive(Clone,Copy,Debug)]
 pub struct AABoundingBox
 {
     pub minPt: Vec3,

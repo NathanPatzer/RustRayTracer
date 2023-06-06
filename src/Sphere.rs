@@ -5,7 +5,7 @@ use crate::Ray::Ray;
 use crate::BoundingBox;
 use std::f32::consts::PI;
 use libm::{self, atan2,asin};
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct Sphere
 {
     center: Vec3,

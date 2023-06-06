@@ -29,9 +29,8 @@ impl OBJParser
         self.scale = Some(s);
     }
 
-    pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String,interpolate_on: bool,scene: &mut SceneContainer) -> i32
+    pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String,interpolate_on: bool,scene: &mut SceneContainer)
     {
-        let mut totalShapes = 0;
         let mut verticies: Vec<Vec3> = Vec::new();
         let mut faces: Vec<(i32,i32,i32)> = Vec::new();
         let file_result = File::open(obj_file_path);
@@ -76,11 +75,11 @@ impl OBJParser
                 triangle_to_push.setInterpolateON();
                 triangle_to_push.setVNormals(tri_norms);
             }
-            totalShapes+=1;
+            
             scene.addShape(Shape::Triangle(triangle_to_push));
         }
 
-        totalShapes
+        
     }
 
         //helper function that converts line_vec into a vec3

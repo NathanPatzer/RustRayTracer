@@ -4,7 +4,7 @@ use crate::Ray::Ray;
 use crate::HitStruct::HitStruct;
 use crate::{Sph, Vec3};
 use crate::BVHNode::BVHNode;
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub enum Shape
 {
     Triangle(Triangle),

@@ -76,7 +76,8 @@ impl JsonParser
         let shape_vec = jShapes.unwrap();
         let shape_len: usize = shape_vec.len();
 
-        let mut total_shapes = 0;
+        
+
         //ADDS SHAPES TO SHAPEVECTOR     
         for i in 0..shape_len
         {
@@ -90,7 +91,8 @@ impl JsonParser
                 let shader_name = shape_vec[i].get("shader").unwrap().get("_ref").unwrap().as_str().unwrap().to_string();
                 let tri = Tri::new(v0, v1, v2, shader_name.clone(),shader_name);
                 scene.addShape(Shape::Triangle(tri));
-                total_shapes+=1;
+                
+
             }
             else if shape_type == "sphere" 
             {
@@ -110,7 +112,7 @@ impl JsonParser
                     let s = Sph::new(center, radius as f32,shader_name.clone(),shader_name);
                     scene.addShape(Shape::Sphere(s));
                 }
-                total_shapes+=1;
+               
             }
             else if shape_type == "box"
             {
@@ -123,7 +125,7 @@ impl JsonParser
                 {
                     scene.addShape(Shape::Triangle(triangle));
                 }
-                total_shapes+=12;            
+                           
             }
         }
         
@@ -233,13 +235,13 @@ impl JsonParser
                 let scale = obj_vec[i].get("scale").unwrap().as_f64().unwrap() as f32;
                 obj_parser.setScale(scale);
             }
-            let shapes_added = obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate,scene);
-            total_shapes+=shapes_added;
+            obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate,scene);
+           
         }
-        println!("Added {} Shapes", total_shapes);
-        println!("Added {} Shaders", shader_len);
-        println!("Added {} Lights", light_len);
-        println!("Added {} Textures", texture_len);
+        println!("Added {} Shapes", scene.allShapes.len());
+        println!("Added {} Shaders", scene.allShaders.len());
+        println!("Added {} Lights", scene.allLights.len());
+        println!("Added {} Textures", scene.allTextures.len());
         let end = std::time::Instant::now();
         println!("Time to parse: {:?}", end - start);
     }

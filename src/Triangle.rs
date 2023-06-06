@@ -3,7 +3,7 @@ use crate::Ray::Ray;
 use crate::Shape::Hittable;
 use crate::HStruct;
 use crate::BoundingBox;
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct Triangle
 {
     A: Vec3D,

@@ -163,7 +163,7 @@ impl HitStruct
 
     pub fn getShaderName(&self) -> String
     {
-        self.shader_name.clone()
+        self.shader_name.to_string()
     }
 
     pub fn setRoot(&mut self,root: Option<BVHNode::BVHNode>)

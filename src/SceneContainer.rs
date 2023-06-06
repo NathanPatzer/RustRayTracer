@@ -112,8 +112,8 @@ impl SceneContainer
             {
                 if texture.isTexture
                 {
-                let coords = h.getCoords();
-                color = texture.get_texture_color(coords.0, coords.1, texture);
+                    let coords = h.getCoords();
+                    color = texture.get_texture_color(coords.0, coords.1, texture);
                 }
                 else {
                    

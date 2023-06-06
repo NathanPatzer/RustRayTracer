@@ -4,7 +4,7 @@ use std::sync::{Arc};
 use crate::Shape::{Shape, Hittable};
 use crate::{BoundingBox, HStruct, Vec3};
 
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct BVHNode
 {
     leftChild: Option<Arc<Shape>>,
