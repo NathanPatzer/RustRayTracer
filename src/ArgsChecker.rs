@@ -1,3 +1,4 @@
+extern crate num_cpus;
 
 pub struct ArgsChecker
 {
@@ -16,6 +17,7 @@ impl ArgsChecker
 {
     pub fn new(args: Vec<String>) -> ArgsChecker
     {
+        let max_threads = num_cpus::get();
         let mut width = 500;
         let mut height = 0;
         let mut json: String = "".to_string();
@@ -62,9 +64,9 @@ impl ArgsChecker
                         1
                     };
 
-                    if num_threads > 16
+                    if num_threads > max_threads as u32
                     {
-                        num_threads = 16;
+                        num_threads = max_threads as u32;
                     }
                 }
             }

@@ -566,6 +566,7 @@ dependencies = [
  "image",
  "indicatif",
  "libm",
+ "num_cpus",
  "rand",
  "rayon",
  "serde_json",
