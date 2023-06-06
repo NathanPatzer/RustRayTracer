@@ -9,25 +9,16 @@
 	    "_type": "perspective"
 	}],
 	"light": [{
-	    "position": "10 10 0",
+	    "position": "0 0 10",
 	    "intensity": "1.0 1.0 1.0",
 	    "_type": "point"
 	},{
-	    "position": "10 -10 0",
-	    "intensity": "1.0 1.0 1.0",
-	    "_type": "point"
-	},
-    {
-	    "position": "-10 -10 0",
-	    "intensity": "1.0 1.0 1.0",
-	    "_type": "point"
-	},{
-	    "position": "-10 10 0",
+	    "position": "0 10 0",
 	    "intensity": "1.0 1.0 1.0",
 	    "_type": "point"
 	}],
 	"shader": [{
-        "diffuse": "1 0 0",
+        "diffuse": "0 0 10",
 	    "_name": "red",
 	    "_type": "Lambertian"
 	}],

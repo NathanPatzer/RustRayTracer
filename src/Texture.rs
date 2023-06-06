@@ -22,8 +22,8 @@ impl Texture
 
     fn rotateUV(u: f32, v: f32, _angle: f32) -> (f32, f32)
     {
-        let rotated_u = u;  // Apply rotation to U coordinate
-        let rotated_v = 1.0 - v;  // Keep V coordinate unchanged
+        let rotated_u = u;
+        let rotated_v = 1.0 - v;
         (rotated_u, rotated_v)
     }
 
@@ -49,7 +49,6 @@ impl Texture
 
     pub fn new(image_path: String) -> Texture
     {
-        
         let img = image::open(image_path).expect("Failed to open texture image");
         let (width,height) = img.dimensions();
         let mut texture_grid: Vec<Vec<Vec3>> = vec![vec![Vec3::newEmpty(); height as usize]; width as usize];
@@ -66,4 +65,3 @@ impl Texture
         Texture { texture_array: Some(texture_grid), nx: Some(width), ny: Some(height), color: None,isTexture: true }
     }
 }
-

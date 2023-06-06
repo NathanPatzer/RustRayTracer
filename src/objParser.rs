@@ -1,11 +1,13 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::sync::{Arc, Mutex};
+use crate::SceneContainer::SceneContainer;
+use crate::Shape::Shape;
 use crate::{Vec3};
 use crate::Tri;
-
+use rayon::prelude::*;
 pub struct OBJParser
 {
-    tri: Vec<Tri>,
     shift: Option<Vec3>,
     scale: Option<f32>
 }
@@ -14,8 +16,7 @@ impl OBJParser
 {
     pub fn new() ->OBJParser
     {
-        let emptytri: Vec<Tri> = Vec::new(); 
-        OBJParser { tri:  emptytri, shift: None,scale: None}
+        OBJParser {shift: None,scale: None}
     }
 
     pub fn setShift(&mut self,shift: Vec3)
@@ -28,7 +29,7 @@ impl OBJParser
         self.scale = Some(s);
     }
 
-    pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String,interpolate_on: bool) -> i32
+    pub fn parse_obj(&mut self,obj_file_path: String,shader_ref: &String,interpolate_on: bool,scene: &mut SceneContainer) -> i32
     {
         let mut totalShapes = 0;
         let mut verticies: Vec<Vec3> = Vec::new();
@@ -62,7 +63,8 @@ impl OBJParser
         let mut vertex_normals: Vec<Vec3> = Vec::new();
         if interpolate_on
         {
-            vertex_normals = OBJ::calculate_vertex_normals(&faces,verticies.len() as i32,&verticies);
+            //vertex_normals = OBJ::calculate_vertex_normals(&faces,verticies.len() as i32,&verticies);
+            vertex_normals = OBJ::par_calculate_vertex_normals(&faces, &verticies);
         }
         
         for face in &faces
@@ -76,8 +78,9 @@ impl OBJParser
                 triangle_to_push.setVNormals(tri_norms);
             }
             totalShapes+=1;
-            self.tri.push(triangle_to_push);
+            scene.addShape(Shape::Triangle(triangle_to_push));
         }
+
         totalShapes
     }
 
@@ -105,31 +108,35 @@ impl OBJParser
             (face[1].parse::<i32>().unwrap() - 1,face[2].parse::<i32>().unwrap() - 1,face[3].parse::<i32>().unwrap() - 1)
         }  
 
-        pub fn getSceneShapes(&self) -> &Vec<Tri>
+        fn calcualteFaceNormal(A: Vec3, B: Vec3, C: Vec3) -> Vec3
         {
-            &self.tri
+            let a = B - A;
+            let b = C - A;
+            a.crossProduct(&b).normalize()
         }
 
-        fn calculate_vertex_normals(f: &Vec<(i32,i32,i32)>,num_verts: i32, verts: &Vec<Vec3>) -> Vec<Vec3>
+        fn par_calculate_vertex_normals(f: &Vec<(i32,i32,i32)>, verts: &Vec<Vec3>) -> Vec<Vec3>
         {
-            let mut face_vec: Vec<(i32,i32,i32)> = Vec::new();
-            let mut normal_vec: Vec<Vec3> = Vec::new();
-            let mut vertex_normals: Vec<Vec3> = Vec::new();
+            let vertex_normals: Arc<Mutex<Vec<Vec3>>> = Arc::new(Mutex::new(Vec::with_capacity(verts.len())));
+            vertex_normals.lock().unwrap().resize_with(verts.len(), Vec3::newEmpty);
             //for every verticie, check if is contained in a face
-            for i in 0..num_verts
+            verts.par_iter().enumerate().for_each(|(i,_face)|
             {
+                let mut face_vec: Vec<(i32,i32,i32)> = Vec::new();
+                let mut normal_vec: Vec<Vec3> = Vec::new();
                 for face in f
                 {
-                    if face.0 == i || face.1 == i || face.2 == i
+                    if face.0 == i as i32 || face.1 == i as i32 || face.2 == i as i32
                     {
                         face_vec.push((face.0,face.1,face.2));
                     }
                 }
                 for tri in &face_vec
                 {
-                    normal_vec.push(OBJ::calcualteFaceNormal(verts[tri.0 as usize], verts[tri.1 as usize], verts[tri.2 as usize]));
+                    let normal = OBJ::calcualteFaceNormal(verts[tri.0 as usize], verts[tri.1 as usize], verts[tri.2 as usize]);
+                    normal_vec.push(normal);
                 }
-
+                
                 let mut norm_total: Vec3 = Vec3::newEmpty();
                 //TODO: only account for unique normals to account for normals that are on the same plane
                 for norm in &normal_vec
@@ -137,19 +144,10 @@ impl OBJParser
                     norm_total = norm_total + norm;
                 }
                 norm_total = norm_total / normal_vec.len() as f32;
-                vertex_normals.push(norm_total.normalize());
-                normal_vec.clear();
-                face_vec.clear();
-            }
-            
-            vertex_normals
-        }
-
-        fn calcualteFaceNormal(A: Vec3, B: Vec3, C: Vec3) -> Vec3
-        {
-            let a = B - A;
-            let b = C - A;
-            a.crossProduct(&b).normalize()
+                let mut vertex_normals_lock = vertex_normals.lock().expect("Failed to acquire lock on vertex_normals");
+                vertex_normals_lock[i] = norm_total.normalize();
+            });
+            Arc::try_unwrap(vertex_normals).unwrap().into_inner().unwrap()
         }
 }
 

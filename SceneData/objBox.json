@@ -1,0 +1,28 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "-8 4 4",
+	    "viewDir": "2 -1 -1",
+	    "focalLength": 1.0,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+	    "position": "0 0 10",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+	    "diffuse": "1 0 0",
+	    "_name": "blue",
+	    "_type": "Lambertian"
+	}],"texture":[],
+    "obj":[{
+        "obj": "box.obj",
+        "shader_ref": "blue",
+        "shift": "-.5 -.5 -.5"
+    }],
+	"shape": []
+    }
+}

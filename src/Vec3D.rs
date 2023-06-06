@@ -1,5 +1,5 @@
 
-#[derive(Clone,Copy)]
+#[derive(Clone,Copy,Debug)]
 pub struct Vec3D{
     rgb: [f32; 3]
 }
@@ -51,6 +51,15 @@ impl Vec3D{
     pub fn print(&self)
     {
         println!("{} {} {}", self.rgb[0], self.rgb[1], self.rgb[2]);
+    }
+
+    pub fn equals(&self,rhs: Vec3) -> bool
+    {
+        if self.rgb[0] == rhs[0] && self.rgb[1] == rhs[1] && self.rgb[2] == rhs[2]
+        {
+            return true;
+        }
+        false
     }
 }
 

@@ -567,6 +567,7 @@ dependencies = [
  "indicatif",
  "libm",
  "rand",
+ "rayon",
  "serde_json",
 ]
 

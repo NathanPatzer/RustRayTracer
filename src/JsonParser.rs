@@ -53,6 +53,7 @@ impl JsonParser
 
     pub fn Parse(self,scene: &mut SceneContainer)
     {
+        let start = std::time::Instant::now();
         println!("PARSING JSON...");
         let jString = self::JsonParser::readFile(self.path);
         let json: serde_json::Value = serde_json::from_str(&jString).expect("JSON not well formatted");
@@ -232,19 +233,15 @@ impl JsonParser
                 let scale = obj_vec[i].get("scale").unwrap().as_f64().unwrap() as f32;
                 obj_parser.setScale(scale);
             }
-            let shapes_added = obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate);
-            let triVec: &Vec<Tri> = obj_parser.getSceneShapes();
-
-            for tri in triVec
-            {
-                scene.addShape(Shape::Triangle(tri.clone()));
-            }
+            let shapes_added = obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate,scene);
             total_shapes+=shapes_added;
         }
         println!("Added {} Shapes", total_shapes);
         println!("Added {} Shaders", shader_len);
         println!("Added {} Lights", light_len);
         println!("Added {} Textures", texture_len);
+        let end = std::time::Instant::now();
+        println!("Time to parse: {:?}", end - start);
     }
 
     //helper function that converts "a b c" into a vec3(a,b,c)

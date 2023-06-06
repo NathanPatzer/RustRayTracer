@@ -60,9 +60,9 @@ fn main() {
     let mut fb = Framebuffer::Framebuffer::new(args.width, args.height);
     
     let mut sc = SceneContainer::SceneContainer::new();
-    //obj.setSceneShapes(&mut sc);
-    //sc.background_color = Vec3::new(0.53,0.81,0.92);
-    sc.background_color = Vec3::newEmpty();
+
+    sc.background_color = Vec3::new(0.53,0.81,0.92);
+    
     assert!(args.json.len() > 0, "NO JSON SUPPLIED");
     let parser = JsonParser::JsonParser::new(args.json, args.width as i32, args.height as i32,args.interpolation);
     parser.Parse(&mut sc);
@@ -133,7 +133,6 @@ fn main() {
 
 fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
 {
-    
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
