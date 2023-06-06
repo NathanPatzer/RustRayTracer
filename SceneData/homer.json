@@ -23,7 +23,7 @@
 	}],
 	"texture":[{
         "_name": "earth",
-        "texture": "earth.jpg"
+        "texture": "earthsmall.jpg"
     }],
     "obj":[{
         "obj": "homer.obj",

@@ -19,7 +19,7 @@
 	}],
     "texture":[{
         "_name": "earth",
-        "texture": "earth.jpg"
+        "texture": "earthsmall.jpg"
     }],"obj":[],
 	"shape": [{
 	    "shader": {
