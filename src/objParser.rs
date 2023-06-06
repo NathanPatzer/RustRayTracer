@@ -63,7 +63,6 @@ impl OBJParser
         let mut vertex_normals: Vec<Vec3> = Vec::new();
         if interpolate_on
         {
-            //vertex_normals = OBJ::calculate_vertex_normals(&faces,verticies.len() as i32,&verticies);
             vertex_normals = OBJ::par_calculate_vertex_normals(&faces, &verticies);
         }
         

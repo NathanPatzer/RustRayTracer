@@ -98,10 +98,11 @@ fn main() {
         let thread_sc = sc.clone();
         let slice_start = slice_width * i;
         let slices_clone = Arc::clone(&slices);
+        let progress_bar_clone = progress_bar.clone();
         // Spawn a new thread for each iteration
         let thread = thread::spawn({
             move|| {
-            let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i,args.num_threads);
+            let slice_to_push = render_slice(w,h, rpp, cam, &thread_sc, depth, slice_width*(i+1), slice_start, i,args.num_threads,&progress_bar_clone);
             let mut v = slices_clone.lock().unwrap();
             v.push(slice_to_push);
             }
@@ -115,7 +116,7 @@ fn main() {
         thread.join().unwrap();
     }
     let end = std::time::Instant::now();
-    
+    progress_bar.finish();
     let slices_guard = slices.lock().unwrap();
     let slices_vec = &*slices_guard;
     for slice in slices_vec.iter()
@@ -131,7 +132,7 @@ fn main() {
     println!("Time to render: {:.2}s", rounded);
 }
 
-fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32) -> Vec<(u32,u32,Vec3)>
+fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &SceneContainer::SceneContainer, depth: i32, slice_width: u32, slice_start: u32, thread: u32,num_threads: u32,progress_bar: &ProgressBar) -> Vec<(u32,u32,Vec3)>
 {
     //initialize hitstruct
     let hit_struct = &mut HStruct::new();
@@ -172,7 +173,7 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             pixel_color = pixel_color / (rpp*rpp) as f32;
             slice.push((i,j,pixel_color));
             }
-            
+            progress_bar.inc(1);  
         }
         
         slice
