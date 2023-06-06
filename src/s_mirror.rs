@@ -1,4 +1,4 @@
-use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shape::Hittable, Texture::Texture};
+use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Shape::Hittable};
 use rand::Rng;
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
@@ -35,7 +35,7 @@ impl s_mirror
                 if texture.isTexture
                 {
                     let coords = h.getCoords();
-                    color = Texture::get_texture_color(coords.0, coords.1, texture);
+                    color = texture.get_texture_color(coords.0, coords.1, texture);
                 }
                 else {
                    

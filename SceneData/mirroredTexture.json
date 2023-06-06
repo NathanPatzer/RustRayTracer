@@ -56,7 +56,7 @@
 	],
     "texture":[{
         "_name": "earth",
-        "texture": "earth.jpg"
+        "texture": "Dirt.jpg"
     }],"obj":[],
 	"shape": [
 	    {

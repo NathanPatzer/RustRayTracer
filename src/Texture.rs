@@ -1,22 +1,28 @@
 use image::GenericImageView;
 use crate::Vec3;
-
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
 pub struct Texture
 {
-    pub texture_array: Option<Vec<Vec<Vec3>>>,
+    texture_array: Option<Vec<VecU8>>,
     pub nx: Option<u32>,
     pub ny: Option<u32>,
     pub color: Option<Vec3>,
     pub isTexture: bool
 }
 
+#[derive(Clone,Copy)]
+struct VecU8 {
+    r: u8,
+    g: u8,
+    b: u8,
+}
+
 impl Texture
 {
     pub fn create_empty() -> Texture
     {
-        let e: Vec<Vec<Vec3>> = Vec::new();
+        let e: Vec<VecU8> = Vec::new();
         Texture { texture_array: Some(e), nx: Some(0), ny: Some(0),color: None,isTexture: false }
     }
 
@@ -27,14 +33,16 @@ impl Texture
         (rotated_u, rotated_v)
     }
 
-    pub fn get_texture_color(u: f32, v: f32, t: &Texture) -> Vec3 
+    pub fn get_texture_color(&self,u: f32, v: f32, t: &Texture) -> Vec3 
     {
         let width = t.nx.unwrap();
         let height = t.ny.unwrap();
         let (ru,rv) = self::Texture::rotateUV(u, v, 0.5);
         let x = (ru * (width - 1) as f32).floor() as usize;
         let y = (rv * (height - 1) as f32).floor() as usize;
-        t.texture_array.as_ref().unwrap()[x][y]
+        let index: usize = ((y * self.nx.unwrap() as usize ) + x) as usize;
+        let color = self.texture_array.as_ref().unwrap()[index];
+        Vec3::new(color.r as f32 / 255.0,color.g as f32 / 255.0,color.b as f32 / 255.0)
     }
 
     pub fn create_diffuse_texture(c: Vec3)->Texture
@@ -51,17 +59,14 @@ impl Texture
     {
         let img = image::open(image_path).expect("Failed to open texture image");
         let (width,height) = img.dimensions();
-        let mut texture_grid: Vec<Vec<Vec3>> = vec![vec![Vec3::newEmpty(); height as usize]; width as usize];
+        let mut texture_grid: Vec<VecU8> = vec![VecU8 { r: 0, g: 0, b: 0 }; (width * height) as usize];
         for (x,y,pixel) in img.pixels()
         {
-            
-            let mut p: Vec3 = Vec3::newEmpty();
-            p[0] = pixel[0] as f32 / 255.0; 
-            p[1] = pixel[1] as f32 / 255.0;
-            p[2] = pixel[2] as f32 / 255.0;
-            texture_grid[x as usize][y as usize] = p;
-            
+           let color: VecU8 = VecU8 { r: pixel[0], g: pixel[1], b: pixel[2] };
+           let index: usize = ((y as usize * width as usize ) + x as usize) as usize;
+           texture_grid[index] = color;
         }
+        
         Texture { texture_array: Some(texture_grid), nx: Some(width), ny: Some(height), color: None,isTexture: true }
     }
 }

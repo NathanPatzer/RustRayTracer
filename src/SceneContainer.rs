@@ -113,7 +113,7 @@ impl SceneContainer
                 if texture.isTexture
                 {
                 let coords = h.getCoords();
-                color = Texture::get_texture_color(coords.0, coords.1, texture);
+                color = texture.get_texture_color(coords.0, coords.1, texture);
                 }
                 else {
                    
