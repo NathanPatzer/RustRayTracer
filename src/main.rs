@@ -33,6 +33,7 @@ mod s_Toon;
 mod Texture;
 mod objParser;
 mod l_SpotLight;
+mod l_area;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -51,7 +52,7 @@ use crate::AABoundingBox::*;
 use crate::s_Toon::*;
 use crate::objParser::*;
 //use crate::l_SpotLight::*;
-
+use crate::l_area::*;
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
     let args: Args = Args::new(plainargs);

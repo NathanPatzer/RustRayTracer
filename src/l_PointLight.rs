@@ -1,3 +1,5 @@
+use crate::Ray::Ray;
+use crate::Shape::Hittable;
 use crate::Vec3;
 use crate::Light::IsLight;
 #[derive(Clone,Copy)]
@@ -26,6 +28,13 @@ impl IsLight for l_PointLight
     fn getPos(&self) -> Vec3
     {
         self.pos    
+    }
+
+    fn getContribution(&self,h: &mut crate::HStruct, intersection: Vec3) -> f32 {
+        let shadow_ray = Ray::new(self.getPos() - intersection, intersection);
+        let hit = h.scene.root.clone().unwrap().closestHit(&shadow_ray, 0.0001, 1.0, h);
+        if hit {return 0.0}
+        else {return 1.0}
     }
 }
 

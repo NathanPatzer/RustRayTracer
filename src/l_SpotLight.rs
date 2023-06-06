@@ -32,6 +32,10 @@ impl IsLight for l_SpotLight
     {
         self.pos    
     }
+
+    fn getContribution(&self,_h: &mut crate::HStruct, _p: Vec3) -> f32 {
+        0.0
+    }
 }
 
 #[allow(dead_code)]

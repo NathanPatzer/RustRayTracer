@@ -15,6 +15,7 @@ use crate::Coord;
 use crate::Camera::Camera;
 use crate::PerspectiveCamera;
 use crate::Box;
+use crate::l_area::AreaLight;
 use crate::s_Toon::Toon;
 use crate::s_mirror::Mirror;
 use crate::Texture::Texture;
@@ -192,6 +193,17 @@ impl JsonParser
                 let l: PointLight = PointLight::new(pos, intensity);
                 scene.addLight(Light::PointLight(l));              
             }
+            else if light_type == "area"
+            {
+                let x0 = JsonParser::getFloat(light_vec[i].get("x0"));
+                let x1 = JsonParser::getFloat(light_vec[i].get("x1"));
+                let y0 = JsonParser::getFloat(light_vec[i].get("y0"));
+                let y1 = JsonParser::getFloat(light_vec[i].get("y1"));
+                let z = JsonParser::getFloat(light_vec[i].get("z"));
+                let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());
+                let l: AreaLight = AreaLight::new(x0, x1, y0, y1, z, (16,16),intensity);
+                scene.addLight(Light::AreaLight(l));
+            }
         }
         
         //ADD CAMERA TO CAMERAVECTOR
@@ -256,5 +268,10 @@ impl JsonParser
     fn getStr(val: Option<&Value>) -> String
     {
         val.unwrap().as_str().unwrap().to_string()
+    }
+
+    fn getFloat(val: Option<&Value>) -> f32
+    {
+        val.unwrap().as_f64().unwrap() as f32
     }
 }

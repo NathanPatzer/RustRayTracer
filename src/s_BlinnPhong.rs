@@ -1,7 +1,7 @@
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
 use crate::Light::IsLight;
-use crate::Shader::Shader;
+
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
 pub struct s_BlinnPhong
@@ -36,6 +36,7 @@ impl Shading for s_BlinnPhong
             let V = (ray.dir * -1.0).normalize();
             let H = (L + V).normalize();
             let mut phongMax = 0.0_f32.max(normal.dot(&H));
+            if phongMax == 0.0 {continue;}
             phongMax = phongMax.powf(self.phongExp);
             let mut specular = Vec3::newEmpty();
             specular[0] = self.specular[0] * light.getIntensity()[0];
@@ -46,17 +47,14 @@ impl Shading for s_BlinnPhong
             //CALCULATE DIFFUSE COMPONENET
             let ndotl = normal.dot(&L);
             let max: f32 = 0.0_f32.max(ndotl);
+            if max == 0.0 {continue;}
             lcolor[0] = light.getIntensity()[0] * color_to_shade[0];
             lcolor[1] = light.getIntensity()[1] * color_to_shade[1];
             lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
             lcolor = lcolor * max;
 
-            //SHADOWS
-            let shadowRay = Shader::shadowRay(light, intersect);
-            if Shader::anyHit(shadowRay, 0.0001, 1.0, h_struct) == false
-            {
-                finalColor = finalColor + (lcolor + specular);
-            }
+            finalColor = finalColor + ((lcolor + specular) * light.getContribution(h_struct,intersect));
+
         }
        finalColor
     }

@@ -38,7 +38,8 @@ impl SceneContainer
         {
             Shape::Sphere(s) => self.allShapes.push(Shape::Sphere(s)),
             Shape::Triangle(t) => self.allShapes.push(Shape::Triangle(t)),
-            Shape::BVHNode(b) => self.allShapes.push(Shape::BVHNode(b))
+            Shape::BVHNode(b) => self.allShapes.push(Shape::BVHNode(b)),
+           
         }
     }
 
@@ -86,6 +87,7 @@ impl SceneContainer
         match light
         {
             Light::PointLight(l) => self.allLights.push(Light::PointLight(l)),
+            Light::AreaLight(a) => self.allLights.push(Light::AreaLight(a))
         }
     }
 

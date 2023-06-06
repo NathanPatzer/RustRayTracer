@@ -4,12 +4,14 @@ use crate::Ray::Ray;
 use crate::HitStruct::HitStruct;
 use crate::{Sph, Vec3};
 use crate::BVHNode::BVHNode;
+
 #[derive(Clone,Debug)]
 pub enum Shape
 {
     Triangle(Triangle),
     Sphere(Sph),
-    BVHNode(BVHNode)
+    BVHNode(BVHNode),
+    
 }
 
 pub trait Hittable
@@ -28,7 +30,8 @@ impl Hittable for Shape
         {
             Shape::Triangle(triangle) => triangle.closestHit(r, tMin, tMax, h),
             Shape::Sphere(sphere) => sphere.closestHit(r, tMin, tMax, h),
-            Shape::BVHNode(BVH)=> BVH.closestHit(r, tMin, tMax, h)
+            Shape::BVHNode(BVH)=> BVH.closestHit(r, tMin, tMax, h),
+            
         }
     }
 
@@ -38,7 +41,8 @@ impl Hittable for Shape
         {
             Shape::Triangle(t) => t.getShaderName(),
             Shape::Sphere(s) => s.getShaderName(),
-            Shape::BVHNode(b)=> b.getShaderName()
+            Shape::BVHNode(b)=> b.getShaderName(),
+            
         }
     }
 
@@ -48,7 +52,8 @@ impl Hittable for Shape
         {
             Shape::Triangle(t) => t.getBoundingBox(),
             Shape::Sphere(s) => s.getBoundingBox(),
-            Shape::BVHNode(b)=> b.getBoundingBox()
+            Shape::BVHNode(b)=> b.getBoundingBox(),
+            
         }
     }
 
@@ -58,7 +63,8 @@ impl Hittable for Shape
         {
             Shape::Triangle(t) => t.getCentroid(),
             Shape::Sphere(s) => s.getCentroid(),
-            Shape::BVHNode(b)=> b.getCentroid()
+            Shape::BVHNode(b)=> b.getCentroid(),
+           
         }    
     }
 

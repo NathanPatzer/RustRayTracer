@@ -1,7 +1,6 @@
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
 use crate::Light::IsLight;
-use crate::Shader::Shader;
 
 #[allow(non_camel_case_types)]
 #[derive(Clone)]
@@ -31,19 +30,15 @@ impl Shading for s_Lambertian
             let L_direction = (light.getPos() - intersect).normalize();
             let ndotl = normal.dot(&L_direction);
             let max: f32 = 0.0_f32.max(ndotl);
+            if max == 0.0 {continue;}
             let mut lcolor = Vec3::newEmpty();
 
             lcolor[0] = light.getIntensity()[0] * color_to_shade[0];
             lcolor[1] = light.getIntensity()[1] * color_to_shade[1];
             lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
 
-            //SHADOWS
-            let shadowRay = Shader::shadowRay(light, intersect);
-            assert!(h_struct.scene.root.is_some(),"ROOT IS NONE");
-            if Shader::anyHit(shadowRay, 0.0001, 1.0, h_struct) == false
-            {
-                finalColor = finalColor + (lcolor * max);
-            }
+            finalColor = finalColor + ((lcolor * max)*light.getContribution(h_struct,intersect));
+
         }
         finalColor
     }
