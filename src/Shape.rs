@@ -20,6 +20,7 @@ pub trait Hittable
     fn getShaderName(&self) -> String;
     fn getBoundingBox(&self) -> BoundingBox;
     fn getCentroid(&self) -> Vec3;
+    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool;
 }
 
 impl Hittable for Shape
@@ -30,8 +31,7 @@ impl Hittable for Shape
         {
             Shape::Triangle(triangle) => triangle.closestHit(r, tMin, tMax, h),
             Shape::Sphere(sphere) => sphere.closestHit(r, tMin, tMax, h),
-            Shape::BVHNode(BVH)=> BVH.closestHit(r, tMin, tMax, h),
-            
+            Shape::BVHNode(BVH)=> BVH.closestHit(r, tMin, tMax, h), 
         }
     }
 
@@ -66,6 +66,15 @@ impl Hittable for Shape
             Shape::BVHNode(b)=> b.getCentroid(),
            
         }    
+    }
+    
+    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool {
+        match self 
+        {
+            Shape::Triangle(triangle) => triangle.anyHit(r, tMin, tMax),
+            Shape::Sphere(sphere) => sphere.anyHit(r, tMin, tMax),
+            Shape::BVHNode(BVH)=> BVH.anyHit(r, tMin, tMax), 
+        }
     }
 
 }

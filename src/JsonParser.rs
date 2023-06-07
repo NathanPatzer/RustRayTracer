@@ -200,8 +200,10 @@ impl JsonParser
                 let y0 = JsonParser::getFloat(light_vec[i].get("y0"));
                 let y1 = JsonParser::getFloat(light_vec[i].get("y1"));
                 let z = JsonParser::getFloat(light_vec[i].get("z"));
+                let s: u32 =JsonParser::getFloat(light_vec[i].get("s")) as u32;
+                let axis: u8 =JsonParser::getFloat(light_vec[i].get("axis")) as u8;
                 let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());
-                let l: AreaLight = AreaLight::new(x0, x1, y0, y1, z, (16,16),intensity);
+                let l: AreaLight = AreaLight::new(x0, x1, y0, y1, z, (s,s),intensity,axis);
                 scene.addLight(Light::AreaLight(l));
             }
         }

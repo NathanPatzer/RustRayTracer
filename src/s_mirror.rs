@@ -66,7 +66,6 @@ impl Shading for s_mirror
         
         if self._roughness > 0.0
         {
-            
             let random_perturbation = Vec3::new(
             rng.gen_range(lower_range..upper_range), 
             rng.gen_range(lower_range..upper_range), 

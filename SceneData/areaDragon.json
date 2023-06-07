@@ -1,0 +1,52 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 3.0 -4.0",
+	    "viewDir": "0 -1.5 3.0",
+	    "focalLength": 0.60,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+        "x0": -10,
+        "x1": 50,
+        "y0": -50,
+        "y1": 10,
+        "z": 10,
+        "s": 10,
+        "axis": 1,
+		"intensity": "1.0 1.0 1.0",
+		"_type": "area"
+	    }],
+	"shader": [{
+		"diffuse": "1 0.0 0.0",
+		"specular": "1 1 1",
+		"phongExp": 64.0,
+		"_name": "redBlinnPhong_64",
+		"_type": "BlinnPhong"
+	    },
+	    {
+		"diffuse": "0.5 0.5 0.5",
+		"_name": "greyMat",
+		"_type": "Lambertian"
+	    }],
+     "obj":[{
+        "obj": "xyzrgb_dragon.obj",
+        "shader_ref": "redBlinnPhong_64",
+        "shift": "0 41 0",
+        "scale": 0.01
+        
+    }],
+    "texture":[],
+	"shape": [{
+		"shader": {
+		    "_ref": "greyMat"
+		},
+		"minPt": "-50.0 -0.5 -50.0",
+		"maxPt": "50.0 0.0 50.0",
+		"_name": "ground",
+		"_type": "box"
+	    }]
+    }
+}

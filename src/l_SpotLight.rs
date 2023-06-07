@@ -1,5 +1,6 @@
 use std::f32::consts::PI;
 
+use crate::Ray::Ray;
 use crate::Vec3;
 use crate::Light::IsLight;
 #[derive(Clone,Copy)]
@@ -33,9 +34,13 @@ impl IsLight for l_SpotLight
         self.pos    
     }
 
-    fn getContribution(&self,_h: &mut crate::HStruct, _p: Vec3) -> f32 {
+    fn getContribution(&self,_h: &mut crate::HStruct, _p: Vec3,_normal: Vec3) -> f32 {
         0.0
     }
+    fn getSpecularContribution(&self,_intersection: Vec3,_normal: Vec3,_specular: f32,_r: Ray) -> f32 {
+        0.0
+    }
+
 }
 
 #[allow(dead_code)]

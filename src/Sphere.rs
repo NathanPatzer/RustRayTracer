@@ -86,12 +86,36 @@ impl Hittable for Sphere
         }
     }
 
+    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool {
+        let oc = &r.origin - &self.center;
+        let a = r.dir.dot(&r.dir);
+        let b = 2.0 * &oc.dot(&r.dir);
+        let c = oc.dot(&oc) - (self.radius * self.radius);
+        let disc = (b*b) - (4.0*a*c);
+        
+        if disc < 0.0
+        {
+            return false;
+        }
+        else 
+        {
+            let T = (-b - disc.sqrt() ) / (2.0*a);
+
+            if T < tMin || T > tMax 
+            {
+                return false;
+            }
+            else 
+            {
+                return true;
+            }
+        }
+    }
+
     fn getShaderName(&self) -> String 
     {
         self.shader_name.clone()
     }
-
-
 
     fn getBoundingBox(&self) -> BoundingBox 
     {

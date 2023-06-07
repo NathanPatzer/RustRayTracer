@@ -62,8 +62,8 @@ fn main() {
     
     let mut sc = SceneContainer::SceneContainer::new();
 
-    sc.background_color = Vec3::new(0.53,0.81,0.92);
-    
+    //sc.background_color = Vec3::new(0.53,0.81,0.92);
+    sc.background_color = Vec3::newEmpty();
     assert!(args.json.len() > 0, "NO JSON SUPPLIED");
     let parser = JsonParser::JsonParser::new(args.json, args.width as i32, args.height as i32,args.interpolation);
     parser.Parse(&mut sc);

@@ -30,11 +30,27 @@ impl IsLight for l_PointLight
         self.pos    
     }
 
-    fn getContribution(&self,h: &mut crate::HStruct, intersection: Vec3) -> f32 {
+    fn getContribution(&self,h: &mut crate::HStruct, intersection: Vec3,normal: Vec3) -> f32 {
         let shadow_ray = Ray::new(self.getPos() - intersection, intersection);
-        let hit = h.scene.root.clone().unwrap().closestHit(&shadow_ray, 0.0001, 1.0, h);
-        if hit {return 0.0}
-        else {return 1.0}
+
+        let L_direction = (self.getPos() - intersection).normalize();
+        let ndotl = normal.dot(&L_direction);
+        let max: f32 = 0.0_f32.max(ndotl);
+
+        if !h.scene.root.clone().unwrap().anyHit(&shadow_ray, 0.0001, 1.0)
+        {
+            return max;
+        }
+        0.0
+    }
+
+    fn getSpecularContribution(&self,intersection: Vec3,normal: Vec3,phongExp: f32,r: Ray) -> f32 {
+            let L = (self.getPos() - intersection).normalize();
+            let V = (r.dir * -1.0).normalize();
+            let H = (L + V).normalize();
+            let mut phongMax = 0.0_f32.max(normal.dot(&H));
+            phongMax = phongMax.powf(phongExp);
+            phongMax
     }
 }
 

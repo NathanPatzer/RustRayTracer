@@ -1,0 +1,58 @@
+{
+    "scene": {
+	"_bgColor": "0.5 0.8 1.0",
+	"camera": [{
+	    "position": "0 3.0 4.0",
+	    "viewDir": "0 -1.5 -3.0",
+	    "focalLength": 0.40,
+	    "imagePlaneWidth": 0.5,
+	    "_name": "main",
+	    "_type": "perspective"
+	}],
+	"light": [{
+        "x0": -2.5,
+        "x1": 2.5,
+        "y0": -4.5,
+        "y1": -1.5,
+        "z": 5,
+        "s": 10,
+        "axis": 1,
+		"intensity": "1.0 1.0 1.0",
+		"_type": "area"
+	    }],"texture":[],"obj":[],
+	"shader": [
+	    {
+            "diffuse": "1 0 0",
+            "specular": "1 1 1",
+            "phongExp": 32.0,
+            "_name": "redPlastic",
+            "_type": "BlinnPhong"
+            },
+	    {
+		"diffuse": "0.5 0.5 0.5",
+		"_name": "greyMat",
+		"_type": "Lambertian"
+	    }
+	],
+	"shape": [
+	    {
+		"shader": {
+		    "_ref": "greyMat"
+		},
+		"minPt": "-50.0 -0.5 -50.0",
+		"maxPt": "50.0 0.0 50.0",
+		"_name": "ground",
+		"_type": "box"
+	    },
+	    {
+		"shader": {
+		    "_ref": "redPlastic"
+		},
+		"center": "0 2 -3.5",
+		"radius": 0.5,
+		"_name": "leftsphere",
+		"_type": "sphere"
+	    }
+	]
+    }
+}

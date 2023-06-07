@@ -94,6 +94,17 @@ impl std::ops::Mul<Vec3D> for Vec3D
     }
 }
 
+impl std::ops::Mul<&Vec3D> for Vec3D
+{
+    type Output = Vec3D;
+    fn mul(self, rhs: &Vec3D) -> Vec3D {
+        Vec3D { rgb: [
+            self.rgb[0] * rhs[0],
+            self.rgb[1] * rhs[1],
+            self.rgb[2] * rhs[2]] }
+    }
+}
+
 impl std::ops::Div<f32> for Vec3D
 {
     type Output = Vec3D;

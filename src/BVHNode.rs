@@ -156,6 +156,35 @@ impl Hittable for BVHNode
         false
     }
 
+    fn anyHit(&mut self,r: &crate::Ray::Ray,tMin: f32, tMax: f32) -> bool {
+        let mut leftHit: bool = false;
+        let mut rightHit: bool = false;
+
+        if self.bounding_box.intersect(r)
+        {
+            if self.rightChild.is_some()
+            {
+                let mut shape = self.rightChild.clone().unwrap().as_ref().clone();
+                rightHit = shape.anyHit(r, tMin, tMax); 
+            }
+            if self.leftChild.is_some()
+            {
+                let mut shape = self.leftChild.clone().unwrap().as_ref().clone();
+                leftHit = shape.anyHit(r, tMin, tMax);
+            }
+            if leftHit && rightHit
+            {
+
+                return true;
+
+            }
+            else {
+                return leftHit || rightHit;
+            }
+        }          
+        false
+    }
+
     fn getBoundingBox(&self) -> BoundingBox {
         self.bounding_box
     }
