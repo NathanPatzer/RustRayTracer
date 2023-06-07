@@ -17,8 +17,9 @@ impl s_mirror
 
 impl s_mirror
 {
-    fn mirror_color(r: Ray,min_t: f32, max_t: f32,depth: i32, h: &mut HStruct) -> Vec3
+    pub fn mirror_color(r: Ray,min_t: f32, max_t: f32,depth: i32, h: &mut HStruct) -> Vec3
     {
+        
         if depth == 0
         {
             return h.getBackGroundColor();

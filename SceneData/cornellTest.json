@@ -1,0 +1,37 @@
+{
+    "scene": {
+	"camera": [{
+	    "position": "0 2 -4",
+        "lookat": "0 0 0",
+	    "_name": "main",
+	    "_type": "lookAt"
+	}],
+	"light": [{
+	    "position": "0 0 5",
+	    "intensity": "1.0 1.0 1.0",
+	    "_type": "point"
+	}],
+	"shader": [{
+	    "diffuse": ".05 0.65 .05",
+	    "_name": "green",
+	    "_type": "Lambertian"
+	},{
+	    "diffuse": ".65 .05 .05",
+	    "_name": "red",
+	    "_type": "Lambertian"
+	},{
+	    "diffuse": ".73 .73 .73",
+	    "_name": "white",
+	    "_type": "Lambertian"
+	}],"texture":[],"obj":[],
+	"shape": [{
+	    "shader": {
+		"_ref": "white"
+	    },
+	    "minPt": "-1.0 -0.5 -.5",
+	    "maxPt": "1 0.5 0.51",
+	    "_name": "box1",
+	    "_type": "box"
+	}]
+    }
+}

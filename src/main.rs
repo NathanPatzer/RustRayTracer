@@ -34,6 +34,7 @@ mod Texture;
 mod objParser;
 mod l_SpotLight;
 mod l_area;
+mod lookAtCam;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -165,10 +166,13 @@ fn render_slice(img_w: u32,img_h: u32, rpp: u32, cam: Camera::Camera, sc: &Scene
             {
                 for q in 0..rpp
                 {
-                    let off_i: f32 = (p as f32 + rng.gen::<f32>()) / rpp as f32;
+                    let off_i: f32 =(p as f32 + rng.gen::<f32>()) / rpp as f32;
                     let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
-                    let r = cam.genRay(i as i32, j as i32, off_i, off_j);
-                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, hit_struct)
+                    let u: f32 = (i as f32 + off_i) / (img_w - 1) as f32;
+                    let v: f32 = (j as f32 + off_j) / (img_h - 1) as f32;
+                    let r = cam.genRay(u, v);
+                    pixel_color = pixel_color + sc.rayColor(r, min_t, max_t, hit_struct);
+                    hit_struct.setDepth(depth);
                 }
             }
             pixel_color = pixel_color / (rpp*rpp) as f32;

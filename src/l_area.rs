@@ -73,6 +73,7 @@ impl IsLight for l_area
                 
                 let ndotl = normal.dot(&L);
                 let max: f32 = 0.0_f32.max(ndotl);
+                if max == 0.0 {continue;}
                 diffuse_contribution = diffuse_contribution + max;
 
                 let shadow_ray = Ray::new(lightP - intersectionPt, intersectionPt);

@@ -16,6 +16,7 @@ use crate::Camera::Camera;
 use crate::PerspectiveCamera;
 use crate::Box;
 use crate::l_area::AreaLight;
+use crate::lookAtCam::lookAtCam;
 use crate::s_Toon::Toon;
 use crate::s_mirror::Mirror;
 use crate::Texture::Texture;
@@ -136,7 +137,16 @@ impl JsonParser
             let shader_type = shader_vec[i].get("_type").unwrap().as_str().unwrap();
             if shader_type == "Lambertian"
             {
-                let shader = Lambertian::new();
+                let mut bleed: bool = false;
+                if shader_vec[i].get("bleed").is_some()
+                {
+                    let b = JsonParser::getInt(shader_vec[i].get("bleed"));
+                    if b == 1
+                    {
+                        bleed = true;
+                    }
+                }
+                let shader = Lambertian::new(bleed);
                 let name = JsonParser::getStr(shader_vec[i].get("_name"));
                 if shader_vec[i].get("diffuse").is_none()
                 {
@@ -214,13 +224,26 @@ impl JsonParser
             let cam_type = camera_vec[i].get("_type").unwrap().as_str().unwrap();
             if cam_type == "perspective"
             {
-                let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
-                let view_dir = JsonParser::getVec(camera_vec[i].get("viewDir").unwrap().as_str().unwrap());
-                let focal_length = camera_vec[i].get("focalLength").unwrap().as_f64().unwrap();
-                let plane_w = camera_vec[i].get("imagePlaneWidth").unwrap().as_f64().unwrap();
-                let coord_sys = Coord::new(view_dir, Vec3::new(0.0, 1.0, 0.0));
-                let p_cam = PerspectiveCamera::new(pos, plane_w as f32, focal_length as f32, self.width, self.height, coord_sys);
-                scene.addCamera(Camera::PerpectiveCamera(p_cam));
+                if camera_vec[i].get("lookat").is_none()
+                {                
+                    let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
+                    let view_dir = JsonParser::getVec(camera_vec[i].get("viewDir").unwrap().as_str().unwrap());
+                    let focal_length = camera_vec[i].get("focalLength").unwrap().as_f64().unwrap();
+                    let plane_w = camera_vec[i].get("imagePlaneWidth").unwrap().as_f64().unwrap();
+                    let coord_sys = Coord::new(view_dir, Vec3::new(0.0, 1.0, 0.0));
+                    let p_cam = PerspectiveCamera::new(pos, plane_w as f32, focal_length as f32, self.width, self.height, coord_sys);
+                    scene.addCamera(Camera::PerpectiveCamera(p_cam));
+                }
+                else 
+                {
+                    let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
+                    let lookat = JsonParser::getVec(camera_vec[i].get("lookat").unwrap().as_str().unwrap());
+                    let aspect: f32 = 1.0;
+                    let coord_sys = Coord::new_look_at(pos, lookat, Vec3::new(0.0, 1.0, 0.0));
+                    let p_cam = lookAtCam::new(pos,30 as f64,aspect,coord_sys);
+                    
+                    scene.addCamera(Camera::lookAtCam(p_cam));
+                }
             }
         }
         
@@ -275,5 +298,10 @@ impl JsonParser
     fn getFloat(val: Option<&Value>) -> f32
     {
         val.unwrap().as_f64().unwrap() as f32
+    }
+
+    fn getInt(val: Option<&Value>) -> i64
+    {
+        val.unwrap().as_i64().unwrap()
     }
 }

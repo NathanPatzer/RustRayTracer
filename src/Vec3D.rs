@@ -20,6 +20,11 @@ impl Vec3D{
         ((self.rgb[0] * self.rgb[0]) + (self.rgb[1] * self.rgb[1]) + (self.rgb[2] * self.rgb[2])).sqrt()
     }
 
+    pub fn length_squared(&self) -> f32
+    {
+        (self.rgb[0] * self.rgb[0]) + (self.rgb[1] * self.rgb[1]) + (self.rgb[2] * self.rgb[2])
+    }
+
     pub fn crossProduct(self,rhs: &Vec3D) -> Vec3D
     {
         Vec3D::new( (self.rgb[1] * rhs[2]) - (self.rgb[2] * rhs[1]),

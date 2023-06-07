@@ -95,7 +95,8 @@ impl SceneContainer
     {
         match cam
         {
-            Camera::PerpectiveCamera(p) => self.allCameras.push(Camera::PerpectiveCamera(p))
+            Camera::PerpectiveCamera(p) => self.allCameras.push(Camera::PerpectiveCamera(p)),
+            Camera::lookAtCam(l) => self.allCameras.push(Camera::lookAtCam(l))
         }
     }
 
