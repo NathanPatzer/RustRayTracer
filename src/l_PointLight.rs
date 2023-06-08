@@ -37,7 +37,7 @@ impl IsLight for l_PointLight
         let ndotl = normal.dot(&L_direction);
         let max: f32 = 0.0_f32.max(ndotl);
 
-        if !h.scene.root.clone().unwrap().anyHit(&shadow_ray, 0.0001, 1.0)
+        if !h.getRoot().anyHit(&shadow_ray, 0.0001, 1.0)
         {
             return max;
         }

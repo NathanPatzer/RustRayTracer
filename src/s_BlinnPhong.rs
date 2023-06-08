@@ -1,9 +1,9 @@
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
-use crate::Light::IsLight;
+use crate::Light::{IsLight, Light};
 
 #[allow(non_camel_case_types)]
-#[derive(Clone)]
+#[derive(Clone,Copy)]
 pub struct s_BlinnPhong
 {   
     specular: Vec3,
@@ -20,15 +20,15 @@ impl s_BlinnPhong
 
 impl Shading for s_BlinnPhong
 {
-    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3,lights: &Vec<Light>) -> Vec3 
     {
         let mut finalColor = Vec3::newEmpty();
-        let lights = h_struct.getLights();
+        
         let intersect = h_struct.getIntersect();
         let normal = h_struct.getNormal();
         let ray = h_struct.getRay();
         let ambient = Vec3::new(0.1, 0.1, 0.1) * color_to_shade;
-        for light in lights
+        for light in lights.iter()
         {
             let mut lcolor = Vec3::newEmpty();
             

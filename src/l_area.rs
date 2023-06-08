@@ -77,7 +77,7 @@ impl IsLight for l_area
                 diffuse_contribution = diffuse_contribution + max;
 
                 let shadow_ray = Ray::new(lightP - intersectionPt, intersectionPt);
-                if !h.scene.root.clone().unwrap().anyHit(&shadow_ray, 0.0001, 1.0)
+                if !h.getRoot().anyHit(&shadow_ray, 0.0001, 1.0)
                 {
                     shading_contribution = shading_contribution + 1.0;
                 }

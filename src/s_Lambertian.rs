@@ -4,10 +4,10 @@ use crate::Ray::Ray;
 use crate::s_mirror::Mirror;
 use crate::{Vec3, HStruct};
 use crate::Shader::Shading;
-use crate::Light::IsLight;
+use crate::Light::{IsLight, Light};
 use fastrand::Rng;
 #[allow(non_camel_case_types)]
-#[derive(Clone)]
+#[derive(Clone,Copy)]
 pub struct s_Lambertian
 {
     bleed: bool
@@ -41,14 +41,14 @@ impl s_Lambertian
         }
     }
 
-    fn getAttenuation(intersection: Vec3, normal: Vec3,samples: i32,h_struct: &mut HStruct,depth: i32) -> Vec3
+    fn getAttenuation(intersection: Vec3, normal: Vec3,samples: i32,h_struct: &mut HStruct,depth: i32, lights: &Vec<Light>) -> Vec3
     {
         let mut indirectColor = Vec3::newEmpty();
         for _i in 0..samples
         {
             let target = intersection + normal + Lambertian::random_in_unit_sphere();
             let ray = Ray::new(target - intersection, intersection);
-            indirectColor = indirectColor + Mirror::mirror_color(ray, 1.0e-5, INFINITY, depth,h_struct);
+            indirectColor = indirectColor + Mirror::mirror_color(ray, 1.0e-5, INFINITY, depth,h_struct,lights);
         }
 
         indirectColor / samples as f32
@@ -57,10 +57,11 @@ impl s_Lambertian
 
 impl Shading for s_Lambertian
 {
-    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3) -> Vec3 
+    #[allow(implied_bounds_entailment)]
+    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3,lights: &Vec<Light>) -> Vec3 
     {
         let mut finalColor = Vec3::newEmpty();
-        let lights = h_struct.getLights();
+        
         let intersect = h_struct.getIntersect();
         let normal = h_struct.getNormal();
         let ambient = Vec3::new(0.1, 0.1, 0.1) * color_to_shade;
@@ -73,7 +74,7 @@ impl Shading for s_Lambertian
             }
             h_struct.setDepth(h_struct.getDepth() - 1); //subtract depth by 1
             let depth = h_struct.getDepth();
-            indirectColor = Lambertian::getAttenuation(intersect, normal, 75, h_struct,depth);
+            indirectColor = Lambertian::getAttenuation(intersect, normal, 75, h_struct,depth,lights);
         }
        
         for light in lights

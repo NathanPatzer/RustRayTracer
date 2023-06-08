@@ -1,13 +1,10 @@
 use std::collections::HashMap;
-
+use std::sync::{Arc, Mutex};
 use crate::Texture::Texture;
 use crate::Vec3;
 use crate::Ray::Ray;
-use crate::Shape::Shape;
-use crate::Light::Light;
-use crate::SceneContainer::SceneContainer;
 use crate::Shader::Shader;
-use crate::BVHNode;
+use crate::BVHNode::BVHNode;
 
 #[derive(Clone)]
 pub struct HitStruct
@@ -16,7 +13,9 @@ pub struct HitStruct
     intersect: Vec3,
     normal: Vec3,
     ray: Ray,
-    pub scene: SceneContainer,
+    root: Option<BVHNode>,
+    pub shaders: Option<Arc<Mutex<HashMap<String,Shader>>>>,
+    pub textures: Option<Arc<Mutex<HashMap<String,Texture>>>>,
     depth: i32,
     background_color: Vec3,
     shader_name: String,
@@ -29,17 +28,29 @@ impl HitStruct
     pub fn new() -> HitStruct
     {
         HitStruct{
-            min_t: 1.0,
-            intersect: Vec3::newEmpty(),
-            normal: Vec3::newEmpty(), 
-            ray: Ray::new(Vec3::newEmpty(), Vec3::newEmpty()),
-            scene: SceneContainer::new(),
-            depth: 1,
-            background_color: Vec3::newEmpty(),
-            shader_name: "".to_string(),
-            texture_name: "".to_string(),
-            t_coords: (0.0,0.0)
+            min_t: 1.0, //cloned
+            intersect: Vec3::newEmpty(), //cloned
+            normal: Vec3::newEmpty(), //cloned
+            ray: Ray::new(Vec3::newEmpty(), Vec3::newEmpty()), //cloned
+            root: None,
+            shaders: None,
+            textures: None,
+            depth: 1, //cloned
+            background_color: Vec3::newEmpty(), //referenced
+            shader_name: "".to_string(), //cloned
+            texture_name: "".to_string(), //cloned
+            t_coords: (0.0,0.0) //cloned
         }
+    }
+
+    pub fn setTextures(&mut self, textures: HashMap<String,Texture>)
+    {
+        self.textures = Some(Arc::new(Mutex::new(textures)));
+    }
+
+    pub fn setShaders(&mut self, shaders: HashMap<String,Shader>)
+    {
+        self.shaders = Some(Arc::new(Mutex::new(shaders)));
     }
 
     pub fn setTextureName(&mut self, n: String)
@@ -102,29 +113,7 @@ impl HitStruct
         self.ray
     }
  
-    pub fn setShapes(&mut self, shapes: Vec<Shape>)
-    {
-        //self.shapes = shapes;
-        self.scene.allShapes = shapes;
-    }
     
-    pub fn getShapes(&self) -> Vec<Shape>
-    {
-        //self.shapes[..].to_vec()
-        self.scene.allShapes[..].to_vec()
-    }
-
-    pub fn setLights(&mut self, lights: Vec<Light>)
-    {
-        //self.lights = lights;
-        self.scene.allLights = lights
-    }
-
-    pub fn getLights(&self) -> Vec<Light>
-    {
-        //self.lights[..].to_vec()
-        self.scene.allLights[..].to_vec()
-    }
 
     pub fn setDepth(&mut self, d: i32)
     {
@@ -134,16 +123,6 @@ impl HitStruct
     pub fn getDepth(&self) -> i32
     {
         self.depth
-    }
-
-    pub fn setShaders(&mut self, shaders: HashMap<String,Shader>)
-    {
-        self.scene.allShaders = shaders;
-    }
-
-    pub fn getShaders(&self) -> HashMap<String,Shader>
-    {
-        self.scene.allShaders.clone()
     }
 
     pub fn setBackGroundColor(&mut self, bg: Vec3)
@@ -166,24 +145,14 @@ impl HitStruct
         self.shader_name.to_string()
     }
 
-    pub fn setRoot(&mut self,root: Option<BVHNode::BVHNode>)
+    pub fn setRoot(&mut self,root: Option<BVHNode>)
     {
-        self.scene.root = root;
+        self.root = root;
     }
 
-    pub fn getRoot(&self) -> BVHNode::BVHNode
+    pub fn getRoot(&self) -> BVHNode
     {
-        self.scene.root.clone().unwrap()
-    }
-
-    pub fn setTextures(&mut self, textures: HashMap<String,Texture>)
-    {
-        self.scene.allTextures = textures;
-    }
-
-    pub fn getTexture(&self, t: String) -> &Texture
-    {
-        self.scene.allTextures.get(&t).unwrap()
+        self.root.clone().unwrap()
     }
 
 }

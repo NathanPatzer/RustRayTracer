@@ -21,14 +21,6 @@ impl Framebuffer
         }
     }
 
-    pub fn setPixelColor(&mut self ,locX: u32 ,locY: u32 , rgb: &Vec3D)
-    {
-        let index: usize = ((locY * self.width) + locX) as usize;
-        assert!(index < self.pixelArray.len(), "Index out of range");
-        self.pixelArray[index] = *rgb;
-        
-    }
-
     pub fn exportAsPng(&mut self,filename: String)
     {
         let mut img = RgbImage::new(self.width, self.height);
@@ -67,11 +59,12 @@ impl Framebuffer
         }
     }
 
-    pub fn setFromSlice(&mut self,slice: Vec<(u32,u32,Vec3D)>)
+    pub fn setAll(&mut self,img: Vec<Vec3D>)
     {
-        for (i,j,pixel) in slice
+        assert!(img.len() == self.pixelArray.len(), "Invalid Array");
+        for i in 0..img.len()
         {
-           self.setPixelColor(i, j, &pixel);
+            self.pixelArray[i] = img[i];
         }
     }
 }
