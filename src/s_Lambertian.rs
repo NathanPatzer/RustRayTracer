@@ -1,11 +1,15 @@
+use std::collections::HashMap;
 use std::f32::INFINITY;
 
 use crate::Ray::Ray;
+use crate::Texture::Texture;
 use crate::s_mirror::Mirror;
 use crate::{Vec3, HStruct};
-use crate::Shader::Shading;
+use crate::Shader::{Shading, Shader};
 use crate::Light::{IsLight, Light};
-use fastrand::Rng;
+use rand::Rng;
+
+
 #[allow(non_camel_case_types)]
 #[derive(Clone,Copy)]
 pub struct s_Lambertian
@@ -20,15 +24,9 @@ impl s_Lambertian
         s_Lambertian{bleed: b}
     }
 
-    fn random_double(min: f32,max: f32) -> f32
-    {
-        let rng = Rng::new();
-        min + (max - min) * rng.f32()
-    }
-
     fn random_vector() -> Vec3
     {
-        Vec3::new(Lambertian::random_double(-1.0,1.0), Lambertian::random_double(-1.0,1.0), Lambertian::random_double(-1.0,1.0))
+        Vec3::new(rand::thread_rng().gen_range(-1.0, 1.0), rand::thread_rng().gen_range(-1.0, 1.0), rand::thread_rng().gen_range(-1.0, 1.0))
     }
 
     fn random_in_unit_sphere() -> Vec3
@@ -41,14 +39,18 @@ impl s_Lambertian
         }
     }
 
-    fn getAttenuation(intersection: Vec3, normal: Vec3,samples: i32,h_struct: &mut HStruct,depth: i32, lights: &Vec<Light>) -> Vec3
+    fn getAttenuation(intersection: Vec3, normal: Vec3,samples: i32,h_struct: &mut HStruct,depth: i32, lights: &Vec<Light>,shaders: &HashMap<String,Shader>,textures: &HashMap<String,Texture>) -> Vec3
     {
         let mut indirectColor = Vec3::newEmpty();
         for _i in 0..samples
         {
-            let target = intersection + normal + Lambertian::random_in_unit_sphere();
+            let mut target = intersection + normal + Lambertian::random_in_unit_sphere();
+            if target.nearZero()
+            {
+                target = normal;
+            }
             let ray = Ray::new(target - intersection, intersection);
-            indirectColor = indirectColor + Mirror::mirror_color(ray, 1.0e-5, INFINITY, depth,h_struct,lights);
+            indirectColor = indirectColor + Mirror::mirror_color(ray, 1.0e-5, INFINITY, depth,h_struct,lights,shaders,textures);
         }
 
         indirectColor / samples as f32
@@ -58,7 +60,7 @@ impl s_Lambertian
 impl Shading for s_Lambertian
 {
     #[allow(implied_bounds_entailment)]
-    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3,lights: &Vec<Light>) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct, color_to_shade: &Vec3,lights: &Vec<Light>,shaders: &HashMap<String,Shader>,textures: &HashMap<String,Texture>) -> Vec3 
     {
         let mut finalColor = Vec3::newEmpty();
         
@@ -74,7 +76,7 @@ impl Shading for s_Lambertian
             }
             h_struct.setDepth(h_struct.getDepth() - 1); //subtract depth by 1
             let depth = h_struct.getDepth();
-            indirectColor = Lambertian::getAttenuation(intersect, normal, 75, h_struct,depth,lights);
+            indirectColor = Lambertian::getAttenuation(intersect, normal, 25, h_struct,depth,lights,shaders,textures);
         }
        
         for light in lights

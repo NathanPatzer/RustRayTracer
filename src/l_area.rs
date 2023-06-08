@@ -1,5 +1,5 @@
 use crate::{Light::IsLight, Vec3, Shape::Hittable,Ray::Ray};
-use fastrand::Rng;
+use rand::Rng;
 #[allow(non_camel_case_types)]
 #[derive(Clone,Debug,Copy)]
 pub struct l_area
@@ -61,13 +61,13 @@ impl IsLight for l_area
         let invSamplesY = 1.0 / samplesY as f32;
         let mut shading_contribution: f32 = 0.0;
         let mut diffuse_contribution: f32 = 0.0;
-        let rng = Rng::new();
+       
         for x in 0..samplesX
         {
             for y in 0..samplesY
             {
-                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rng.f32() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
-                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rng.f32() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
+                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
+                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
                 let lightP = self.center + first + second;
                 let L = (lightP - intersectionPt).normalize();
                 
@@ -103,13 +103,13 @@ impl IsLight for l_area
         let invSamplesX = 1.0 / samplesX as f32;
         let invSamplesY = 1.0 / samplesY as f32;
         let mut specular_contribution = 0.0;
-        let rng = Rng::new();
+        
         for x in 0..samplesX
         {
             for y in 0..samplesY
             {
-                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rng.f32() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
-                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rng.f32() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
+                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
+                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
                 let lightP = self.center + first + second;
                 
                 let L = (lightP - intersection).normalize();

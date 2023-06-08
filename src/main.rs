@@ -2,7 +2,7 @@
 use indicatif::{ProgressBar, ProgressStyle};
 
 use PespectiveCamera::PerspectiveCamera;
-use fastrand::Rng;
+use rand::Rng;
 
 use std::sync::{Arc, Mutex};
 
@@ -83,12 +83,9 @@ fn main() {
     println!("CONSTRUCTED BVH");
     assert!(sc.root.is_some());
     
-
-
-    
     println!("RENDERING WITH {} THREADS...",args.num_threads);
     //LOADING BAR
-    let progress_bar = Arc::new(ProgressBar::new((args.height * args.num_threads) as u64));
+    let progress_bar = Arc::new(ProgressBar::new((h) as u64));
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("[{bar:25}] {percent}%")
@@ -99,15 +96,14 @@ fn main() {
     hit_struct.setDepth(depth);
     hit_struct.setBackGroundColor(sc.background_color);
     hit_struct.setRoot(sc.root.clone());
-    hit_struct.setShaders(sc.allShaders.clone());
-    hit_struct.setTextures(sc.allTextures.clone());
+
     //Rayon
     let img: Arc<Mutex<Vec<Vec3>>> = Arc::new(Mutex::new(Vec::with_capacity((w * h) as usize)));
     img.lock().unwrap().resize_with((w * h) as usize, Vec3::newEmpty);
     let start = std::time::Instant::now();
     (0..h).into_par_iter().for_each(|j| {
         let mut t_h = hit_struct.clone();
-        let rng = Rng::new();
+       
         for i in 0..w {
             let mut pixel_color = Vec3::newEmpty();
             //ANTI ALIASING
@@ -115,8 +111,8 @@ fn main() {
             {
                 for q in 0..rpp
                 {
-                    let off_i: f32 =(p as f32 + rng.f32()) / rpp as f32;
-                    let off_j: f32 = (q as f32 + rng.f32()) / rpp as f32;
+                    let off_i: f32 =(p as f32 + rand::thread_rng().gen::<f32>()) / rpp as f32;
+                    let off_j: f32 = (q as f32 + rand::thread_rng().gen::<f32>()) / rpp as f32;
                     let u: f32 = (i as f32 + off_i) / (w - 1) as f32;
                     let v: f32 = (j as f32 + off_j) / (h - 1) as f32;
                     let r = cam.genRay(u, v);

@@ -32,6 +32,12 @@ impl Vec3D{
                     (self.rgb[0] * rhs[1]) - (self.rgb[1] * rhs[0]))
     }
 
+    pub fn nearZero(&self) -> bool
+    {
+        let s: f32 = 1e-8;
+        return (self[0].abs() < s) && (self[1].abs() < s) && (self[2].abs() < s);
+    }
+
     pub fn dot(&self, rhs: &Vec3D) -> f32
     {
         (self[0] * rhs[0]) + (self[1] * rhs[1]) + (self[2] * rhs[2])

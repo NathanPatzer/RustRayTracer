@@ -107,7 +107,7 @@ impl Hittable for BVHNode
         let mut left_t: f32 = tMax;
         let mut right_t: f32 = tMax;
         let mut right_normal = Vec3::newEmpty();
-        let mut right_s = "".to_string();
+        let mut right_s: String = "".to_string();
         let mut right_i = Vec3::newEmpty();
         let mut right_texture = "".to_string();
         if self.bounding_box.intersect(r)
@@ -120,7 +120,7 @@ impl Hittable for BVHNode
                 {
                     right_t = h.getT();
                     right_normal = h.getNormal();
-                    right_s = h.getShaderName();
+                    right_s = h.getShaderName().clone();
                     right_i = h.getIntersect();
                     right_texture = h.getTextureName().to_string();
                 }

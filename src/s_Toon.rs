@@ -1,5 +1,8 @@
+use std::collections::HashMap;
+
+use crate::Texture::Texture;
 use crate::{Vec3, HStruct};
-use crate::Shader::Shading;
+use crate::Shader::{Shading, Shader};
 use crate::Light::{IsLight, Light};
 
 
@@ -20,7 +23,7 @@ impl s_Toon
 
 impl Shading for s_Toon
 {
-    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3, lights: &Vec<Light>) -> Vec3 
+    fn apply(&self,h_struct: &mut HStruct,color_to_shade: &Vec3, lights: &Vec<Light>,_shaders: &HashMap<String,Shader>,_textures: &HashMap<String,Texture>) -> Vec3 
     {
         let mut final_color = Vec3::newEmpty();
 

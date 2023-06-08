@@ -1,9 +1,5 @@
-use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
-use crate::Texture::Texture;
 use crate::Vec3;
 use crate::Ray::Ray;
-use crate::Shader::Shader;
 use crate::BVHNode::BVHNode;
 
 #[derive(Clone)]
@@ -14,8 +10,6 @@ pub struct HitStruct
     normal: Vec3,
     ray: Ray,
     root: Option<BVHNode>,
-    pub shaders: Option<Arc<Mutex<HashMap<String,Shader>>>>,
-    pub textures: Option<Arc<Mutex<HashMap<String,Texture>>>>,
     depth: i32,
     background_color: Vec3,
     shader_name: String,
@@ -33,24 +27,12 @@ impl HitStruct
             normal: Vec3::newEmpty(), //cloned
             ray: Ray::new(Vec3::newEmpty(), Vec3::newEmpty()), //cloned
             root: None,
-            shaders: None,
-            textures: None,
             depth: 1, //cloned
             background_color: Vec3::newEmpty(), //referenced
             shader_name: "".to_string(), //cloned
             texture_name: "".to_string(), //cloned
             t_coords: (0.0,0.0) //cloned
         }
-    }
-
-    pub fn setTextures(&mut self, textures: HashMap<String,Texture>)
-    {
-        self.textures = Some(Arc::new(Mutex::new(textures)));
-    }
-
-    pub fn setShaders(&mut self, shaders: HashMap<String,Shader>)
-    {
-        self.shaders = Some(Arc::new(Mutex::new(shaders)));
     }
 
     pub fn setTextureName(&mut self, n: String)
@@ -140,9 +122,9 @@ impl HitStruct
         self.shader_name = shader;
     }
 
-    pub fn getShaderName(&self) -> String
+    pub fn getShaderName(&self) -> &String
     {
-        self.shader_name.to_string()
+        &self.shader_name
     }
 
     pub fn setRoot(&mut self,root: Option<BVHNode>)

@@ -107,7 +107,6 @@ impl SceneContainer
 
     pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32, h: &mut HStruct) -> Vec3
     {
-        
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
         {
             let mut color: Vec3 = Vec3::newEmpty();
@@ -124,8 +123,8 @@ impl SceneContainer
                 }
             }
 
-            if let Some(shader) = self.allShaders.get(&h.getShaderName()) {
-                return shader.apply(h,&color,&self.allLights);
+            if let Some(shader) = self.allShaders.get(h.getShaderName()) {
+                return shader.apply(h,&color,&self.allLights,&self.allShaders,&self.allTextures);
             }
         }
         self.background_color
