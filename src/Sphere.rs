@@ -39,7 +39,7 @@ impl Sphere
         BoundingBox::new(minPt, maxPt)
     }
 
-    fn getSphereUV(p: Vec3) -> (f32,f32)
+    pub fn getSphereUV(p: Vec3) -> (f32,f32)
     {
         let phi = atan2(p[2] as f64, p[0] as f64);
         let theta = asin(p[1] as f64);

@@ -71,14 +71,12 @@ impl std::ops::Index<usize> for Vec3D
 {
     type Output = f32;
     fn index(&self, idx: usize) -> &Self::Output {
-        assert!(idx < 3, "Index out of range");
         &self.rgb[idx]
     }
 }
 
 impl std::ops::IndexMut<usize> for Vec3D {
     fn index_mut(&mut self, idx: usize) -> &mut Self::Output {
-        assert!(idx < 3, "Index out of range");
         &mut self.rgb[idx]
     }
 }

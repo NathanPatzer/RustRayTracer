@@ -14,7 +14,7 @@
         "y0": -0.2,
         "y1": 0.2,
         "z": 0.9,
-        "s": 1,
+        "s": 12,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"
@@ -34,7 +34,12 @@
 		"bleed": 1,
 	    "_name": "white",
 	    "_type": "Lambertian"
-	}],"texture":[],"obj":[],
+	}],"texture":[],"obj":[{
+        "obj": "max-planck.obj",
+        "shader_ref": "white",
+        "scale": 0.002,
+        "shift": "0.5 0 0.3"
+    }],
 	"shape": [{
 	    "shader": {
 		"_ref": "green"
@@ -79,18 +84,11 @@
 	    "shader": {
 		"_ref": "white"
 	    },
-	    "center": ".6 -.3 .4",
-	    "radius": 0.2,
-	    "_name": "sphere1",
-	    "_type": "sphere"
-	},{
-	    "shader": {
-		"_ref": "white"
-	    },
 	    "center": "-.6 -.3 0",
 	    "radius": 0.2,
 	    "_name": "sphere1",
 	    "_type": "sphere"
-	}]
+	}],
+	"background-texture": "space.jpg"
     }
 }

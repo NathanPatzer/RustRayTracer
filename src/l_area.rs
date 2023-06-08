@@ -1,5 +1,5 @@
 use crate::{Light::IsLight, Vec3, Shape::Hittable,Ray::Ray};
-use rand::Rng;
+use rand::{Rng, thread_rng, rngs::ThreadRng};
 #[allow(non_camel_case_types)]
 #[derive(Clone,Debug,Copy)]
 pub struct l_area
@@ -54,21 +54,23 @@ impl l_area
 impl IsLight for l_area
 {
     //https://github.com/dcower/raytracer/blob/master/raytracer/AreaLight.cpp getContribution Method
-    fn getContribution(&self,h: &mut crate::HStruct, intersectionPt: crate::Vec3, normal: Vec3) -> f32 {
+    fn getContribution(&self,h: &mut crate::HStruct, intersectionPt: crate::Vec3, normal: Vec3,rng: &mut ThreadRng) -> f32 {
         let samplesX = self.samples.0;
         let samplesY = self.samples.1;
         let invSamplesX = 1.0 / samplesX as f32;
         let invSamplesY = 1.0 / samplesY as f32;
         let mut shading_contribution: f32 = 0.0;
         let mut diffuse_contribution: f32 = 0.0;
-       
+        let mut distance_contribution: f32 = 0.0;
+        let totalSamples = samplesX as f32 * samplesY as f32;
         for x in 0..samplesX
         {
             for y in 0..samplesY
             {
-                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
-                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
+                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rng.gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
+                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rng.gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
                 let lightP = self.center + first + second;
+                distance_contribution = distance_contribution + (lightP - intersectionPt).length();
                 let L = (lightP - intersectionPt).normalize();
                 
                 let ndotl = normal.dot(&L);
@@ -83,9 +85,11 @@ impl IsLight for l_area
                 }
             }
         }
-        let total_shading = shading_contribution / (samplesX as f32 * samplesY as f32);
-        let total_diffuse = diffuse_contribution / (samplesX as f32 * samplesY as f32);
-        let totalContribution = total_shading * total_diffuse;
+
+        let total_distance: f32 = distance_contribution / totalSamples;
+        let total_shading: f32 = shading_contribution / totalSamples;
+        let total_diffuse: f32 = diffuse_contribution / totalSamples;
+        let totalContribution: f32 = (total_shading * total_diffuse) / (total_distance * total_distance);
         return totalContribution;
     }
 
@@ -103,13 +107,13 @@ impl IsLight for l_area
         let invSamplesX = 1.0 / samplesX as f32;
         let invSamplesY = 1.0 / samplesY as f32;
         let mut specular_contribution = 0.0;
-        
+        let mut rng = thread_rng();
         for x in 0..samplesX
         {
             for y in 0..samplesY
             {
-                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
-                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rand::thread_rng().gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
+                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rng.gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
+                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rng.gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
                 let lightP = self.center + first + second;
                 
                 let L = (lightP - intersection).normalize();

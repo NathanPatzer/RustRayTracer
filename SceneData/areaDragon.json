@@ -14,29 +14,28 @@
         "y0": -50,
         "y1": 10,
         "z": 10,
-        "s": 10,
+        "s": 2,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"
 	    }],
 	"shader": [{
-		"diffuse": "1 0.0 0.0",
-		"specular": "1 1 1",
-		"phongExp": 64.0,
-		"_name": "redBlinnPhong_64",
-		"_type": "BlinnPhong"
-	    },
+	    "diffuse": ".65 .05 .05",
+		"bleed": 1,
+	    "_name": "red",
+	    "_type": "Lambertian"
+		},
 	    {
 		"diffuse": "0.5 0.5 0.5",
+		"bleed": 1,
 		"_name": "greyMat",
 		"_type": "Lambertian"
 	    }],
      "obj":[{
         "obj": "xyzrgb_dragon.obj",
-        "shader_ref": "redBlinnPhong_64",
+        "shader_ref": "red",
         "shift": "0 41 0",
         "scale": 0.01
-        
     }],
     "texture":[],
 	"shape": [{

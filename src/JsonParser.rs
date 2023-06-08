@@ -78,7 +78,14 @@ impl JsonParser
         let shape_vec = jShapes.unwrap();
         let shape_len: usize = shape_vec.len();
 
-        
+        //add background texture to scene if it is present
+        if json["scene"].get("background-texture").is_some()
+        {
+            let background_name = "background".to_string();
+            let background_path = JsonParser::getStr(json["scene"].get("background-texture"));
+            let texture = Texture::new("TEXTURES/".to_string() + &background_path);
+            scene.addTexture(texture, background_name);  
+        }
 
         //ADDS SHAPES TO SHAPEVECTOR     
         for i in 0..shape_len

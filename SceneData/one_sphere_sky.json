@@ -2,7 +2,7 @@
     "scene": {
 	"camera": [{
 	    "position": "0 0 0",
-	    "viewDir": "0 0 -1",
+	    "viewDir": "0 0 1",
 	    "focalLength": 1.0,
 	    "imagePlaneWidth": 0.5,
 	    "_name": "main",
@@ -27,6 +27,7 @@
 	    "radius": 1,
 	    "_name": "sphere1",
 	    "_type": "sphere"
-	}]
+	}],
+    "background-texture": "sky.jpg"
     }
 }

@@ -3,7 +3,7 @@
 This is a raytracer written in Rust that generates images using various command-line arguments.
 ![Alt Text](./IMAGES/areaDragon.png)
 
-![Alt Text](./IMAGES/cornell_box.png) 
+![Alt Text](./IMAGES/cornell_box2.png) 
 ## Setup
 
 To run the raytracer, follow the steps below:

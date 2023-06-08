@@ -1,6 +1,6 @@
+use crate::Sphere::Sphere;
 use crate::Texture::Texture;
 use crate::{HStruct, Vec3, Shading, Shape::Shape};
-
 use std::collections::HashMap;
 use crate::Shader::Shader;
 use crate::Light::Light;
@@ -127,7 +127,24 @@ impl SceneContainer
                 return shader.apply(h,&color,&self.allLights,&self.allShaders,&self.allTextures);
             }
         }
-        self.background_color
+
+        if let Some(background) = self.allTextures.get("background")
+        {
+            let oc = &r.origin;
+            let a = r.dir.dot(&r.dir);
+            let b = 2.0 * &oc.dot(&r.dir);
+            let c = oc.dot(&oc) - (5.0 * 5.0);
+            let disc = (b*b) - (4.0*a*c);
+            let T = (-b - disc.sqrt() ) / (2.0*a);
+            let point_on_bg = r.origin + (r.dir * T);
+            let (U,V) = Sphere::getSphereUV(point_on_bg);
+            return background.get_texture_color(U, V, background);
+        }
+        else {
+            return self.background_color;
+        }
+        
+        
     }
 
     pub fn addTexture(&mut self, t: Texture,tname: String)

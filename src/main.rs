@@ -3,6 +3,7 @@ use indicatif::{ProgressBar, ProgressStyle};
 
 use PespectiveCamera::PerspectiveCamera;
 use rand::Rng;
+use rand::thread_rng;
 
 use std::sync::{Arc, Mutex};
 
@@ -83,7 +84,7 @@ fn main() {
     println!("CONSTRUCTED BVH");
     assert!(sc.root.is_some());
     
-    println!("RENDERING WITH {} THREADS...",args.num_threads);
+    println!("RENDERING...");
     //LOADING BAR
     let progress_bar = Arc::new(ProgressBar::new((h) as u64));
     progress_bar.set_style(
@@ -96,14 +97,14 @@ fn main() {
     hit_struct.setDepth(depth);
     hit_struct.setBackGroundColor(sc.background_color);
     hit_struct.setRoot(sc.root.clone());
-
+    
     //Rayon
-    let img: Arc<Mutex<Vec<Vec3>>> = Arc::new(Mutex::new(Vec::with_capacity((w * h) as usize)));
+    let img: Arc<Mutex<Vec<Vec3>>> = Arc::new(Mutex::new(Vec::with_capacity((h*w) as usize)));
     img.lock().unwrap().resize_with((w * h) as usize, Vec3::newEmpty);
     let start = std::time::Instant::now();
     (0..h).into_par_iter().for_each(|j| {
         let mut t_h = hit_struct.clone();
-       
+        let mut rng = thread_rng();
         for i in 0..w {
             let mut pixel_color = Vec3::newEmpty();
             //ANTI ALIASING
@@ -111,10 +112,12 @@ fn main() {
             {
                 for q in 0..rpp
                 {
-                    let off_i: f32 =(p as f32 + rand::thread_rng().gen::<f32>()) / rpp as f32;
-                    let off_j: f32 = (q as f32 + rand::thread_rng().gen::<f32>()) / rpp as f32;
-                    let u: f32 = (i as f32 + off_i) / (w - 1) as f32;
-                    let v: f32 = (j as f32 + off_j) / (h - 1) as f32;
+                    let off_i: f32 =(p as f32 + rng.gen::<f32>()) / rpp as f32;
+                    let off_j: f32 = (q as f32 + rng.gen::<f32>()) / rpp as f32;
+                    let random_i = i as f32 + off_i;
+                    let random_j = j as f32 + off_j;
+                    let u: f32 = (random_i) / (w - 1) as f32;
+                    let v: f32 = (random_j) / (h - 1) as f32;
                     let r = cam.genRay(u, v);
                     pixel_color = pixel_color + sc.rayColor(r, 1.0, INFINITY, &mut t_h);
                     t_h.setDepth(depth);
@@ -134,7 +137,15 @@ fn main() {
     let filepath: String = "IMAGES/".to_owned() + &args.name + ".png";
     fb.exportAsPng(filepath);
     
-    let elapsed_time = end - start;
-    let rounded = (elapsed_time.as_secs_f64() * 100.0).round() / 100.0;
-    println!("Time to render: {:.2}s", rounded);
+    let mut elapsed_time = (end - start).as_secs_f32();
+    if elapsed_time > 60.0
+    {
+        elapsed_time = elapsed_time / 60.0;
+        println!("Time to render {:.2}m",elapsed_time);
+    }
+    else {
+        println!("Time to render {:.2}s", elapsed_time);
+    }
+    
+    
 }

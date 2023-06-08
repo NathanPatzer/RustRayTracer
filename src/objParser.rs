@@ -95,9 +95,9 @@ impl OBJParser
             {
                 scale = sc.unwrap();
             }
-            let a = (vert[1].parse::<f32>().unwrap() + shift[0]) * scale;
-            let b = (vert[2].parse::<f32>().unwrap() + shift[1]) * scale;
-            let c = (vert[3].parse::<f32>().unwrap() + shift[2]) * scale;
+            let a = (vert[1].parse::<f32>().unwrap() * scale) + shift[0];
+            let b = (vert[2].parse::<f32>().unwrap() * scale) + shift[1];
+            let c = (vert[3].parse::<f32>().unwrap() * scale) + shift[2];
             Vec3::new(a, b, c)
         }
 
