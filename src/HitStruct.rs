@@ -9,7 +9,7 @@ pub struct HitStruct
     intersect: Vec3,
     normal: Vec3,
     ray: Ray,
-    root: Option<BVHNode>,
+    root: BVHNode,
     depth: i32,
     background_color: Vec3,
     shader_name: String,
@@ -26,7 +26,7 @@ impl HitStruct
             intersect: Vec3::newEmpty(), //cloned
             normal: Vec3::newEmpty(), //cloned
             ray: Ray::new(Vec3::newEmpty(), Vec3::newEmpty()), //cloned
-            root: None,
+            root: BVHNode::create_empty(),
             depth: 1, //cloned
             background_color: Vec3::newEmpty(), //referenced
             shader_name: "".to_string(), //cloned
@@ -127,14 +127,14 @@ impl HitStruct
         &self.shader_name
     }
 
-    pub fn setRoot(&mut self,root: Option<BVHNode>)
+    pub fn setRoot(&mut self,root: BVHNode)
     {
         self.root = root;
     }
 
-    pub fn getRoot(&self) -> BVHNode
+    pub fn getRoot(&self) -> &BVHNode
     {
-        self.root.clone().unwrap()
+        &self.root
     }
 
 }

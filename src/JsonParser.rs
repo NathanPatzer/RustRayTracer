@@ -66,18 +66,12 @@ impl JsonParser
         let jLights = json["scene"]["light"].as_array();
         let jCameras = json["scene"]["camera"].as_array();
         let jTextures = json["scene"]["texture"].as_array();
-        let obj_vec = jObj.unwrap();
-        let obj_len = obj_vec.len();
+        let obj_vec: &Vec<Value> = jObj.unwrap();
         let texture_vec = jTextures.unwrap();
-        let texture_len = texture_vec.len();
         let camera_vec = jCameras.unwrap();
-        let camera_len: usize = camera_vec.len();
         let light_vec = jLights.unwrap();
-        let light_len: usize = light_vec.len();
         let shader_vec = jShaders.unwrap();
-        let shader_len: usize = shader_vec.len();
         let shape_vec = jShapes.unwrap();
-        let shape_len: usize = shape_vec.len();
 
         //add background texture to scene if it is present
         if json["scene"].get("background-texture").is_some()
@@ -87,9 +81,68 @@ impl JsonParser
             let texture = Texture::new("TEXTURES/".to_string() + &background_path);
             scene.addTexture(texture, background_name);  
         }
+        
+        JsonParser::parse_textures(texture_vec, scene);
+        JsonParser::parse_cameras(camera_vec, scene,self.width,self.height);
+        JsonParser::parse_shapes(shape_vec, scene);
+        JsonParser::parse_lights(light_vec, scene);
+        JsonParser::parse_shaders(shader_vec, scene);
+        JsonParser::parse_obj(obj_vec,scene,self.interpolate);
 
-        //ADDS SHAPES TO SHAPEVECTOR     
-        for i in 0..shape_len
+        println!("Added {} Shapes", scene.allShapes.len());
+        println!("Added {} Shaders", scene.allShaders.len());
+        println!("Added {} Lights", scene.allLights.len());
+        println!("Added {} Textures", scene.allTextures.len());
+        let end = std::time::Instant::now();
+        println!("Time to parse: {:.2}s", (end - start).as_secs_f32());
+    }
+
+    fn parse_textures(texture_vec: &Vec<Value>,scene: &mut SceneContainer)
+    {
+        for i in 0..texture_vec.len()
+        {
+            //let texture_name = texture_vec[i].get("_name").unwrap().as_str().unwrap();
+            let texture_name = JsonParser::getStr(texture_vec[i].get("_name"));
+            let stexture = JsonParser::getStr(texture_vec[i].get("texture"));
+            let texture = Texture::new("TEXTURES/".to_string() + &stexture);
+            scene.addTexture(texture, texture_name);  
+        }
+    }
+
+    fn parse_cameras(camera_vec: &Vec<Value>,scene: &mut SceneContainer,w: i32, h: i32)
+    {
+        for i in 0..camera_vec.len()
+        {
+            let cam_type = camera_vec[i].get("_type").unwrap().as_str().unwrap();
+            if cam_type == "perspective"
+            {
+                if camera_vec[i].get("lookat").is_none()
+                {                
+                    let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
+                    let view_dir = JsonParser::getVec(camera_vec[i].get("viewDir").unwrap().as_str().unwrap());
+                    let focal_length = camera_vec[i].get("focalLength").unwrap().as_f64().unwrap();
+                    let plane_w = camera_vec[i].get("imagePlaneWidth").unwrap().as_f64().unwrap();
+                    let coord_sys = Coord::new(view_dir, Vec3::new(0.0, 1.0, 0.0));
+                    let p_cam = PerspectiveCamera::new(pos, plane_w as f32, focal_length as f32, w, h, coord_sys);
+                    scene.addCamera(Camera::PerpectiveCamera(p_cam));
+                }
+                else 
+                {
+                    let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
+                    let lookat = JsonParser::getVec(camera_vec[i].get("lookat").unwrap().as_str().unwrap());
+                    let aspect: f32 = w as f32 / h as f32;
+                    let coord_sys = Coord::new_look_at(pos, lookat, Vec3::new(0.0, 1.0, 0.0));
+                    let p_cam = lookAtCam::new(pos,30 as f64,aspect,coord_sys);
+                    
+                    scene.addCamera(Camera::lookAtCam(p_cam));
+                }
+            }
+        }
+    }
+
+    fn parse_shapes(shape_vec: &Vec<Value>,scene: &mut SceneContainer)
+    {
+        for i in 0..shape_vec.len()
         {
             
             let shape_type = shape_vec[i].get("_type").unwrap().as_str().unwrap();
@@ -138,9 +191,39 @@ impl JsonParser
                            
             }
         }
-        
-        //ADD SHADERS TO SHADERVECTOR
-        for i in 0..shader_len
+    }
+
+    fn parse_lights(light_vec: &Vec<Value>,scene: &mut SceneContainer)
+    {
+        for i in 0..light_vec.len()
+        {
+            let light_type = light_vec[i].get("_type").unwrap().as_str().unwrap();
+            if light_type == "point"
+            {
+                let pos = JsonParser::getVec(light_vec[i].get("position").unwrap().as_str().unwrap());
+                let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());     
+                let l: PointLight = PointLight::new(pos, intensity);
+                scene.addLight(Light::PointLight(l));              
+            }
+            else if light_type == "area"
+            {
+                let x0 = JsonParser::getFloat(light_vec[i].get("x0"));
+                let x1 = JsonParser::getFloat(light_vec[i].get("x1"));
+                let y0 = JsonParser::getFloat(light_vec[i].get("y0"));
+                let y1 = JsonParser::getFloat(light_vec[i].get("y1"));
+                let z = JsonParser::getFloat(light_vec[i].get("z"));
+                let s: u32 =JsonParser::getFloat(light_vec[i].get("s")) as u32;
+                let axis: u8 =JsonParser::getFloat(light_vec[i].get("axis")) as u8;
+                let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());
+                let l: AreaLight = AreaLight::new(x0, x1, y0, y1, z, (s,s),intensity,axis);
+                scene.addLight(Light::AreaLight(l));
+            }
+        }
+    }
+
+    fn parse_shaders(shader_vec: &Vec<Value>,scene: &mut SceneContainer)
+    {
+        for i in 0..shader_vec.len()
         {
             let shader_type = shader_vec[i].get("_type").unwrap().as_str().unwrap();
             if shader_type == "Lambertian"
@@ -227,74 +310,11 @@ impl JsonParser
                 }
             }
         }
-        
-        //ADD LIGHTS TO LIGHTVECTOR
-        for i in 0..light_len
-        {
-            
-            let light_type = light_vec[i].get("_type").unwrap().as_str().unwrap();
-            if light_type == "point"
-            {
-                let pos = JsonParser::getVec(light_vec[i].get("position").unwrap().as_str().unwrap());
-                let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());     
-                let l: PointLight = PointLight::new(pos, intensity);
-                scene.addLight(Light::PointLight(l));              
-            }
-            else if light_type == "area"
-            {
-                let x0 = JsonParser::getFloat(light_vec[i].get("x0"));
-                let x1 = JsonParser::getFloat(light_vec[i].get("x1"));
-                let y0 = JsonParser::getFloat(light_vec[i].get("y0"));
-                let y1 = JsonParser::getFloat(light_vec[i].get("y1"));
-                let z = JsonParser::getFloat(light_vec[i].get("z"));
-                let s: u32 =JsonParser::getFloat(light_vec[i].get("s")) as u32;
-                let axis: u8 =JsonParser::getFloat(light_vec[i].get("axis")) as u8;
-                let intensity = JsonParser::getVec(light_vec[i].get("intensity").unwrap().as_str().unwrap());
-                let l: AreaLight = AreaLight::new(x0, x1, y0, y1, z, (s,s),intensity,axis);
-                scene.addLight(Light::AreaLight(l));
-            }
-        }
-        
-        //ADD CAMERA TO CAMERAVECTOR
-        for i in 0..camera_len
-        {
-            let cam_type = camera_vec[i].get("_type").unwrap().as_str().unwrap();
-            if cam_type == "perspective"
-            {
-                if camera_vec[i].get("lookat").is_none()
-                {                
-                    let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
-                    let view_dir = JsonParser::getVec(camera_vec[i].get("viewDir").unwrap().as_str().unwrap());
-                    let focal_length = camera_vec[i].get("focalLength").unwrap().as_f64().unwrap();
-                    let plane_w = camera_vec[i].get("imagePlaneWidth").unwrap().as_f64().unwrap();
-                    let coord_sys = Coord::new(view_dir, Vec3::new(0.0, 1.0, 0.0));
-                    let p_cam = PerspectiveCamera::new(pos, plane_w as f32, focal_length as f32, self.width, self.height, coord_sys);
-                    scene.addCamera(Camera::PerpectiveCamera(p_cam));
-                }
-                else 
-                {
-                    let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
-                    let lookat = JsonParser::getVec(camera_vec[i].get("lookat").unwrap().as_str().unwrap());
-                    let aspect: f32 = 1.0;
-                    let coord_sys = Coord::new_look_at(pos, lookat, Vec3::new(0.0, 1.0, 0.0));
-                    let p_cam = lookAtCam::new(pos,30 as f64,aspect,coord_sys);
-                    
-                    scene.addCamera(Camera::lookAtCam(p_cam));
-                }
-            }
-        }
-        
-        //ADD TEXTURES
-        for i in 0..texture_len
-        {
-            //let texture_name = texture_vec[i].get("_name").unwrap().as_str().unwrap();
-            let texture_name = JsonParser::getStr(texture_vec[i].get("_name"));
-            let stexture = JsonParser::getStr(texture_vec[i].get("texture"));
-            let texture = Texture::new("TEXTURES/".to_string() + &stexture);
-            scene.addTexture(texture, texture_name);  
-        }
-        
-        for i in 0..obj_len
+    }
+
+    fn parse_obj(obj_vec: &Vec<Value>, scene: &mut SceneContainer,interpolate: bool)
+    {
+        for i in 0..obj_vec.len()
         {
             let obj_file_name = JsonParser::getStr(obj_vec[i].get("obj"));
             let shader_ref = JsonParser::getStr(obj_vec[i].get("shader_ref"));
@@ -330,15 +350,8 @@ impl JsonParser
             else {
                 obj_parser.setScale(1.0);
             }
-            obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate,scene);
-           
+            obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,interpolate,scene);
         }
-        println!("Added {} Shapes", scene.allShapes.len());
-        println!("Added {} Shaders", scene.allShaders.len());
-        println!("Added {} Lights", scene.allLights.len());
-        println!("Added {} Textures", scene.allTextures.len());
-        let end = std::time::Instant::now();
-        println!("Time to parse: {:?}", end - start);
     }
 
     //helper function that converts "a b c" into a vec3(a,b,c)

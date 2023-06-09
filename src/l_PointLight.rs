@@ -1,5 +1,6 @@
 use rand::rngs::ThreadRng;
 
+use crate::BVHNode::BVHNode;
 use crate::Ray::Ray;
 use crate::Shape::Hittable;
 use crate::Vec3;
@@ -32,13 +33,13 @@ impl IsLight for l_PointLight
         self.pos    
     }
 
-    fn getContribution(&self,h: &mut crate::HStruct, intersection: Vec3,normal: Vec3,_rng: &mut ThreadRng) -> f32 {
+    fn getContribution(&self, intersection: Vec3,normal: Vec3,_rng: &mut ThreadRng, root: &BVHNode) -> f32 {
         let shadow_ray = Ray::new(self.getPos() - intersection, intersection);
         let L_direction = (self.getPos() - intersection).normalize();
         let ndotl = normal.dot(&L_direction);
         let max: f32 = 0.0_f32.max(ndotl);
         if max == 0.0 {return 0.0;}
-        if !h.getRoot().anyHit(&shadow_ray, 0.0001, 1.0)
+        if !root.anyHit(&shadow_ray, 0.0001, 1.0)
         {
             return max;
         }

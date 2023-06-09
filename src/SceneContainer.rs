@@ -16,7 +16,7 @@ pub struct SceneContainer
     pub allCameras: Vec<Camera>,
     pub allTextures: HashMap<String,Texture>,
     pub background_color: Vec3,
-    pub root: Option<BVHNode>
+    pub root: BVHNode
 }
 
 impl SceneContainer
@@ -28,7 +28,8 @@ impl SceneContainer
         let l: Vec<Light> = Vec::new();
         let c: Vec<Camera> = Vec::new();
         let t: HashMap<String,Texture> = HashMap::new();
-        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c,allTextures: t, background_color: Vec3::newEmpty(),root: None }
+        let b: BVHNode = BVHNode::create_empty();
+        SceneContainer { allShapes: v, allShaders: s, allLights: l, allCameras: c,allTextures: t, background_color: Vec3::newEmpty(),root: b }
     }
 
     pub fn addShape(&mut self, shape: Shape)
@@ -114,7 +115,7 @@ impl SceneContainer
 
     pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32, h: &mut HStruct,coords: (f32,f32)) -> Vec3
     {
-        if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
+        if self.root.closestHit(&r, minT, maxT, h)
         {
             let mut color: Vec3 = Vec3::newEmpty();
             if let Some(texture) = self.allTextures.get(h.getTextureName())

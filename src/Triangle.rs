@@ -95,7 +95,7 @@ impl Triangle
 
 impl Hittable for Triangle
 {
-    fn closestHit(&mut self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
+    fn closestHit(&self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
     {
         let a = self.A[0] - self.B[0];
         let b = self.A[1] - self.B[1];
@@ -162,7 +162,7 @@ impl Hittable for Triangle
         true
     }
 
-    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool {
+    fn anyHit(&self,r: &Ray,tMin: f32, tMax: f32) -> bool {
         let a = self.A[0] - self.B[0];
         let b = self.A[1] - self.B[1];
         let c = self.A[2] - self.B[2];

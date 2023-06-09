@@ -80,7 +80,7 @@ impl Shading for s_Lambertian
             }
             h_struct.setDepth(h_struct.getDepth() - 1); //subtract depth by 1
             let depth = h_struct.getDepth();
-            indirectColor = Lambertian::getAttenuation(intersect, normal, 50, h_struct,depth,lights,shaders,textures,&mut rng);
+            indirectColor = Lambertian::getAttenuation(intersect, normal, 25, h_struct,depth,lights,shaders,textures,&mut rng);
         }
         
         for light in lights
@@ -90,7 +90,7 @@ impl Shading for s_Lambertian
             lcolor[1] = light.getIntensity()[1] * color_to_shade[1];
             lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
 
-            finalColor = finalColor + ((lcolor * light.getContribution(h_struct,intersect,normal,&mut rng)));
+            finalColor = finalColor + ((lcolor * light.getContribution(intersect,normal,&mut rng,h_struct.getRoot())));
 
         }
         finalColor + ambient + (indirectColor * Vec3::new(0.5, 0.5, 0.5))

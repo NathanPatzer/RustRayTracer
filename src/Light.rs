@@ -1,6 +1,6 @@
 use rand::rngs::ThreadRng;
 
-use crate::{Vec3, PointLight, HStruct,AreaLight,Ray::Ray};
+use crate::{Vec3, PointLight,AreaLight,Ray::Ray, BVHNode::BVHNode};
 #[derive(Clone,Copy)]
 pub enum Light
 {
@@ -12,7 +12,7 @@ pub trait IsLight
 {
     fn getPos(&self) -> Vec3;
     fn getIntensity(&self) -> Vec3;
-    fn getContribution(&self,h: &mut HStruct, p: Vec3,normal: Vec3,rng: &mut ThreadRng) -> f32;
+    fn getContribution(&self, p: Vec3,normal: Vec3,rng: &mut ThreadRng,root: &BVHNode) -> f32;
     fn getSpecularContribution(&self,intersection: Vec3,normal: Vec3,specular: f32,r: Ray) -> f32;
 
 }
@@ -37,12 +37,12 @@ impl IsLight for Light
         }
     }
 
-    fn getContribution(&self,h: &mut HStruct, pt: Vec3,normal: Vec3,rng: &mut ThreadRng) -> f32
+    fn getContribution(&self,pt: Vec3,normal: Vec3,rng: &mut ThreadRng,root: &BVHNode) -> f32
     {
         match self
         {
-            Light::PointLight(p) => p.getContribution(h,pt,normal,rng),
-            Light::AreaLight(a) => a.getContribution(h, pt,normal,rng)
+            Light::PointLight(p) => p.getContribution(pt,normal,rng,root),
+            Light::AreaLight(a) => a.getContribution(pt,normal,rng,root)
         }
     }
 

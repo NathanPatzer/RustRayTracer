@@ -100,7 +100,7 @@ impl BVHNode
 
 impl Hittable for BVHNode
 {
-    fn closestHit(&mut self ,r: &crate::Ray::Ray , tMin: f32 , tMax: f32,h: &mut HStruct ) -> bool 
+    fn closestHit(&self ,r: &crate::Ray::Ray , tMin: f32 , tMax: f32,h: &mut HStruct ) -> bool 
     {
         let mut leftHit: bool = false;
         let mut rightHit: bool = false;
@@ -114,7 +114,7 @@ impl Hittable for BVHNode
         {
             if self.rightChild.is_some()
             {
-                let mut shape = self.rightChild.clone().unwrap().as_ref().clone();
+                let shape = self.rightChild.clone().unwrap().as_ref().clone();
                 rightHit = shape.closestHit(r, tMin, tMax, h); 
                 if h.getT() < tMax
                 {
@@ -127,7 +127,7 @@ impl Hittable for BVHNode
             }
             if self.leftChild.is_some()
             {
-                let mut shape = self.leftChild.clone().unwrap().as_ref().clone();
+                let shape = self.leftChild.clone().unwrap().as_ref().clone();
                 leftHit = shape.closestHit(r, tMin, tMax, h);
                 if h.getT() < tMax
                 {
@@ -156,7 +156,7 @@ impl Hittable for BVHNode
         false
     }
 
-    fn anyHit(&mut self,r: &crate::Ray::Ray,tMin: f32, tMax: f32) -> bool {
+    fn anyHit(&self,r: &crate::Ray::Ray,tMin: f32, tMax: f32) -> bool {
         let mut leftHit: bool = false;
         let mut rightHit: bool = false;
 
@@ -164,12 +164,12 @@ impl Hittable for BVHNode
         {
             if self.rightChild.is_some()
             {
-                let mut shape = self.rightChild.clone().unwrap().as_ref().clone();
+                let shape = self.rightChild.clone().unwrap().as_ref().clone();
                 rightHit = shape.anyHit(r, tMin, tMax); 
             }
             if self.leftChild.is_some()
             {
-                let mut shape = self.leftChild.clone().unwrap().as_ref().clone();
+                let shape = self.leftChild.clone().unwrap().as_ref().clone();
                 leftHit = shape.anyHit(r, tMin, tMax);
             }
             if leftHit && rightHit

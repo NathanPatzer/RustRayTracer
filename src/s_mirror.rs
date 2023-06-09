@@ -29,7 +29,7 @@ impl s_mirror
             return h.getBackGroundColor();
         }
         
-        if h.getRoot().closestHit(&r, min_t, max_t, h)
+        if h.getRoot().clone().closestHit(&r, min_t, max_t, h)
         {
             let mut color: Vec3 = Vec3::newEmpty();
 

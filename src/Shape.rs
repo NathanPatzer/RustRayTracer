@@ -16,16 +16,16 @@ pub enum Shape
 
 pub trait Hittable
 {
-    fn closestHit(&mut self ,r: &Ray , tMin: f32 , tMax: f32,h: &mut HitStruct ) -> bool;
+    fn closestHit(&self ,r: &Ray , tMin: f32 , tMax: f32,h: &mut HitStruct ) -> bool;
     fn getShaderName(&self) -> String;
     fn getBoundingBox(&self) -> BoundingBox;
     fn getCentroid(&self) -> Vec3;
-    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool;
+    fn anyHit(&self,r: &Ray,tMin: f32, tMax: f32) -> bool;
 }
 
 impl Hittable for Shape
 {
-    fn closestHit(&mut self, r: &Ray, tMin: f32, tMax: f32, h: &mut HitStruct) -> bool 
+    fn closestHit(&self, r: &Ray, tMin: f32, tMax: f32, h: &mut HitStruct) -> bool 
     {
         match self 
         {
@@ -68,7 +68,7 @@ impl Hittable for Shape
         }    
     }
     
-    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool {
+    fn anyHit(&self,r: &Ray,tMin: f32, tMax: f32) -> bool {
         match self 
         {
             Shape::Triangle(triangle) => triangle.anyHit(r, tMin, tMax),

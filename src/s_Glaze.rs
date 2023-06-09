@@ -68,7 +68,7 @@ impl s_Glaze
             specular[2] = self.specular[2] * light.getIntensity()[2];
             specular = specular * light.getSpecularContribution(intersect, normal, self.phongExp, ray);
 
-            finalColor = finalColor + ((lcolor + specular) * light.getContribution(h_struct,intersect,normal,&mut rng));
+            finalColor = finalColor + ((lcolor + specular) * light.getContribution(intersect,normal,&mut rng,h_struct.getRoot()));
         }
         finalColor + ambient + (indirectColor * Vec3::new(0.5, 0.5, 0.5))
     }

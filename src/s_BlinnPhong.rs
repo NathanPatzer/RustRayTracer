@@ -49,7 +49,7 @@ impl Shading for s_BlinnPhong
             lcolor[1] = light.getIntensity()[1] * color_to_shade[1];
             lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
 
-            finalColor = finalColor + ((lcolor + specular) * light.getContribution(h_struct,intersect,normal,&mut rng));
+            finalColor = finalColor + ((lcolor + specular) * light.getContribution(intersect,normal,&mut rng,h_struct.getRoot()));
 
         }
        finalColor + ambient

@@ -1,4 +1,4 @@
-use crate::{Light::IsLight, Vec3, Shape::Hittable,Ray::Ray};
+use crate::{Light::IsLight, Vec3, Shape::Hittable,Ray::Ray, BVHNode::BVHNode};
 use rand::{Rng, thread_rng, rngs::ThreadRng};
 #[allow(non_camel_case_types)]
 #[derive(Clone,Debug,Copy)]
@@ -54,7 +54,7 @@ impl l_area
 impl IsLight for l_area
 {
     //https://github.com/dcower/raytracer/blob/master/raytracer/AreaLight.cpp getContribution Method
-    fn getContribution(&self,h: &mut crate::HStruct, intersectionPt: crate::Vec3, normal: Vec3,rng: &mut ThreadRng) -> f32 {
+    fn getContribution(&self, intersectionPt: Vec3, normal: Vec3,rng: &mut ThreadRng,root: &BVHNode) -> f32 {
         let samplesX = self.samples.0;
         let samplesY = self.samples.1;
         let invSamplesX = 1.0 / samplesX as f32;
@@ -79,7 +79,7 @@ impl IsLight for l_area
                 diffuse_contribution = diffuse_contribution + max;
 
                 let shadow_ray = Ray::new(lightP - intersectionPt, intersectionPt);
-                if !h.getRoot().anyHit(&shadow_ray, 0.0001, 1.0)
+                if !root.anyHit(&shadow_ray, 0.0001, 1.0)
                 {
                     shading_contribution = shading_contribution + 1.0;
                 }

@@ -14,7 +14,7 @@
         "y0": -0.2,
         "y1": 0.2,
         "z": 0.9,
-        "s": 2,
+        "s": 8,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"
@@ -42,6 +42,12 @@
 		"pitch": 0,
 		"roll": 0,
 		"shift": "0.5 0 0.5"
+    },{
+        "obj": "xyzrgb_dragon.obj",
+        "shader_ref": "white",
+        "scale": 0.005,
+		"shift": "-0.4 -0.33 0",
+		"yaw": 45
     }],
 	"shape": [{
 	    "shader": {
@@ -83,14 +89,6 @@
 	    "maxPt": "1 1 1.01",
 	    "_name": "backWall",
 	    "_type": "box"
-	},{
-	    "shader": {
-		"_ref": "white"
-	    },
-	    "center": "-.6 -.3 0",
-	    "radius": 0.2,
-	    "_name": "sphere1",
-	    "_type": "sphere"
 	}]
     }
 }

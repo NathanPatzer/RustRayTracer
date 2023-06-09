@@ -1,14 +1,11 @@
 #![allow(non_snake_case)]
 use indicatif::{ProgressBar, ProgressStyle};
-
 use PespectiveCamera::PerspectiveCamera;
 use rand::Rng;
 use rand::thread_rng;
-
 use std::sync::{Arc, Mutex};
-
-
 pub const INFINITY: f32 = f32::INFINITY; // +Inff32
+
 mod Vec3D;
 mod Framebuffer;
 mod CoordSys;
@@ -57,8 +54,8 @@ use crate::s_Toon::*;
 use crate::objParser::*;
 use rayon::prelude::*;
 use crate::s_Glaze::*;
-//use crate::l_SpotLight::*;
 use crate::l_area::*;
+
 fn main() {
     let plainargs: Vec<String> = std::env::args().collect();
     let args: Args = Args::new(plainargs);
@@ -82,9 +79,8 @@ fn main() {
     let shape_refs: &[Shape::Shape] = &sc.allShapes[..];
 
     let bvh = BVHNode::BVHNode::new(shape_refs.iter().map(|shape| Arc::new(shape.clone())).collect::<Vec<_>>().as_slice(), 0);
-    sc.root = Some(bvh);
+    sc.root = bvh;
     println!("CONSTRUCTED BVH");
-    assert!(sc.root.is_some());
     
     println!("RENDERING...");
     //LOADING BAR

@@ -2,6 +2,7 @@ use std::f32::consts::PI;
 
 use rand::rngs::ThreadRng;
 
+use crate::BVHNode::BVHNode;
 use crate::Ray::Ray;
 use crate::Vec3;
 use crate::Light::IsLight;
@@ -36,7 +37,7 @@ impl IsLight for l_SpotLight
         self.pos    
     }
 
-    fn getContribution(&self,_h: &mut crate::HStruct, _p: Vec3,_normal: Vec3,_rng: &mut ThreadRng) -> f32 {
+    fn getContribution(&self, _p: Vec3,_normal: Vec3,_rng: &mut ThreadRng,_root: &BVHNode) -> f32 {
         0.0
     }
     fn getSpecularContribution(&self,_intersection: Vec3,_normal: Vec3,_specular: f32,_r: Ray) -> f32 {

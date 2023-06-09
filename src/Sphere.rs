@@ -51,7 +51,7 @@ impl Sphere
 
 impl Hittable for Sphere
 {
-    fn closestHit(&mut self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
+    fn closestHit(&self,r: &Ray, tMin: f32, tMax: f32, h_struct: &mut HStruct) -> bool
     {
         let oc = &r.origin - &self.center;
         let a = r.dir.dot(&r.dir);
@@ -86,7 +86,7 @@ impl Hittable for Sphere
         }
     }
 
-    fn anyHit(&mut self,r: &Ray,tMin: f32, tMax: f32) -> bool {
+    fn anyHit(&self,r: &Ray,tMin: f32, tMax: f32) -> bool {
         let oc = &r.origin - &self.center;
         let a = r.dir.dot(&r.dir);
         let b = 2.0 * &oc.dot(&r.dir);
