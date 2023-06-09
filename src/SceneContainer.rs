@@ -1,4 +1,3 @@
-use crate::Sphere::Sphere;
 use crate::Texture::Texture;
 use crate::{HStruct, Vec3, Shading, Shape::Shape};
 use std::collections::HashMap;
@@ -79,6 +78,14 @@ impl SceneContainer
                     Some(_old_shader) => println!("Replaced old shader")
                 }
             }
+            Shader::Glaze(G)=>
+            {
+                match self.allShaders.insert(name, Shader::Glaze(G))
+                {
+                    None => (),
+                    Some(_old_shader) => println!("Replaced old shader")
+                }
+            }
         }
     }
 
@@ -105,7 +112,7 @@ impl SceneContainer
         self.allCameras[0]
     }
 
-    pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32, h: &mut HStruct) -> Vec3
+    pub fn rayColor(&self,r: Ray,minT: f32, maxT: f32, h: &mut HStruct,coords: (f32,f32)) -> Vec3
     {
         if self.root.clone().unwrap().closestHit(&r, minT, maxT, h)
         {
@@ -130,15 +137,8 @@ impl SceneContainer
 
         if let Some(background) = self.allTextures.get("background")
         {
-            let oc = &r.origin;
-            let a = r.dir.dot(&r.dir);
-            let b = 2.0 * &oc.dot(&r.dir);
-            let c = oc.dot(&oc) - (5.0 * 5.0);
-            let disc = (b*b) - (4.0*a*c);
-            let T = (-b - disc.sqrt() ) / (2.0*a);
-            let point_on_bg = r.origin + (r.dir * T);
-            let (U,V) = Sphere::getSphereUV(point_on_bg);
-            return background.get_texture_color(U, V, background);
+
+            return background.get_texture_color(coords.0, coords.1, background);
         }
         else {
             return self.background_color;

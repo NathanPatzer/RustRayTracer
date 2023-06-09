@@ -37,6 +37,7 @@ mod objParser;
 mod l_SpotLight;
 mod l_area;
 mod lookAtCam;
+mod s_Glaze;
 
 pub use Vec3D::*;
 pub use CoordSys::*;
@@ -55,6 +56,7 @@ use crate::AABoundingBox::*;
 use crate::s_Toon::*;
 use crate::objParser::*;
 use rayon::prelude::*;
+use crate::s_Glaze::*;
 //use crate::l_SpotLight::*;
 use crate::l_area::*;
 fn main() {
@@ -119,7 +121,7 @@ fn main() {
                     let u: f32 = (random_i) / (w - 1) as f32;
                     let v: f32 = (random_j) / (h - 1) as f32;
                     let r = cam.genRay(u, v);
-                    pixel_color = pixel_color + sc.rayColor(r, 1.0, INFINITY, &mut t_h);
+                    pixel_color = pixel_color + sc.rayColor(r, 1.0, INFINITY, &mut t_h,(u,v));
                     t_h.setDepth(depth);
                 }
             }

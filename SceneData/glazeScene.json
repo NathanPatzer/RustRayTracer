@@ -40,9 +40,11 @@
 		"_type": "Lambertian"
 	    },
 	    {
-		"_name": "mirrorMat",
-		"_type": "Mirror",
-		"roughness": 0.3
+		"_name": "glazeMat",
+        "diffuse": "0.75 0.05 0.05",
+        "specular": "1 1 1",
+        "phongExp": 32.0,
+		"_type": "Glaze"
 	    }
 	],
 	"shape": [
@@ -66,7 +68,7 @@
 	    },
 	    {
 		"shader": {
-		    "_ref": "mirrorMat"
+		    "_ref": "glazeMat"
 		},
 		"center": "1.2 1.10 -4.0",
 		"radius": 1.10,

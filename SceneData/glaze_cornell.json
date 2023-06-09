@@ -34,14 +34,19 @@
 		"bleed": 1,
 	    "_name": "white",
 	    "_type": "Lambertian"
-	}],"texture":[],"obj":[{
-        "obj": "max-planck.obj",
-        "shader_ref": "white",
-        "scale": 0.002,
-		"yaw": 0,
-		"pitch": 0,
-		"roll": 45
-    }],
+	},{
+		"_name": "glaze",
+        "diffuse": ".73 .73 .73",
+        "specular": "1 1 1",
+        "phongExp": 32.0,
+		"_type": "Glaze",
+        "bleed": 1
+	    }],
+		"texture":[{
+			"_name": "earth",
+			"texture": "earthsmall.jpg"
+		}],
+		"obj":[],
 	"shape": [{
 	    "shader": {
 		"_ref": "green"
@@ -84,13 +89,23 @@
 	    "_type": "box"
 	},{
 	    "shader": {
+		"_ref": "glaze"
+	    },
+        "texture": {
+        "_ref": "earth"
+        },
+	    "center": ".6 -.3 .4",
+	    "radius": 0.2,
+	    "_name": "sphere1",
+	    "_type": "sphere"
+	},{
+	    "shader": {
 		"_ref": "white"
 	    },
 	    "center": "-.6 -.3 0",
 	    "radius": 0.2,
 	    "_name": "sphere1",
 	    "_type": "sphere"
-	}],
-	"background-texture": "space.jpg"
+	}]
     }
 }

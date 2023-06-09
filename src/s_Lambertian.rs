@@ -42,7 +42,7 @@ impl s_Lambertian
         }
     }
 
-    fn getAttenuation(intersection: Vec3, normal: Vec3,samples: i32,h_struct: &mut HStruct,depth: i32, lights: &Vec<Light>,shaders: &HashMap<String,Shader>,textures: &HashMap<String,Texture>,rng: &mut ThreadRng) -> Vec3
+    pub fn getAttenuation(intersection: Vec3, normal: Vec3,samples: i32,h_struct: &mut HStruct,depth: i32, lights: &Vec<Light>,shaders: &HashMap<String,Shader>,textures: &HashMap<String,Texture>,rng: &mut ThreadRng) -> Vec3
     {
         
         let mut indirectColor = Vec3::newEmpty();

@@ -21,6 +21,7 @@ use crate::s_Toon::Toon;
 use crate::s_mirror::Mirror;
 use crate::Texture::Texture;
 use crate::OBJ;
+use crate::Glaze;
 pub struct JsonParser
 {
     path: String,
@@ -196,6 +197,35 @@ impl JsonParser
                 scene.addTexture(Texture, name.to_string());
                 scene.addShader(Shader::Toon(shader), name);
             }
+            else if shader_type == "Glaze"
+            {
+                let roughness = shader_vec[i].get("roughness")
+                    .and_then(|value| value.as_f64())
+                    .unwrap_or(0.0);
+                let name = JsonParser::getStr(shader_vec[i].get("_name"));
+                let specular = JsonParser::getVec(shader_vec[i].get("specular").unwrap().as_str().unwrap());
+                let phong_exp = shader_vec[i].get("phongExp").unwrap().as_f64().unwrap();
+                let mut bleed: bool = false;
+                if shader_vec[i].get("bleed").is_some()
+                {
+                    let b = JsonParser::getInt(shader_vec[i].get("bleed"));
+                    if b == 1
+                    {
+                        bleed = true;
+                    }
+                }
+                let shader = Glaze::new(roughness as f32, bleed,specular,phong_exp as f32);
+                if shader_vec[i].get("diffuse").is_none()
+                {
+                    scene.addShader(Shader::Glaze(shader), name);
+                }
+                else {
+                    let diffuse = JsonParser::getVec(shader_vec[i].get("diffuse").unwrap().as_str().unwrap());
+                    let texture = Texture::create_diffuse_texture(diffuse);
+                    scene.addTexture(texture, name.to_string());
+                    scene.addShader(Shader::Glaze(shader), name);
+                }
+            }
         }
         
         //ADD LIGHTS TO LIGHTVECTOR
@@ -268,16 +298,37 @@ impl JsonParser
         {
             let obj_file_name = JsonParser::getStr(obj_vec[i].get("obj"));
             let shader_ref = JsonParser::getStr(obj_vec[i].get("shader_ref"));
-            let mut obj_parser: OBJ = OBJ::new();
+            let mut roll: Option<f64> = Some(0.0);
+            let mut pitch: Option<f64> = Some(0.0);
+            let mut yaw: Option<f64> = Some(0.0);
+            if obj_vec[i].get("roll").is_some()
+            {
+                roll = Some(JsonParser::getF64(obj_vec[i].get("roll")));
+            }
+            if obj_vec[i].get("pitch").is_some()
+            {
+                pitch = Some(JsonParser::getF64(obj_vec[i].get("pitch")));
+            }
+            if obj_vec[i].get("yaw").is_some()
+            {
+                yaw = Some(JsonParser::getF64(obj_vec[i].get("yaw")));
+            }
+            let mut obj_parser: OBJ = OBJ::new(roll,pitch,yaw);
             if obj_vec[i].get("shift").is_some()
             {
                 let shift = JsonParser::getVec(obj_vec[i].get("shift").unwrap().as_str().unwrap());
                 obj_parser.setShift(shift);
             }
+            else {
+                obj_parser.setShift(Vec3::newEmpty());
+            }
             if obj_vec[i].get("scale").is_some()
             {
                 let scale = obj_vec[i].get("scale").unwrap().as_f64().unwrap() as f32;
                 obj_parser.setScale(scale);
+            }
+            else {
+                obj_parser.setScale(1.0);
             }
             obj_parser.parse_obj("OBJ/".to_string() + obj_file_name.as_ref(), &shader_ref,self.interpolate,scene);
            
@@ -305,6 +356,11 @@ impl JsonParser
     fn getFloat(val: Option<&Value>) -> f32
     {
         val.unwrap().as_f64().unwrap() as f32
+    }
+
+    fn getF64(val: Option<&Value>) -> f64
+    {
+        val.unwrap().as_f64().unwrap()
     }
 
     fn getInt(val: Option<&Value>) -> i64

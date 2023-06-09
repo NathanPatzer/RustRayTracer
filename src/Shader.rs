@@ -8,7 +8,7 @@ use crate::Texture::Texture;
 use crate::Vec3;
 use crate::Light::Light;
 use crate::Toon;
-
+use crate::Glaze;
 use crate::Mirror;
 #[derive(Clone,Copy)]
 pub enum Shader
@@ -16,7 +16,8 @@ pub enum Shader
     Lambertian(Lambertian),
     BlinnPhong(BlinnPhong),
     Mirror(Mirror),
-    Toon(Toon)
+    Toon(Toon),
+    Glaze(Glaze)
 }
 
 pub trait Shading
@@ -33,12 +34,8 @@ impl Shading for Shader
             Shader::Lambertian(L) => L.apply(h_struct,color_to_shade,lights,shaders,textures),
             Shader::BlinnPhong(B) => B.apply(h_struct,color_to_shade,lights,shaders,textures),
             Shader::Mirror(M) => M.apply(h_struct,color_to_shade,lights,shaders,textures),
-            Shader::Toon(T) => T.apply(h_struct,color_to_shade,lights,shaders,textures)
+            Shader::Toon(T) => T.apply(h_struct,color_to_shade,lights,shaders,textures),
+            Shader::Glaze(G) => G.apply(h_struct,color_to_shade,lights,shaders,textures)
         }    
     }
-}
-
-impl Shader
-{
-
 }
