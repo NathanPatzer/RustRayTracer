@@ -1,4 +1,4 @@
-use wide::*;
+use wide::f32x4;
 #[derive(Clone,Copy,Debug)]
 pub struct Vec3D{
     rgb: [f32; 3]
