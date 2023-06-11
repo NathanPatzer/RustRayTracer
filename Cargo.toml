@@ -12,6 +12,7 @@ rand = "0.7.3"
 indicatif = "0.16"
 libm = "0.2"
 rayon = "1.7.0"
+wide = "0.7.10"
 
 [profile.release]
 opt-level = 3

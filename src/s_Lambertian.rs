@@ -56,7 +56,6 @@ impl s_Lambertian
             let ray = Ray::new(target - intersection, intersection);
             indirectColor = indirectColor + Mirror::mirror_color(ray, 1.0e-5, INFINITY, depth,h_struct,lights,shaders,textures);
         }
-
         indirectColor / samples as f32
     }
 }
@@ -70,7 +69,7 @@ impl Shading for s_Lambertian
         let mut rng = thread_rng();
         let intersect = h_struct.getIntersect();
         let normal = h_struct.getNormal();
-        let ambient = Vec3::new(0.1, 0.1, 0.1) * color_to_shade;
+        let ambient = color_to_shade * 0.1;
         let mut indirectColor = Vec3::newEmpty();
         if self.bleed.is_some() && h_struct.getDepth() != 1
         {
@@ -92,7 +91,7 @@ impl Shading for s_Lambertian
 
             finalColor = finalColor + ((lcolor * light.getContribution(intersect,normal,&mut rng,h_struct.getRoot())));
         }
-        finalColor + ambient + (indirectColor * Vec3::new(0.5, 0.5, 0.5))
+        finalColor + ambient + (indirectColor * 0.5)
     }
 }
 
