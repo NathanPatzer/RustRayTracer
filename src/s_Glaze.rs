@@ -6,14 +6,14 @@ use crate::{Vec3, Shading, Ray::Ray, INFINITY, HStruct, Light::{Light, IsLight},
 pub struct s_Glaze
 {
     roughness: f32,
-    bleed: bool,
+    bleed: Option<i32>,
     specular: Vec3,
     phongExp: f32
 }
 
 impl s_Glaze
 {
-    pub fn new(roughness: f32, bleed: bool,specular: Vec3,phongExp: f32) -> s_Glaze
+    pub fn new(roughness: f32, bleed: Option<i32>,specular: Vec3,phongExp: f32) -> s_Glaze
     {
         s_Glaze{roughness: roughness, bleed,specular: specular, phongExp: phongExp}
     }
@@ -43,7 +43,7 @@ impl s_Glaze
         let normal = h_struct.getNormal();
         let ambient = Vec3::new(0.1, 0.1, 0.1) * color_to_shade;
         let mut indirectColor = Vec3::newEmpty();
-        if self.bleed
+        if self.bleed.is_some()
         {
             if h_struct.getDepth() <= 1
             {
@@ -51,7 +51,7 @@ impl s_Glaze
             }
             h_struct.setDepth(h_struct.getDepth() - 1); //subtract depth by 1
             let depth = h_struct.getDepth();
-            indirectColor = Lambertian::getAttenuation(intersect, normal, 50, h_struct,depth,lights,shaders,textures,&mut rng);
+            indirectColor = Lambertian::getAttenuation(intersect, normal, self.bleed.unwrap(), h_struct,depth,lights,shaders,textures,&mut rng);
         }
         
         for light in lights

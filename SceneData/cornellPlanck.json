@@ -2,7 +2,7 @@
     "scene": {
 	"camera": [{
 	    "position": "0 0 -4",
-        "lookat": "0 .25 .25",
+        "lookat": "0 .3 .25",
 	    "focalLength": 0.5,
 	    "imagePlaneWidth": 0.5,
 	    "_name": "main",
@@ -14,24 +14,24 @@
         "y0": -0.2,
         "y1": 0.2,
         "z": 0.9,
-        "s": 8,
+        "s": 10,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"
 	    }],
 	"shader": [{
 	    "diffuse": ".12 .45 .15",
-		"bleed": 1,
+		"bleed": 25,
 	    "_name": "green",
 	    "_type": "Lambertian"
 	},{
 	    "diffuse": ".65 .05 .05",
-		"bleed": 1,
+		"bleed": 25,
 	    "_name": "red",
 	    "_type": "Lambertian"
 	},{
 	    "diffuse": ".73 .73 .73",
-		"bleed": 1,
+		"bleed": 25,
 	    "_name": "white",
 	    "_type": "Lambertian"
 	}],"texture":[],"obj":[{

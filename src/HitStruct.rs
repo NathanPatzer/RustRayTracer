@@ -1,4 +1,5 @@
-use crate::Vec3;
+
+use crate::{Vec3};
 use crate::Ray::Ray;
 use crate::BVHNode::BVHNode;
 

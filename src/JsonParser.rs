@@ -132,8 +132,7 @@ impl JsonParser
                     let lookat = JsonParser::getVec(camera_vec[i].get("lookat").unwrap().as_str().unwrap());
                     let aspect: f32 = w as f32 / h as f32;
                     let coord_sys = Coord::new_look_at(pos, lookat, Vec3::new(0.0, 1.0, 0.0));
-                    let p_cam = lookAtCam::new(pos,30 as f64,aspect,coord_sys);
-                    
+                    let p_cam = lookAtCam::new(pos,25 as f64,aspect,coord_sys);
                     scene.addCamera(Camera::lookAtCam(p_cam));
                 }
             }
@@ -228,14 +227,11 @@ impl JsonParser
             let shader_type = shader_vec[i].get("_type").unwrap().as_str().unwrap();
             if shader_type == "Lambertian"
             {
-                let mut bleed: bool = false;
+                let mut bleed: Option<i32> = None;
                 if shader_vec[i].get("bleed").is_some()
                 {
-                    let b = JsonParser::getInt(shader_vec[i].get("bleed"));
-                    if b == 1
-                    {
-                        bleed = true;
-                    }
+                    bleed = Some(JsonParser::getInt(shader_vec[i].get("bleed")) as i32);
+                    
                 }
                 let shader = Lambertian::new(bleed);
                 let name = JsonParser::getStr(shader_vec[i].get("_name"));
@@ -288,14 +284,11 @@ impl JsonParser
                 let name = JsonParser::getStr(shader_vec[i].get("_name"));
                 let specular = JsonParser::getVec(shader_vec[i].get("specular").unwrap().as_str().unwrap());
                 let phong_exp = shader_vec[i].get("phongExp").unwrap().as_f64().unwrap();
-                let mut bleed: bool = false;
+                let mut bleed: Option<i32> = None;
                 if shader_vec[i].get("bleed").is_some()
                 {
-                    let b = JsonParser::getInt(shader_vec[i].get("bleed"));
-                    if b == 1
-                    {
-                        bleed = true;
-                    }
+                    bleed = Some(JsonParser::getInt(shader_vec[i].get("bleed")) as i32);
+
                 }
                 let shader = Glaze::new(roughness as f32, bleed,specular,phong_exp as f32);
                 if shader_vec[i].get("diffuse").is_none()

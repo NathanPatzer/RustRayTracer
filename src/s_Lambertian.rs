@@ -16,19 +16,18 @@ use rand::{Rng, thread_rng};
 #[derive(Clone,Copy)]
 pub struct s_Lambertian
 {
-    bleed: bool
+    bleed: Option<i32>
 }
 
 impl s_Lambertian
 {
-    pub fn new(b: bool) -> s_Lambertian
+    pub fn new(b: Option<i32>) -> s_Lambertian
     {
         s_Lambertian{bleed: b}
     }
 
     fn random_vector(rng: &mut ThreadRng) -> Vec3
     {
-        
         Vec3::new(rng.gen_range(-1.0, 1.0), rng.gen_range(-1.0, 1.0), rng.gen_range(-1.0, 1.0))
     }
 
@@ -49,6 +48,7 @@ impl s_Lambertian
         for _i in 0..samples
         {
             let mut target = intersection + normal + Lambertian::random_in_unit_sphere(rng);
+            
             if target.nearZero()
             {
                 target = normal;
@@ -72,7 +72,7 @@ impl Shading for s_Lambertian
         let normal = h_struct.getNormal();
         let ambient = Vec3::new(0.1, 0.1, 0.1) * color_to_shade;
         let mut indirectColor = Vec3::newEmpty();
-        if self.bleed
+        if self.bleed.is_some() && h_struct.getDepth() != 1
         {
             if h_struct.getDepth() <= 1
             {
@@ -80,7 +80,7 @@ impl Shading for s_Lambertian
             }
             h_struct.setDepth(h_struct.getDepth() - 1); //subtract depth by 1
             let depth = h_struct.getDepth();
-            indirectColor = Lambertian::getAttenuation(intersect, normal, 25, h_struct,depth,lights,shaders,textures,&mut rng);
+            indirectColor = Lambertian::getAttenuation(intersect, normal, self.bleed.unwrap(), h_struct,depth,lights,shaders,textures,&mut rng);
         }
         
         for light in lights
@@ -91,7 +91,6 @@ impl Shading for s_Lambertian
             lcolor[2] = light.getIntensity()[2] * color_to_shade[2];
 
             finalColor = finalColor + ((lcolor * light.getContribution(intersect,normal,&mut rng,h_struct.getRoot())));
-
         }
         finalColor + ambient + (indirectColor * Vec3::new(0.5, 0.5, 0.5))
     }

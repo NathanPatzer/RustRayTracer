@@ -150,7 +150,6 @@ impl Hittable for Triangle
             normal = ((barys.0 * self.v_normals.0) + (barys.1 * self.v_normals.1) + (barys.2 * self.v_normals.2)).normalize();
         }
 
-
         //DONE TESTING
         h_struct.setTextureName(self.texture_name.clone());
         h_struct.setT(T);
@@ -193,7 +192,6 @@ impl Hittable for Triangle
         let mut G = i*((a*k)-(j*b)) + h*((j*c)-(a*l)) + g*((b*l)-(k*c));
         G = G/M;
         
-
         if G < 0.0 || G > 1.0
         {
                 return false;

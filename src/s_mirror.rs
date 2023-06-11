@@ -28,24 +28,30 @@ impl s_mirror
         {
             return h.getBackGroundColor();
         }
+        let mut new_h = HStruct::new();
         
-        if h.getRoot().clone().closestHit(&r, min_t, max_t, h)
+        if h.getRoot().closestHit(&r, min_t, max_t, &mut new_h)
         {
             let mut color: Vec3 = Vec3::newEmpty();
 
-            if let Some(texture) = textures.get(h.getTextureName())
+            if let Some(texture) = textures.get(new_h.getTextureName())
             {
                 if texture.isTexture
                 {
-                    let coords = h.getCoords();
+                    let coords = new_h.getCoords();
                     color = texture.get_texture_color(coords.0, coords.1, texture);
                 }
                 else {
                     color = texture.get_diffuse_color();
                 }
             }
-            if let Some(shader) = shaders.get(h.getShaderName())
+            if let Some(shader) = shaders.get(new_h.getShaderName())
             {
+                h.setCoords(new_h.getCoords());
+                h.setIntersect(new_h.getIntersect());
+                h.setNormal(new_h.getNormal());
+                h.setT(new_h.getT());
+                h.setRay(new_h.getRay());
                 return shader.apply(h, &color, lights, shaders,textures)
             }
         }
@@ -66,8 +72,6 @@ impl Shading for s_mirror
         (u * rng.gen_range(-1.0,1.0) * 0.5 * self.roughness) +
         (v * rng.gen_range(-1.0, 1.0) * 0.5 * self.roughness)).normalize();
         
-
-
         let mirror_ray = Ray::new(ray_dir, h_struct.getIntersect());
         let depth = h_struct.getDepth();
         self::s_mirror::mirror_color(mirror_ray, 1.0e-5, INFINITY, depth - 1, h_struct,lights,shaders,textures)
