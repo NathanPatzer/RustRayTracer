@@ -130,9 +130,10 @@ impl JsonParser
                 {
                     let pos = JsonParser::getVec(camera_vec[i].get("position").unwrap().as_str().unwrap());
                     let lookat = JsonParser::getVec(camera_vec[i].get("lookat").unwrap().as_str().unwrap());
+                    let vfov = JsonParser::getInt(camera_vec[i].get("vfov"));
                     let aspect: f32 = w as f32 / h as f32;
                     let coord_sys = Coord::new_look_at(pos, lookat, Vec3::new(0.0, 1.0, 0.0));
-                    let p_cam = lookAtCam::new(pos,25 as f64,aspect,coord_sys);
+                    let p_cam = lookAtCam::new(pos, vfov as f64,aspect,coord_sys);
                     scene.addCamera(Camera::lookAtCam(p_cam));
                 }
             }
