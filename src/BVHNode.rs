@@ -114,8 +114,7 @@ impl Hittable for BVHNode
         {
             if self.rightChild.is_some()
             {
-                let shape = self.rightChild.clone().unwrap().as_ref().clone();
-                rightHit = shape.closestHit(r, tMin, tMax, h); 
+                rightHit = self.rightChild.as_ref().unwrap().closestHit(r, tMin, tMax, h);                
                 if h.getT() < tMax
                 {
                     right_t = h.getT();
@@ -127,8 +126,8 @@ impl Hittable for BVHNode
             }
             if self.leftChild.is_some()
             {
-                let shape = self.leftChild.clone().unwrap().as_ref().clone();
-                leftHit = shape.closestHit(r, tMin, tMax, h);
+                
+                leftHit = self.leftChild.as_ref().unwrap().closestHit(r, tMin, tMax, h);
                 if h.getT() < tMax
                 {
                     left_t = h.getT();
