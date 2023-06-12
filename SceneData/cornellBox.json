@@ -15,24 +15,24 @@
         "y0": -0.2,
         "y1": 0.2,
         "z": 0.9,
-        "s": 4,
+        "s": 10,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"
 	    }],
 	"shader": [{
 	    "diffuse": ".12 .45 .15",
-		"bleed": 1,
+		"bleed": 20,
 	    "_name": "green",
 	    "_type": "Lambertian"
 	},{
 	    "diffuse": ".65 .05 .05",
-		"bleed": 1,
+		"bleed": 20,
 	    "_name": "red",
 	    "_type": "Lambertian"
 	},{
 	    "diffuse": ".73 .73 .73",
-		"bleed": 1,
+		"bleed": 20,
 	    "_name": "white",
 	    "_type": "Lambertian"
 	}],"texture":[],"obj":[],
