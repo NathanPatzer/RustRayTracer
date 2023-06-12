@@ -1,4 +1,4 @@
-use wide::f32x4;
+
 #[derive(Clone,Copy,Debug)]
 pub struct Vec3D{
     rgb: [f32; 3]
@@ -81,11 +81,10 @@ impl std::ops::Mul<f32> for Vec3D
 {
     type Output = Vec3D;
     fn mul(self, rhs: f32) -> Vec3D {
-        let c: [f32;4] = f32x4::mul(f32x4::from([self[0],self[1],self[2],0.0]), rhs).into();
         Vec3D { rgb: [
-            c[0],
-            c[1],
-            c[2]] }
+            self.rgb[0] * rhs,
+            self.rgb[1] * rhs,
+            self.rgb[2] * rhs] }
     }
 }
 
@@ -116,11 +115,9 @@ impl std::ops::Div<f32> for Vec3D
     type Output = Vec3D;
     fn div(self, rhs: f32) -> Vec3D 
     {
-        let c: [f32;4] = f32x4::div(f32x4::from([self[0],self[1],self[2],0.0]), rhs).into();
-        Vec3D { rgb: [
-            c[0],
-            c[1],
-            c[2]] }
+        Vec3D { rgb: [self.rgb[0] / rhs,
+                      self.rgb[1] / rhs,
+                      self.rgb[2] / rhs] }
     }
 }
 
@@ -129,11 +126,9 @@ impl std::ops::Div<f32> for &Vec3D
     type Output = Vec3D;
     fn div(self, rhs: f32) -> Vec3D 
     {
-        let c: [f32;4] = f32x4::div(f32x4::from([self[0],self[1],self[2],0.0]), rhs).into();
-        Vec3D { rgb: [
-            c[0],
-            c[1],
-            c[2]] }
+        Vec3D { rgb: [self.rgb[0] / rhs,
+                      self.rgb[1] / rhs,
+                      self.rgb[2] / rhs] }
     }
 }
 
@@ -193,11 +188,10 @@ impl std::ops::Mul<f32> for &Vec3D
     type Output = Vec3D;
     fn mul(self, rhs: f32) -> Self::Output 
     {
-        let c: [f32;4] = f32x4::mul(f32x4::from([self[0],self[1],self[2],0.0]), rhs).into();
         Vec3D { rgb: [
-            c[0],
-            c[1],
-            c[2]] }
+            self.rgb[0] * rhs,
+            self.rgb[1] * rhs,
+            self.rgb[2] * rhs] }
     }
 }
 
@@ -206,11 +200,10 @@ impl std::ops::Add<f32> for Vec3D
     type Output = Vec3D;
     fn add(self, rhs: f32) -> Self::Output
     {
-        let c: [f32;4] = f32x4::add(f32x4::from([self[0],self[1],self[2],0.0]), rhs).into();
-        Vec3D::new(
-            c[0],
-            c[1],
-            c[2]
+        Vec3::new(
+            self.rgb[0] + rhs,
+            self.rgb[1] + rhs,
+            self.rgb[2] + rhs
         )
     }
 }
@@ -233,11 +226,10 @@ impl std::ops::Sub<f32> for Vec3D
     type Output = Vec3D;
     fn sub(self, rhs: f32) -> Self::Output 
     {
-        let c: [f32;4] = f32x4::sub(f32x4::from([self[0],self[1],self[2],0.0]), rhs).into();
         Vec3D { rgb: [
-            c[0],
-            c[1],
-            c[2]] }
+            self.rgb[0] - rhs,
+            self.rgb[1] - rhs,
+            self.rgb[2] - rhs] }
     }
 }
 
