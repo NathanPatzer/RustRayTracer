@@ -50,15 +50,6 @@ impl Framebuffer
         }
     }
 
-    #[allow(dead_code)]
-    pub fn setBackground(&mut self,color: Vec3D)
-    {
-        for i in 0..self.pixelArray.len()
-        {
-            self.pixelArray[i] = color;
-        }
-    }
-
     pub fn setAll(&mut self,img: Vec<Vec3D>)
     {
         assert!(img.len() == self.pixelArray.len(), "Invalid Array");
