@@ -55,30 +55,29 @@ impl IsLight for l_area
 {
     //https://github.com/dcower/raytracer/blob/master/raytracer/AreaLight.cpp getContribution Method
     fn getContribution(&self, intersectionPt: Vec3, normal: Vec3,rng: &mut ThreadRng,root: &BVHNode) -> f32 {
-        let samplesX = self.samples.0;
-        let samplesY = self.samples.1;
-        let invSamplesX = 1.0 / samplesX as f32;
-        let invSamplesY = 1.0 / samplesY as f32;
+        let invSamplesX = 1.0 / self.samples.0 as f32;
+        let invSamplesY = 1.0 / self.samples.1 as f32;
         let mut shading_contribution: f32 = 0.0;
         let mut diffuse_contribution: f32 = 0.0;
         let mut distance_contribution: f32 = 0.0;
-        let totalSamples = samplesX as f32 * samplesY as f32;
-        for x in 0..samplesX
+        let totalSamples = self.samples.0 as f32 * self.samples.1 as f32;
+        for x in 0..self.samples.0
         {
-            for y in 0..samplesY
+            for y in 0..self.samples.1
             {
-                let first = self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rng.gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length();
-                let second = self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rng.gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
-                let lightP = self.center + first + second;
-                distance_contribution = distance_contribution + (lightP - intersectionPt).length();
-                let L = (lightP - intersectionPt).normalize();
-                
+                let lightP = self.center + 
+                self.axis.0 * ((x as f32 + 0.5) * invSamplesX + (rng.gen::<f32>() - 0.5) * invSamplesX - 0.5 ) * self.axis.0.length() + 
+                self.axis.1 * ((y as f32 + 0.5) * invSamplesY + (rng.gen::<f32>() - 0.5) * invSamplesY - 0.5 ) * self.axis.1.length();
+                let ltop: Vec3 = lightP - intersectionPt;
+                distance_contribution = distance_contribution + ltop.length();
+                let L = ltop.normalize();
                 let ndotl = normal.dot(&L);
                 let max: f32 = 0.0_f32.max(ndotl);
                 if max == 0.0 {continue;}
+                
                 diffuse_contribution = diffuse_contribution + max;
 
-                let shadow_ray = Ray::new(lightP - intersectionPt, intersectionPt);
+                let shadow_ray = Ray::new(ltop, intersectionPt);
                 if !root.anyHit(&shadow_ray, 0.0001, 1.0)
                 {
                     shading_contribution = shading_contribution + 1.0;
