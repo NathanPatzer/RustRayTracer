@@ -24,23 +24,23 @@ impl Framebuffer
     pub fn exportAsPng(&mut self,filename: String)
     {
         let mut img = RgbImage::new(self.width, self.height);
-        for i in 0u32..self.pixelArray.len() as u32
+        for i in 0..self.pixelArray.len()
         {
-            let x:u32 = i % self.width;
+            let x:u32 = i as u32 % self.width;
             let y:u32 = (i as f32 / self.width as f32).floor() as u32;
-            if self.pixelArray[i as usize][0] > 1.0
+            if self.pixelArray[i][0] > 1.0
             {
-                self.pixelArray[i as usize][0] = 1.0;
+                self.pixelArray[i][0] = 1.0;
             }
-            if self.pixelArray[i as usize][1] > 1.0
+            if self.pixelArray[i][1] > 1.0
             {
-                self.pixelArray[i as usize][1] = 1.0;
+                self.pixelArray[i][1] = 1.0;
             }
-            if self.pixelArray[i as usize][2] > 1.0
+            if self.pixelArray[i][2] > 1.0
             {
-                self.pixelArray[i as usize][2] = 1.0;
+                self.pixelArray[i][2] = 1.0;
             }
-            let pixel = Rgb([(255 as f32 * self.pixelArray[i as usize][0]) as u8,(255 as f32 * self.pixelArray[i as usize][1]) as u8,(255 as f32 * self.pixelArray[i as usize][2]) as u8]);
+            let pixel = Rgb([(255 as f32 * self.pixelArray[i][0]) as u8,(255 as f32 * self.pixelArray[i][1]) as u8,(255 as f32 * self.pixelArray[i][2]) as u8]);
             img.put_pixel(x, self.height - 1 - y, pixel);
         }
 
@@ -53,9 +53,9 @@ impl Framebuffer
     #[allow(dead_code)]
     pub fn setBackground(&mut self,color: Vec3D)
     {
-        for i in 0u32..self.pixelArray.len() as u32
+        for i in 0..self.pixelArray.len()
         {
-            self.pixelArray[i as usize] = color;
+            self.pixelArray[i] = color;
         }
     }
 

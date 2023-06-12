@@ -139,7 +139,15 @@ fn main() {
     if elapsed_time > 60.0
     {
         elapsed_time = elapsed_time / 60.0;
-        println!("Time to render {:.2}m",elapsed_time);
+
+        if elapsed_time > 60.0
+        {
+            elapsed_time = elapsed_time / 60.0;
+            println!("Time to render {:.2}h",elapsed_time);
+        }
+        else {
+            println!("Time to render {:.2}m",elapsed_time);
+        }
     }
     else {
         println!("Time to render {:.2}s", elapsed_time);
