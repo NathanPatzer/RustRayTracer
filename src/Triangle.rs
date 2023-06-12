@@ -142,20 +142,20 @@ impl Hittable for Triangle
    		 return false;
 	    }
 
+        let intersectionPt = r.origin + (r.dir * T);
         let mut normal = self.normal;
         //TESTING
         if self.interpolate
         {
-            let barys = self::Tri::calcualate_barycentric_coords(self.A,self.B,self.C,r.origin + (r.dir * T));
+            let barys = self::Tri::calcualate_barycentric_coords(self.A,self.B,self.C,intersectionPt);
             normal = ((barys.0 * self.v_normals.0) + (barys.1 * self.v_normals.1) + (barys.2 * self.v_normals.2)).normalize();
         }
 
         //DONE TESTING
         h_struct.setTextureName(self.texture_name.clone());
         h_struct.setT(T);
-        //h_struct.setNormal(self.normal);
         h_struct.setNormal(normal);
-        h_struct.setIntersect(r.origin + (r.dir * T));
+        h_struct.setIntersect(intersectionPt);
         h_struct.setRay(Ray::new(r.dir, r.origin));
         h_struct.setShaderName(self.shader_name.clone());
         true

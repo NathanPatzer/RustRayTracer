@@ -96,8 +96,6 @@ impl HitStruct
         self.ray
     }
  
-    
-
     pub fn setDepth(&mut self, d: i32)
     {
         self.depth = d;
