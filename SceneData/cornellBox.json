@@ -3,6 +3,7 @@
 	"camera": [{
 	    "position": "0 0 -4",
         "lookat": "0 .25 .25",
+		"vfov": 30,
 	    "focalLength": 0.5,
 	    "imagePlaneWidth": 0.5,
 	    "_name": "main",
@@ -14,7 +15,7 @@
         "y0": -0.2,
         "y1": 0.2,
         "z": 0.9,
-        "s": 1,
+        "s": 4,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"

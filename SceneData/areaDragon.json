@@ -13,8 +13,8 @@
         "x1": 50,
         "y0": -50,
         "y1": 10,
-        "z": 10,
-        "s": 2,
+        "z": 1,
+        "s": 1,
         "axis": 1,
 		"intensity": "1.0 1.0 1.0",
 		"_type": "area"
@@ -34,7 +34,7 @@
      "obj":[{
         "obj": "xyzrgb_dragon.obj",
         "shader_ref": "red",
-        "shift": "0 41 0",
+        "shift": "0 0.35 0",
         "scale": 0.01
     }],
     "texture":[],
